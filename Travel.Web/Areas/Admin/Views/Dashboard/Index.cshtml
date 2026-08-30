@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<!-- MAIN -->
+<div class="main">
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <button class="hamb" onclick="toggleSidebar(true)" aria-label="Menü">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+        </button>
+        <span class="tb-title">Dashboard</span>
+        <div class="tb-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+            <input type="text" placeholder="Ara: rezervasyon, tur, kullanıcı...">
+        </div>
+        <div class="tb-right">
+            <button class="tb-icon" aria-label="Bildirimler">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+                <span class="n-badge">3</span>
+            </button>
+            <div class="tb-user">
+                <div class="av">MY</div>
+                <div class="nm"><b>Murat Yücedağ</b><span>Yönetici</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+        <div class="page-intro">
+            <div>
+                <div class="eyebrow">Genel Bakış</div>
+                <h1>Hoş Geldiniz, Murat 👋</h1>
+                <p>Travelio platformundaki son gelişmeleri ve önemli verileri buradan takip edebilirsiniz.</p>
+            </div>
+            <div class="date-pill">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                13 Ağustos 2026
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-xl-3">
+                <div class="kpi">
+                    <div class="top">
+                        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v12H3z" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg></div>
+                        <span class="trend">+3</span>
+                    </div>
+                    <div class="num">48</div>
+                    <div class="lab">Toplam Tur</div>
+                    <div class="sub"><span class="up">42 aktif tur</span></div>
+                </div>
+            </div>
+            <div class="col-6 col-xl-3">
+                <div class="kpi">
+                    <div class="top">
+                        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg></div>
+                        <span class="trend">+12%</span>
+                    </div>
+                    <div class="num">1.284</div>
+                    <div class="lab">Toplam Rezervasyon</div>
+                    <div class="sub"><span class="up">Bu ay +126</span> · geçen aya göre %12 artış</div>
+                </div>
+            </div>
+            <div class="col-6 col-xl-3">
+                <div class="kpi">
+                    <div class="top">
+                        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /></svg></div>
+                        <span class="trend">+318</span>
+                    </div>
+                    <div class="num">8.642</div>
+                    <div class="lab">Toplam Kullanıcı</div>
+                    <div class="sub"><span class="up">Bu ay +318</span></div>
+                </div>
+            </div>
+            <div class="col-6 col-xl-3">
+                <div class="kpi">
+                    <div class="top">
+                        <div class="ic warn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12" y2="17" /></svg></div>
+                    </div>
+                    <div class="num">17</div>
+                    <div class="lab">Bekleyen Sorular</div>
+                    <div class="sub warn">Yanıt bekliyor</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW: chart + popular -->
+        <div class="row g-3 mb-3">
+            <div class="col-lg-8">
+                <div class="card-x h-100">
+                    <div class="card-head">
+                        <h3>Rezervasyon İstatistikleri</h3>
+                        <select class="chart-select" id="rangeSelect">
+                            <option>Son 7 Gün</option>
+                            <option>Son 30 Gün</option>
+                            <option selected>Son 6 Ay</option>
+                        </select>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-wrap"><canvas id="resChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card-x h-100">
+                    <div class="card-head"><h3>En Popüler Turlar</h3></div>
+                    <div class="card-body pt-2" id="popularTours"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT BOOKINGS -->
+        <div class="card-x mb-3">
+            <div class="card-head">
+                <h3>Son Rezervasyonlar</h3>
+                <button class="btn-soft">Tümünü Gör</button>
+            </div>
+            <div class="card-body pt-2">
+                <div class="tbl-wrap">
+                    <table class="tx">
+                        <thead>
+                            <tr><th>Rezervasyon No</th><th>Misafir</th><th>Tur</th><th>Tur Tarihi</th><th>Kişi</th><th>Tutar</th><th>Durum</th></tr>
+                        </thead>
+                        <tbody id="bookingRows"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM 3 COLS -->
+        <div class="row g-3">
+            <div class="col-lg-4">
+                <div class="card-x h-100">
+                    <div class="card-head"><h3>Son Yorumlar</h3></div>
+                    <div class="card-body pt-2" id="recentReviews"></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card-x h-100">
+                    <div class="card-head"><h3>Yanıt Bekleyen Sorular</h3></div>
+                    <div class="card-body pt-2" id="pendingQuestions"></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card-x h-100">
+                    <div class="card-head"><h3>Hızlı İşlemler</h3></div>
+                    <div class="card-body pt-2" id="quickActions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="admin-foot">
+        <span>© 2026 Travelio Admin Panel</span>
+        <span>v1.0</span>
+    </footer>
+</div>

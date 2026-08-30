@@ -1,0 +1,32 @@
+﻿@model UpdateRouteDto
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Rota Güncelle</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+    <label>Görsel Url</label>
+    <input type="text" asp-for="ImageUrl" class="form-control" />
+    <span class="text-danger" asp-validation-for="ImageUrl"></span>
+    <br />
+    <label>Ülke</label>
+    <input type="text" asp-for="Country" class="form-control" />
+    <span class="text-danger" asp-validation-for="Country"></span>
+    <br />
+    <label>Şehir</label>
+    <input type="text" asp-for="City" class="form-control" />
+    <span class="text-danger" asp-validation-for="City"></span>
+    <br />
+    <label>Tur Süresi</label>
+    <input type="text" asp-for="Duration" class="form-control" />
+    <span class="text-danger" asp-validation-for="Duration"></span>
+    <br />
+    <label>Fiyat</label>
+    <input type="text" asp-for="Price" class="form-control" />
+    <span class="text-danger" asp-validation-for="Price"></span>
+    <br />
+    <button class="btn btn-outline-dark">Güncelle</button>
+</form>
