@@ -1,4 +1,3 @@
-using AspNetCore.Identity.MongoDbCore.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
@@ -11,19 +10,9 @@ using Travel.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// =====================================================
-// AUTO MAPPER
-// =====================================================
-
 builder.Services.AddAutoMapper(
     Assembly.GetExecutingAssembly()
 );
-
-
-// =====================================================
-// FLUENT VALIDATION
-// =====================================================
 
 builder.Services
     .AddFluentValidationAutoValidation()
@@ -32,10 +21,6 @@ builder.Services
         Assembly.GetExecutingAssembly()
     );
 
-
-// =====================================================
-// DATABASE SETTINGS
-// =====================================================
 
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings")
@@ -46,17 +31,9 @@ builder.Services.AddSingleton<IDatabaseSettings>(sp =>
 );
 
 
-// =====================================================
-// SERVICES
-// =====================================================
-
 builder.Services.AddScoped<IBannerService, BannerService>();
 builder.Services.AddScoped<IRouteService, RouteService>();
 
-
-// =====================================================
-// MONGODB DATABASE SETTINGS
-// =====================================================
 
 var databaseSettings = builder.Configuration
     .GetSection("DatabaseSettings")
@@ -78,8 +55,8 @@ builder.Services
         options.Password.RequiredLength = 8;
         options.Password.RequireDigit = true;
         options.Password.RequireUppercase = true;
-        options.Password.RequireLowercase = false;
-        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = true;
 
 
         // LOCKOUT
@@ -106,23 +83,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 
-// =====================================================
-// MVC
-// =====================================================
-
 builder.Services.AddControllersWithViews();
-
-
-// =====================================================
-// BUILD
-// =====================================================
 
 var app = builder.Build();
 
-
-// =====================================================
-// HTTP PIPELINE
-// =====================================================
 
 if (!app.Environment.IsDevelopment())
 {
@@ -140,10 +104,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-
-// =====================================================
-// ROLE SEED
-// =====================================================
 
 using (var scope = app.Services.CreateScope())
 {
@@ -187,7 +147,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
+    pattern: "{controller=Default}/{action=Index}/{id?}"
 );
 
 
