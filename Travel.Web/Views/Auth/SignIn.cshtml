@@ -1,0 +1,501 @@
+﻿@model Travel.Web.DTOs.AuthDtos.SignInDto
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    
+    <title>Giriş Yap — Travelio</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --navy: #0e2a3b;
+            --navy-2: #12384c;
+            --teal: #0fa3a3;
+            --teal-dark: #0b7f80;
+            --cream: #f7f5f0;
+            --white: #ffffff;
+            --ink: #0e2a3b;
+            --muted: #5d7180;
+            --line: #e7e2d8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            color: var(--ink);
+            background: var(--cream);
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+        }
+
+        h1, h2, h3, h4, .brand {
+            font-family: 'Sora', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--navy);
+            letter-spacing: -.5px;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+            .brand .dot {
+                width: 11px;
+                height: 11px;
+                border-radius: 50%;
+                background: var(--teal);
+                display: inline-block;
+                box-shadow: 0 0 0 4px rgba(15,163,163,.18);
+            }
+
+        .btn-teal {
+            background: var(--teal);
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            font-weight: 600;
+            padding: .85rem 1.6rem;
+            transition: .25s;
+        }
+
+            .btn-teal:hover {
+                background: var(--teal-dark);
+                color: #fff;
+                box-shadow: 0 12px 26px rgba(15,163,163,.32);
+            }
+
+        .auth {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-header {
+            background: linear-gradient( 160deg, rgba(14,42,59,.85) 0%, rgba(14,42,59,.6) 100% ), url('https://images.unsplash.com/photo-1506012733851-bb3f32cb401c?auto=format&fit=crop&w=800&q=80') center/cover;
+            padding: 3rem 1.5rem 2.5rem;
+            color: #fff;
+            text-align: center;
+            border-radius: 0 0 32px 32px;
+        }
+
+            .auth-header .brand {
+                color: #fff;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+
+            .auth-header h1 {
+                font-weight: 800;
+                font-size: 1.75rem;
+                margin-bottom: .5rem;
+            }
+
+            .auth-header p {
+                font-size: .94rem;
+                opacity: .85;
+                margin: 0;
+            }
+
+        .form-wrap {
+            flex: 1;
+            padding: 2rem 1.5rem 3rem;
+        }
+
+        .form-inner {
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .field {
+            margin-bottom: 1.25rem;
+        }
+
+            .field label {
+                display: block;
+                font-size: .85rem;
+                font-weight: 600;
+                color: var(--navy);
+                margin-bottom: .4rem;
+            }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .field input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: .9rem 1.1rem;
+            font-size: .94rem;
+            color: var(--navy);
+            background: #fff;
+            outline: none;
+            transition: .2s;
+            font-family: inherit;
+        }
+
+            .field input:focus {
+                border-color: var(--teal);
+                box-shadow: 0 0 0 4px rgba(15,163,163,.08);
+            }
+
+        .validation-error {
+            color: #c26a52;
+            font-size: .78rem;
+            margin-top: .35rem;
+            display: block;
+        }
+
+        .server-error {
+            background: #fff1ee;
+            color: #c26a52;
+            border: 1px solid #f0c8bf;
+            border-radius: 12px;
+            padding: .8rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: .85rem;
+        }
+
+        .toggle-eye {
+            position: absolute;
+            right: .8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: .4rem;
+            display: grid;
+            place-items: center;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: -.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .85rem;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+            .remember input {
+                accent-color: var(--teal);
+                width: 16px;
+                height: 16px;
+            }
+
+        .forgot {
+            font-size: .85rem;
+            color: var(--teal-dark);
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.8rem 0;
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+            .divider::before,
+            .divider::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: var(--line);
+            }
+
+        .btn-google {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .7rem;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .85rem;
+            font-weight: 600;
+            color: var(--navy);
+            font-size: .92rem;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .signup-line {
+            text-align: center;
+            margin-top: 1.8rem;
+            font-size: .9rem;
+            color: var(--muted);
+        }
+
+            .signup-line a {
+                color: var(--teal-dark);
+                font-weight: 600;
+            }
+
+        @@media (max-width: 576px) {
+            .auth-header {
+                padding: 2.5rem 1.5rem 2rem;
+            }
+        }
+    </style>
+    ```
+
+</head>
+
+<body>
+
+    ```
+    <div class="auth">
+
+        <header class="auth-header">
+
+            <a class="brand" href="/">
+                <span class="dot"></span>
+                Travelio
+            </a>
+
+            <h1>Tekrar Hoş Geldin</h1>
+
+            <p>
+                Macerana kaldığın yerden devam et.
+            </p>
+
+        </header>
+
+
+        <div class="form-wrap">
+
+            <div class="form-inner">
+
+                <form asp-controller="Auth"
+                      asp-action="SignIn"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                    {
+                        <div class="server-error">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+
+                    <div class="field">
+
+                        <label asp-for="Email">
+                            E-posta
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <input asp-for="Email"
+                                   type="email"
+                                   placeholder="ornek@email.com"
+                                   autocomplete="email" />
+
+                        </div>
+
+                        <span asp-validation-for="Email"
+                              class="validation-error">
+                        </span>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label asp-for="Password">
+                            Şifre
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <input asp-for="Password"
+                                   type="password"
+                                   placeholder="Şifreniz"
+                                   autocomplete="current-password" />
+
+                            <button type="button"
+                                    class="toggle-eye"
+                                    data-target="Password">
+
+                                <svg width="20"
+                                     height="20"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+
+                                    <circle cx="12"
+                                            cy="12"
+                                            r="3" />
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                        <span asp-validation-for="Password"
+                              class="validation-error">
+                        </span>
+
+                    </div>
+
+
+                    <div class="options">
+
+                        <label class="remember">
+
+                            <input type="checkbox"
+                                   name="RememberMe" />
+
+                            Beni Hatırla
+
+                        </label>
+
+                        <a href="#"
+                           class="forgot">
+                            Şifremi Unuttum
+                        </a>
+
+                    </div>
+
+
+                    <button type="submit"
+                            class="btn-teal btn-submit">
+
+                        Giriş Yap
+
+                    </button>
+
+
+                    <div class="divider">
+                        veya
+                    </div>
+
+
+                    <button type="button"
+                            class="btn-google">
+
+                        <svg width="18"
+                             height="18"
+                             viewBox="0 0 24 24">
+
+                            <path fill="#4285F4"
+                                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h-3.57c2.08-1.92 3.27-4.74 3.27-8.1z" />
+
+                            <path fill="#34A853"
+                                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
+
+                            <path fill="#FBBC05"
+                                  d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z" />
+
+                            <path fill="#EA4335"
+                                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" />
+
+                        </svg>
+
+                        Google ile Giriş Yap
+
+                    </button>
+
+
+                    <div class="signup-line">
+
+                        Henüz hesabın yok mu?
+
+                        <a asp-controller="Auth"
+                           asp-action="Register">
+                            Kayıt Ol
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        document.querySelectorAll('.toggle-eye').forEach(btn => {
+
+            btn.addEventListener('click', () => {
+
+                const input =
+                    document.getElementById(btn.dataset.target);
+
+                const isPassword =
+                    input.type === 'password';
+
+                input.type =
+                    isPassword ? 'text' : 'password';
+
+            });
+
+        });
+
+    </script>
+    
+
+</body>
+</html>

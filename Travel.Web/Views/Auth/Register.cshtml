@@ -1136,7 +1136,8 @@
         }
 
 
-        function submitForm() {
+        
+        async function submitForm() {
 
             const fn =
                 document.getElementById("firstName").value.trim();
@@ -1162,6 +1163,10 @@
 
             let ok = true;
 
+
+            // -----------------------------
+            // CLIENT VALIDATION
+            // -----------------------------
 
             setErr("firstName", !fn);
 
@@ -1208,6 +1213,7 @@
                 ok = false;
 
 
+            // Validation başarısızsa gönderme
             if (!ok) {
 
                 const firstErr =
@@ -1226,72 +1232,124 @@
             }
 
 
-            /* SUCCESS */
+            // -----------------------------
+            // FORM DATA
+            // -----------------------------
 
-            document.getElementById("successName").textContent = fn;
+            const formData = new FormData();
 
-            document.getElementById("formView").style.display = "none";
-
-            document.getElementById("successView").style.display = "block";
-
-
-            setTimeout(() => {
-
-                window.location.href = "/Profile";
-
-            }, 1800);
-
-        }
+            formData.append("FirstName", fn);
+            formData.append("LastName", ln);
+            formData.append("Email", em);
+            formData.append("Phone", ph);
+            formData.append("Password", p1);
+            formData.append("ConfirmPassword", p2);
+            formData.append("TermsAccepted", ag);
 
 
-        /* CLEAR ERROR */
+            // -----------------------------
+            // BUTTON
+            // -----------------------------
 
-        [
-            "firstName",
-            "lastName",
-            "email",
-            "phone",
-            "password",
-            "password2"
-        ].forEach(id => {
+            const submitButton =
+                document.querySelector(".btn-submit");
 
-            document
-                .getElementById(id)
-                .addEventListener("input", () => {
+            submitButton.disabled = true;
 
-                    setErr(id, false);
+            submitButton.innerHTML =
+                '<span class="spinner"></span> Hesap oluşturuluyor...';
+
+
+            try {
+
+                // -----------------------------
+                // CONTROLLER'A POST
+                // -----------------------------
+
+                const response = await fetch("/Auth/Register", {
+
+                    method: "POST",
+
+                    body: formData
 
                 });
 
-        });
+
+                const result = await response.json();
 
 
-        document
-            .getElementById("agree")
-            .addEventListener("change", () => {
+                // -----------------------------
+                // HATA
+                // -----------------------------
 
-                setErr("agree", false);
+                if (!response.ok || !result.success) {
 
-            });
+                    console.error("Register Error:", result);
+
+                    let message = "Kayıt sırasında bir hata oluştu.";
+
+                    if (result.message) {
+
+                        message = result.message;
+
+                    }
+                    else if (result.errors) {
+
+                        message = Array.isArray(result.errors)
+                            ? result.errors.join("\n")
+                            : "Form bilgilerinde hata var.";
+
+                    }
+
+                    alert(message);
+
+                    submitButton.disabled = false;
+
+                    submitButton.innerHTML =
+                        "Hesap Oluştur";
+
+                    return;
+                }
 
 
-        /* GOOGLE */
+                // -----------------------------
+                // BAŞARILI
+                // -----------------------------
 
-        function googleDemo() {
+                document.getElementById("successName").textContent =
+                    result.firstName || fn;
 
-            const btn =
-                document.querySelector(".btn-google");
+                document.getElementById("formView").style.display =
+                    "none";
 
-            btn.innerHTML =
-                '<span class="spinner"></span> Google\'a bağlanılıyor...';
+                document.getElementById("successView").style.display =
+                    "block";
 
-            setTimeout(() => {
 
-                window.location.href = "/Profile";
+                // Controller'ın gönderdiği URL
+                setTimeout(() => {
 
-            }, 1400);
+                    window.location.href =
+                        result.redirectUrl;
 
+                }, 1800);
+
+
+            }
+            catch (error) {
+
+                console.error("Register request error:", error);
+
+                alert("Hata: " + error.message);
+
+                submitButton.disabled = false;
+
+                submitButton.innerHTML =
+                    "Hesap Oluştur";
+            }
         }
+       
+
 
     </script>
 

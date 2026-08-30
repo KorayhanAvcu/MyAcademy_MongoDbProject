@@ -1039,7 +1039,11 @@
                 <p style="color:var(--muted);font-size:.9rem">Hesabından çıkış yapıldığında rezervasyonların ve favorilerin güvende kalır.</p>
                 <div class="d-flex gap-2 justify-content-center mt-3">
                     <button class="btn-outline" data-bs-dismiss="modal">Vazgeç</button>
-                    <button class="btn-teal" style="background:#c0554f" onclick="doLogout()">Çıkış Yap</button>
+                    <a href="@Url.Action("SignOut", "Auth")"
+                       class="btn-teal"
+                       style="background:#c0554f">
+                        Çıkış Yap
+                    </a>
                 </div>
             </div>
         </div>

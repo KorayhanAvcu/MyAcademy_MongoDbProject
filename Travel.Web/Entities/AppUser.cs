@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AspNetCore.Identity.MongoDbCore.Models;
+using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Travel.Web.Entities
 {
-    public class AppUser : IdentityUser
+    public class AppUser : MongoIdentityUser<string>
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public override string Id { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }

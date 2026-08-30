@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<Travel.Web.Entities.AppUser> UserManager
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8" />
@@ -698,7 +700,51 @@
                     <li class="nav-item"><a class="nav-link" href="#hakkimizda">Hakkımızda</a></li>
                     <li class="nav-item"><a class="nav-link" href="#iletisim">İletişim</a></li>
                 </ul>
-                <a href="#" class="profile-pill"><span>Profilim</span><span class="avatar">EY</span></a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    
+
+                    var currentUser = await UserManager.GetUserAsync(User);
+
+                    if (currentUser != null)
+                    {
+                        <a href="/Profile/Index" class="profile-pill">
+
+                            <span class="avatar">
+                                <svg width="18"
+                                     height="18"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2">
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                    <path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path>
+                                </svg>
+                            </span>
+
+                            <span>
+                                @currentUser.FirstName @currentUser.LastName
+                            </span>
+
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div class="d-flex align-items-center gap-2">
+
+                        <a href="/Auth/Login"
+                           class="btn btn-outline-dark rounded-pill px-4">
+                            Giriş Yap
+                        </a>
+
+                        <a href="/Auth/Register"
+                           class="btn-teal">
+                            Kayıt Ol
+                        </a>
+
+                    </div>
+                }
             </div>
         </div>
     </nav>
