@@ -8,10 +8,10 @@ namespace Travel.Web.Mappings
     {
         public RouteMappings()
         {
-            CreateMap<CreateRouteDto,route>().ReverseMap();
-            CreateMap<UpdateRouteDto,route>().ReverseMap();
-            CreateMap<route,ResultRouteDto>().ReverseMap();
-            CreateMap<ResultRouteDto,UpdateRouteDto>().ReverseMap();
+            CreateMap<CreateRouteDto, Route>().ReverseMap();
+            CreateMap<UpdateRouteDto, Route>().ReverseMap();
+            CreateMap<Route, ResultRouteDto>().ReverseMap();
+            CreateMap<UpdateRouteDto, ResultRouteDto>().ReverseMap();
 
         }
     }

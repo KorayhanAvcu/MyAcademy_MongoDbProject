@@ -1,0 +1,1276 @@
+﻿@using Travel.Web.DTOs.WhyChooseUsDtos
+
+@model CreateWhyChooseUsDto
+
+@{
+    ViewData["Title"] = "Yeni Neden Ekle";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    /* =========================================
+           PAGE INTRO
+           ========================================= */
+
+    .page-intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+            max-width: 64ch;
+        }
+
+
+    /* =========================================
+           BREADCRUMB
+           ========================================= */
+
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+
+    /* =========================================
+           BUTTONS
+           ========================================= */
+
+    .btn-teal {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        transition: .25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        white-space: nowrap;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(15,163,163,.3);
+            transform: translateY(-1px);
+        }
+
+    .btn-ghost {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .65rem 1.2rem;
+        font-size: .88rem;
+        color: var(--navy);
+        transition: .2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        white-space: nowrap;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .btn-ghost:hover {
+            border-color: var(--teal);
+            color: var(--teal-dark);
+        }
+
+
+    /* =========================================
+           SECTION CARD
+           ========================================= */
+
+    .sec {
+        background: #fff;
+        border: 1px solid var(--line-2);
+        border-radius: var(--r);
+        box-shadow: var(--shadow-sm);
+        padding: 1.5rem 1.6rem;
+        margin-bottom: 1.3rem;
+    }
+
+    .sec-head {
+        margin-bottom: 1.2rem;
+    }
+
+        .sec-head h2 {
+            font-family: 'Sora';
+            font-weight: 700;
+            font-size: 1.12rem;
+            color: var(--navy);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        .sec-head .sec-ic {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: rgba(15,163,163,.1);
+            color: var(--teal-dark);
+            display: grid;
+            place-items: center;
+            flex: none;
+        }
+
+        .sec-head p {
+            color: var(--muted);
+            font-size: .86rem;
+            margin: .4rem 0 0;
+        }
+
+
+    /* =========================================
+           FORM FIELDS
+           ========================================= */
+
+    .field {
+        margin-bottom: 1rem;
+    }
+
+        .field label {
+            display: block;
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: .35rem;
+        }
+
+            .field label .req {
+                color: var(--cancel-fg);
+            }
+
+    .ctrl {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: var(--cream);
+        border-radius: 11px;
+        padding: .68rem .9rem;
+        font-size: .9rem;
+        color: var(--navy);
+        outline: none;
+        transition: .2s;
+        font-family: inherit;
+    }
+
+        .ctrl::placeholder {
+            color: #a7b2ba;
+        }
+
+        .ctrl:focus {
+            border-color: var(--teal);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(15,163,163,.12);
+        }
+
+    textarea.ctrl {
+        resize: vertical;
+        min-height: 120px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================================
+           VALIDATION
+           ========================================= */
+
+    .field-validation-error {
+        display: block;
+        margin-top: .35rem;
+        color: var(--cancel-fg) !important;
+        font-size: .78rem;
+        font-weight: 500;
+    }
+
+    .input-validation-error {
+        border-color: var(--cancel-fg) !important;
+        background: #fdf3f1;
+        box-shadow: 0 0 0 3px rgba(180,90,79,.12);
+    }
+
+    .validation-summary-errors {
+        background: #fdf3f1;
+        border: 1px solid rgba(180,90,79,.3);
+        color: var(--cancel-fg);
+        border-radius: 12px;
+        padding: .85rem 1.1rem;
+        margin-bottom: 1.3rem;
+        font-size: .88rem;
+    }
+
+        .validation-summary-errors ul {
+            margin: .3rem 0 0;
+            padding-left: 1.1rem;
+        }
+
+
+    /* =========================================
+           ICON PREVIEW
+           ========================================= */
+
+    .icon-preview-box {
+        margin-top: .9rem;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--cream);
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .icon-preview-inner {
+        color: var(--muted);
+    }
+
+        .icon-preview-inner svg {
+            color: var(--teal-dark);
+            margin-bottom: .5rem;
+        }
+
+        .icon-preview-inner div {
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: .2rem;
+        }
+
+        .icon-preview-inner small {
+            color: var(--muted);
+            font-size: .74rem;
+        }
+
+
+    /* =========================================
+           INFO BOX
+           ========================================= */
+
+    .info-box {
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+        margin-top: .7rem;
+        padding: .75rem .9rem;
+        background: rgba(15,163,163,.05);
+        border: 1px solid rgba(15,163,163,.12);
+        border-radius: 11px;
+    }
+
+    .info-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: rgba(15,163,163,.1);
+        color: var(--teal-dark);
+        display: grid;
+        place-items: center;
+        flex: none;
+    }
+
+    .info-text b {
+        display: block;
+        color: var(--navy);
+        font-size: .8rem;
+    }
+
+    .info-text span {
+        display: block;
+        color: var(--muted);
+        font-size: .75rem;
+        margin-top: .1rem;
+    }
+
+
+    /* =========================================
+           SWITCH
+           ========================================= */
+
+    .switch-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.1rem;
+        background: var(--cream);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+    }
+
+    .switch-info b {
+        display: block;
+        font-family: 'Sora';
+        font-size: .9rem;
+        color: var(--navy);
+    }
+
+    .switch-info span {
+        display: block;
+        font-size: .77rem;
+        color: var(--muted);
+        margin-top: .2rem;
+    }
+
+    .form-check-input {
+        width: 2.6em;
+        height: 1.4em;
+        cursor: pointer;
+        flex: none;
+    }
+
+        .form-check-input:checked {
+            background-color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .form-check-input:focus {
+            box-shadow: 0 0 0 3px rgba(15,163,163,.15);
+            border-color: var(--teal);
+        }
+
+
+    /* =========================================
+           ACTION BAR
+           ========================================= */
+
+    .action-bar {
+        position: sticky;
+        bottom: 0;
+        background: rgba(255,255,255,.92);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--line-2);
+        border-radius: 14px;
+        box-shadow: var(--shadow-md);
+        padding: .9rem 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: .4rem;
+        margin-bottom: .4rem;
+        z-index: 20;
+    }
+
+        .action-bar .saved {
+            font-size: .83rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .action-bar .btns {
+            display: flex;
+            gap: .6rem;
+            flex-wrap: wrap;
+        }
+
+
+    /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+    @@media (max-width: 767px) {
+
+        .page-intro {
+            align-items: flex-start;
+        }
+
+            .page-intro .btn-ghost {
+                width: 100%;
+            }
+
+        .sec {
+            padding: 1.2rem;
+        }
+
+        .action-bar {
+            padding: .8rem;
+        }
+
+            .action-bar .saved {
+                width: 100%;
+            }
+
+            .action-bar .btns {
+                width: 100%;
+            }
+
+                .action-bar .btns a,
+                .action-bar .btns button {
+                    flex: 1;
+                }
+
+        .switch-card {
+            align-items: flex-start;
+        }
+    }
+
+    @@media (max-width: 575px) {
+
+        .page-intro h1 {
+            font-size: 1.45rem;
+        }
+
+        .action-bar {
+            position: static;
+        }
+
+            .action-bar .btns {
+                flex-direction: column;
+            }
+
+                .action-bar .btns a,
+                .action-bar .btns button {
+                    width: 100%;
+                }
+    }
+
+</style>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+    
+    <!-- BREADCRUMB -->
+
+    <div class="crumb">
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index">
+
+            Dashboard
+
+        </a>
+
+        /
+
+        <a asp-area="Admin"
+           asp-controller="WhyChooseUs"
+           asp-action="Index">
+
+            Neden Travelio?
+
+        </a>
+
+        /
+
+        <span class="cur">
+            Yeni Neden Ekle
+        </span>
+
+    </div>
+
+
+    <!-- PAGE INTRO -->
+
+    <div class="page-intro">
+
+        <div>
+
+            <h1>
+                Yeni Neden Ekle
+            </h1>
+
+            <p>
+                Anasayfadaki "Neden Travelio?" bölümünde
+                gösterilecek yeni bir içerik oluşturun.
+            </p>
+
+        </div>
+
+
+        <a asp-area="Admin"
+           asp-controller="WhyChooseUs"
+           asp-action="Index"
+           class="btn-ghost">
+
+            <svg width="16"
+                 height="16"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+
+                <line x1="19"
+                      y1="12"
+                      x2="5"
+                      y2="12" />
+
+                <polyline points="12 19 5 12 12 5" />
+
+            </svg>
+
+            Nedenlere Dön
+
+        </a>
+
+    </div>
+
+
+    <!-- VALIDATION SUMMARY -->
+
+    <div asp-validation-summary="ModelOnly"
+         class="validation-summary-errors">
+    </div>
+
+
+    <!-- FORM -->
+
+    <form asp-area="Admin"
+          asp-controller="WhyChooseUs"
+          asp-action="Create"
+          method="post">
+
+        <!-- TEMEL BİLGİLER -->
+
+        <div class="sec">
+
+            <div class="sec-head">
+
+                <h2>
+
+                    <span class="sec-ic">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <circle cx="12"
+                                    cy="12"
+                                    r="10" />
+
+                            <path d="M12 16v-4" />
+
+                            <path d="M12 8h.01" />
+
+                        </svg>
+
+                    </span>
+
+                    Temel Bilgiler
+
+                </h2>
+
+                <p>
+                    İçeriğin başlık ve açıklama bilgilerini girin.
+                </p>
+
+            </div>
+
+
+            <div class="row g-3">
+
+                <!-- TITLE -->
+
+                <div class="col-md-6 field">
+
+                    <label asp-for="Title">
+
+                        Başlık
+
+                        <span class="req">
+                            *
+                        </span>
+
+                    </label>
+
+                    <input asp-for="Title"
+                           class="ctrl"
+                           placeholder="Örn. Özenle Seçilmiş Rotalar" />
+
+                    <span asp-validation-for="Title">
+                    </span>
+
+                </div>
+
+
+                <!-- ORDER -->
+
+                <div class="col-md-6 field">
+
+                    <label asp-for="Order">
+
+                        Sıralama
+
+                        <span class="req">
+                            *
+                        </span>
+
+                    </label>
+
+                    <input asp-for="Order"
+                           type="number"
+                           min="1"
+                           class="ctrl"
+                           placeholder="Örn. 1" />
+
+                    <span asp-validation-for="Order">
+                    </span>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="col-12 field">
+
+                    <label asp-for="Description">
+
+                        Açıklama
+
+                        <span class="req">
+                            *
+                        </span>
+
+                    </label>
+
+                    <textarea asp-for="Description"
+                              class="ctrl"
+                              rows="5"
+                              placeholder="Örneğin: Her tur, yerel uzmanlarımız tarafından test edilmiş gerçek deneyimlerden oluşur..."></textarea>
+
+                    <span asp-validation-for="Description">
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- İKON -->
+
+        <div class="sec">
+
+            <div class="sec-head">
+
+                <h2>
+
+                    <span class="sec-ic">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <path d="M12 3l2.9 5.9 6.1.9-4.5 4.4 1.1 6.1-5.6-3-5.6 3 1.1-6.1L3 9.8l6.1-.9L12 3z" />
+
+                        </svg>
+
+                    </span>
+
+                    İkon Bilgileri
+
+                </h2>
+
+                <p>
+                    İçeriğin anasayfada gösterilecek ikonunu seçin.
+                </p>
+
+            </div>
+
+
+            <div class="row g-4">
+
+                <!-- ICON SELECT -->
+
+                <div class="col-lg-7 field">
+
+                    <label asp-for="Icon">
+
+                        İkon
+
+                        <span class="req">
+                            *
+                        </span>
+
+                    </label>
+
+                    <select asp-for="Icon"
+                            id="iconSelect"
+                            class="ctrl"
+                            onchange="previewIcon(this.value)">
+
+                        <option value="">
+                            İkon seçiniz
+                        </option>
+
+                        <option value="map-pin">
+                            Map Pin
+                        </option>
+
+                        <option value="check-circle">
+                            Check Circle
+                        </option>
+
+                        <option value="coffee">
+                            Coffee
+                        </option>
+
+                        <option value="star">
+                            Star
+                        </option>
+
+                        <option value="shield">
+                            Shield
+                        </option>
+
+                        <option value="heart">
+                            Heart
+                        </option>
+
+                        <option value="globe">
+                            Globe
+                        </option>
+
+                        <option value="compass">
+                            Compass
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="Icon">
+                    </span>
+
+
+                    <!-- INFO BOX -->
+
+                    <div class="info-box">
+
+                        <div class="info-icon">
+
+                            <svg width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <circle cx="12"
+                                        cy="12"
+                                        r="10" />
+
+                                <path d="M12 16v-4" />
+
+                                <path d="M12 8h.01" />
+
+                            </svg>
+
+                        </div>
+
+                        <div class="info-text">
+
+                            <b>
+                                İkon kullanımı
+                            </b>
+
+                            <span>
+                                Seçtiğiniz ikon anasayfadaki içerik kartında gösterilecektir.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ICON PREVIEW -->
+
+                <div class="col-lg-5">
+
+                    <div class="icon-preview-box">
+
+                        <div class="icon-preview-inner"
+                             id="iconPreview">
+
+                            <svg width="35"
+                                 height="35"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.5">
+
+                                <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7z" />
+
+                                <circle cx="12"
+                                        cy="9"
+                                        r="2.5" />
+
+                            </svg>
+
+                            <div>
+                                İkon önizlemesi
+                            </div>
+
+                            <small>
+                                İkon seçtiğinizde burada gösterilecektir.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- YAYIN AYARLARI -->
+
+        <div class="sec">
+
+            <div class="sec-head">
+
+                <h2>
+
+                    <span class="sec-ic">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <path d="M9 11l3 3L22 4" />
+
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+
+                        </svg>
+
+                    </span>
+
+                    Yayın Ayarları
+
+                </h2>
+
+                <p>
+                    İçeriğin anasayfada yayınlanıp yayınlanmayacağını belirleyin.
+                </p>
+
+            </div>
+
+
+            <div class="switch-card">
+
+                <div class="switch-info">
+
+                    <b>
+                        İçeriği Aktif Et
+                    </b>
+
+                    <span>
+                        Aktif içerikler anasayfadaki "Neden Travelio?"
+                        bölümünde gösterilir.
+                    </span>
+
+                </div>
+
+
+                <div class="form-check form-switch m-0">
+
+                    <input asp-for="IsActive"
+                           class="form-check-input"
+                           type="checkbox"
+                           role="switch" />
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTION BAR -->
+
+        <div class="action-bar">
+
+            <div class="saved">
+
+                <svg width="15"
+                     height="15"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <circle cx="12"
+                            cy="12"
+                            r="10" />
+
+                    <polyline points="12 6 12 12 16 14" />
+
+                </svg>
+
+                Yeni içerik oluşturulmaya hazır.
+
+            </div>
+
+
+            <div class="btns">
+
+                <a asp-area="Admin"
+                   asp-controller="WhyChooseUs"
+                   asp-action="Index"
+                   class="btn-ghost">
+
+                    İptal
+
+                </a>
+
+
+                <button type="submit"
+                        class="btn-teal">
+
+                    <svg width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+
+                        <polyline points="17 21 17 13 7 13 7 21" />
+
+                        <polyline points="7 3 7 8 15 8" />
+
+                    </svg>
+
+                    İçeriği Kaydet
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+    
+
+</div>
+
+<script>
+
+    function previewIcon(icon) {
+
+        const preview =
+            document.getElementById("iconPreview");
+
+        if (!preview) {
+            return;
+        }
+
+
+        if (!icon) {
+
+            preview.innerHTML = `
+                <svg width="35"
+                     height="35"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.5">
+
+                    <circle cx="12"
+                            cy="12"
+                            r="9" />
+
+                    <path d="M12 8v8" />
+
+                    <path d="M8 12h8" />
+
+                </svg>
+
+                <div>
+                    İkon önizlemesi
+                </div>
+
+                <small>
+                    İkon seçtiğinizde burada gösterilecektir.
+                </small>
+            `;
+
+            return;
+        }
+
+
+        let svg = "";
+
+
+        switch (icon) {
+
+            case "map-pin":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/>
+
+                        <circle cx="12"
+                                cy="9"
+                                r="2.5"/>
+
+                    </svg>`;
+
+                break;
+
+
+            case "check-circle":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="9"/>
+
+                        <polyline points="8 12 11 15 16 9"/>
+
+                    </svg>`;
+
+                break;
+
+
+            case "coffee":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M4 8h13v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+
+                        <path d="M17 10h2a2 2 0 0 1 0 4h-2"/>
+
+                        <path d="M8 4v2"/>
+
+                        <path d="M12 4v2"/>
+
+                    </svg>`;
+
+                break;
+
+
+            case "star":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1-5.6-3-5.6 3 1.1-6.1L3 9.6l6.2-.9z"/>
+
+                    </svg>`;
+
+                break;
+
+
+            case "shield":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>
+
+                        <polyline points="9 12 11 14 15 10"/>
+
+                    </svg>`;
+
+                break;
+
+
+            case "heart":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M20.8 8.8c0 5-8.8 10-8.8 10s-8.8-5-8.8-10A4.8 4.8 0 0 1 12 6a4.8 4.8 0 0 1 8.8 2.8z"/>
+
+                    </svg>`;
+
+                break;
+
+
+            case "globe":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="9"/>
+
+                        <path d="M3 12h18"/>
+
+                        <path d="M12 3c3 3 3 15 0 18"/>
+
+                        <path d="M12 3c-3 3-3 15 0 18"/>
+
+                    </svg>`;
+
+                break;
+
+
+            case "compass":
+
+                svg = `
+                    <svg width="45"
+                         height="45"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="9"/>
+
+                        <polygon points="16 8 13 13 8 16 11 11"/>
+
+                    </svg>`;
+
+                break;
+        }
+
+
+        preview.innerHTML =
+            svg +
+            `
+                <div>
+                    ${icon}
+                </div>
+
+                <small>
+                    Seçilen ikon
+                </small>
+            `;
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const iconSelect =
+            document.getElementById("iconSelect");
+
+        if (iconSelect && iconSelect.value) {
+            previewIcon(iconSelect.value);
+        }
+
+    });
+
+</script>

@@ -2,55 +2,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <!-- HERO -->
-    <header class="hero">
-        <div class="container hero-content">
-            <div class="eyebrow mb-3">Travelio ile keşfet</div>
-            <h1>Dünyayı Keşfetmeye Hazır Mısın?</h1>
-            <p class="lead">Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun benzersiz rotalarına kadar unutulmaz deneyimler seni bekliyor.</p>
-
-            <!-- SEARCH -->
-            <div class="search-box">
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-3 search-field">
-                        <label>Destinasyon</label>
-                        <input class="control" list="dests" placeholder="Nereye gidelim?" value="Paris, Fransa" />
-                        <datalist id="dests">
-                            <option>Paris, Fransa</option>
-                            <option>Roma, İtalya</option>
-                            <option>Amsterdam, Hollanda</option>
-                            <option>Tokyo, Japonya</option>
-                            <option>Barselona, İspanya</option>
-                            <option>Prag, Çekya</option>
-                        </datalist>
-                    </div>
-                    <div class="col-md-3 search-field">
-                        <label>Tarih</label>
-                        <input class="control" type="date" />
-                    </div>
-                    <div class="col-md-3 search-field">
-                        <label>Kişi Sayısı</label>
-                        <select class="control">
-                            <option>1 kişi</option>
-                            <option selected>2 kişi</option>
-                            <option>3 kişi</option>
-                            <option>4 kişi</option>
-                            <option>5+ kişi</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 p-2">
-                        <button class="btn-teal">Turları Ara</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-row">
-                <div class="stat"><b>48+</b><span>Destinasyon</span></div>
-                <div class="stat"><b>1.200+</b><span>Rehberli Tur</span></div>
-                <div class="stat"><b>92.000</b><span>Mutlu Gezgin</span></div>
-            </div>
-        </div>
-    </header>
+    @await Component.InvokeAsync("_DefaultBanner")
 
     <!-- TOURS -->
     <section id="turlar">
@@ -68,86 +20,10 @@
         </div>
     </section>
 
-    <!-- DESTINATIONS -->
-    <section id="destinasyonlar" class="dest-section">
-        <div class="container">
-            <div class="section-head mb-5">
-                <div class="eyebrow">İlham veren şehirler</div>
-                <h2>Popüler Destinasyonlar</h2>
-                <p>Milyonlarca gezginin tekrar tekrar dönmek istediği rüya şehirler.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <a class="dest-card tall" href="#">
-                        <img src="https://images.unsplash.com/photo-1522093007474-d86e9bf7ba6f?auto=format&fit=crop&w=1200&q=80" alt="Paris" />
-                        <div class="dest-cap"><h3>Paris</h3><span>Fransa · Işıklar Şehri</span></div>
-                    </a>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <a class="dest-card" href="#">
-                                <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1200&q=80" alt="Roma" />
-                                <div class="dest-cap"><h3>Roma</h3><span>İtalya · Antik Başkent</span></div>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a class="dest-card" href="#">
-                                <img src="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=900&q=80" alt="Amsterdam" />
-                                <div class="dest-cap"><h3>Amsterdam</h3><span>Hollanda · Kanallar</span></div>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a class="dest-card" href="#">
-                                <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80" alt="Tokyo" />
-                                <div class="dest-cap"><h3>Tokyo</h3><span>Japonya · Uzak Doğu</span></div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- WHY -->
-    <section id="hakkimizda">
-        <div class="container">
-            <div class="section-head mb-5">
-                <div class="eyebrow">Neden biz</div>
-                <h2>Neden Travelio?</h2>
-                <p>Sadece bir tur değil, baştan sona düşünülmüş bir seyahat deneyimi.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="why-card">
-                        <div class="why-ico">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                        </div>
-                        <h4>Özenle Seçilmiş Rotalar</h4>
-                        <p>Her tur, yerel uzmanlarımız tarafından test edilmiş gerçek deneyimlerden oluşur; klişe turistik duraklar değil.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="why-card">
-                        <div class="why-ico">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-                        </div>
-                        <h4>Gizli Ücret Yok</h4>
-                        <p>Gördüğün fiyat ödediğin fiyattır. Konaklama, ulaşım ve rehberlik tek pakette şeffaf şekilde sunulur.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="why-card">
-                        <div class="why-ico">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" /></svg>
-                        </div>
-                        <h4>7/24 Yanındayız</h4>
-                        <p>Seyahatin boyunca Türkçe destek ekibimiz tek mesaj uzağında. Herhangi bir aksilikte anında yanındayız.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    
+    @await Component.InvokeAsync("_DefaultDestination")
+    
+    @await Component.InvokeAsync("_DefaultWhyChooseUs")
 
     <!-- REVIEWS -->
     <section id="yorumlar" style="background:#fff">

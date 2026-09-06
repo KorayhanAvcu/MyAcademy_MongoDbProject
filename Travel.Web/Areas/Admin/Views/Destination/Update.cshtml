@@ -1,0 +1,1381 @@
+﻿@using Travel.Web.DTOs.DestinationDtos
+
+@model UpdateDestinationDto
+
+@{
+    ViewData["Title"] = "Destinasyonu Güncelle";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    /* =========================================
+           PAGE INTRO
+           ========================================= */
+
+    .page-intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+            max-width: 64ch;
+        }
+
+
+    /* =========================================
+           BREADCRUMB
+           ========================================= */
+
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+
+    /* =========================================
+           BUTTONS
+           ========================================= */
+
+    .btn-teal {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        transition: .25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        white-space: nowrap;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(15,163,163,.3);
+            transform: translateY(-1px);
+        }
+
+    .btn-ghost {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .65rem 1.2rem;
+        font-size: .88rem;
+        color: var(--navy);
+        transition: .2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        white-space: nowrap;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .btn-ghost:hover {
+            border-color: var(--teal);
+            color: var(--teal-dark);
+        }
+
+
+    /* =========================================
+           SECTION CARD
+           ========================================= */
+
+    .sec {
+        background: #fff;
+        border: 1px solid var(--line-2);
+        border-radius: var(--r);
+        box-shadow: var(--shadow-sm);
+        padding: 1.5rem 1.6rem;
+        margin-bottom: 1.3rem;
+    }
+
+    .sec-head {
+        margin-bottom: 1.2rem;
+    }
+
+        .sec-head h2 {
+            font-family: 'Sora';
+            font-weight: 700;
+            font-size: 1.12rem;
+            color: var(--navy);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        .sec-head .sec-ic {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: rgba(15,163,163,.1);
+            color: var(--teal-dark);
+            display: grid;
+            place-items: center;
+            flex: none;
+        }
+
+        .sec-head p {
+            color: var(--muted);
+            font-size: .86rem;
+            margin: .4rem 0 0;
+        }
+
+
+    /* =========================================
+           FORM FIELDS
+           ========================================= */
+
+    .field {
+        margin-bottom: 1rem;
+    }
+
+        .field label {
+            display: block;
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: .35rem;
+        }
+
+            .field label .req {
+                color: var(--cancel-fg);
+            }
+
+    .ctrl {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: var(--cream);
+        border-radius: 11px;
+        padding: .68rem .9rem;
+        font-size: .9rem;
+        color: var(--navy);
+        outline: none;
+        transition: .2s;
+        font-family: inherit;
+    }
+
+        .ctrl::placeholder {
+            color: #a7b2ba;
+        }
+
+        .ctrl:focus {
+            border-color: var(--teal);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(15,163,163,.12);
+        }
+
+    textarea.ctrl {
+        resize: vertical;
+        min-height: 110px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================================
+           VALIDATION
+           ========================================= */
+
+    .field-validation-error {
+        display: block;
+        margin-top: .35rem;
+        color: var(--cancel-fg) !important;
+        font-size: .78rem;
+        font-weight: 500;
+    }
+
+    .input-validation-error {
+        border-color: var(--cancel-fg) !important;
+        background: #fdf3f1;
+        box-shadow: 0 0 0 3px rgba(180,90,79,.12);
+    }
+
+    .validation-summary-errors {
+        background: #fdf3f1;
+        border: 1px solid rgba(180,90,79,.3);
+        color: var(--cancel-fg);
+        border-radius: 12px;
+        padding: .85rem 1.1rem;
+        margin-bottom: 1.3rem;
+        font-size: .88rem;
+    }
+
+        .validation-summary-errors ul {
+            margin: .3rem 0 0;
+            padding-left: 1.1rem;
+        }
+
+
+    /* =========================================
+           IMAGE PREVIEW
+           ========================================= */
+
+    .image-preview-box {
+        margin-top: .9rem;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: var(--cream);
+        width: 100%;
+    }
+
+        .image-preview-box.preview-container {
+            margin-top: 0;
+            min-height: 250px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .image-preview-box img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+    .image-preview-empty {
+        padding: 1.4rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: .82rem;
+    }
+
+        .image-preview-empty svg {
+            color: var(--muted);
+        }
+
+        .image-preview-empty div {
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: .25rem;
+        }
+
+        .image-preview-empty small {
+            color: var(--muted);
+            font-size: .74rem;
+        }
+
+
+    /* =========================================
+           CURRENT IMAGE BADGE
+           ========================================= */
+
+    .current-image-label {
+        position: absolute;
+        top: .8rem;
+        left: .8rem;
+        z-index: 2;
+        padding: .35rem .65rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,.92);
+        color: var(--navy);
+        font-size: .72rem;
+        font-weight: 700;
+        box-shadow: 0 4px 14px rgba(0,0,0,.08);
+    }
+
+
+    /* =========================================
+           IMAGE INFO
+           ========================================= */
+
+    .image-info {
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+        margin-top: .7rem;
+        padding: .75rem .9rem;
+        background: rgba(15,163,163,.05);
+        border: 1px solid rgba(15,163,163,.12);
+        border-radius: 11px;
+    }
+
+    .image-info-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: rgba(15,163,163,.1);
+        color: var(--teal-dark);
+        display: grid;
+        place-items: center;
+        flex: none;
+    }
+
+    .image-info-text b {
+        display: block;
+        color: var(--navy);
+        font-size: .8rem;
+    }
+
+    .image-info-text span {
+        display: block;
+        color: var(--muted);
+        font-size: .75rem;
+        margin-top: .1rem;
+    }
+
+
+    /* =========================================
+           SWITCH
+           ========================================= */
+
+    .switch-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.1rem;
+        background: var(--cream);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+    }
+
+    .switch-info b {
+        display: block;
+        font-family: 'Sora';
+        font-size: .9rem;
+        color: var(--navy);
+    }
+
+    .switch-info span {
+        display: block;
+        font-size: .77rem;
+        color: var(--muted);
+        margin-top: .2rem;
+    }
+
+    .form-check-input {
+        width: 2.6em;
+        height: 1.4em;
+        cursor: pointer;
+        flex: none;
+    }
+
+        .form-check-input:checked {
+            background-color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .form-check-input:focus {
+            box-shadow: 0 0 0 3px rgba(15,163,163,.15);
+            border-color: var(--teal);
+        }
+
+
+    /* =========================================
+           UPDATE INFO
+           ========================================= */
+
+    .update-info {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        padding: .75rem .9rem;
+        background: rgba(15,163,163,.05);
+        border: 1px solid rgba(15,163,163,.12);
+        border-radius: 11px;
+        margin-top: .8rem;
+    }
+
+        .update-info svg {
+            color: var(--teal-dark);
+            flex: none;
+        }
+
+        .update-info span {
+            color: var(--muted);
+            font-size: .77rem;
+        }
+
+
+    /* =========================================
+           ACTION BAR
+           ========================================= */
+
+    .action-bar {
+        position: sticky;
+        bottom: 0;
+        background: rgba(255,255,255,.92);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--line-2);
+        border-radius: 14px;
+        box-shadow: var(--shadow-md);
+        padding: .9rem 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: .4rem;
+        margin-bottom: .4rem;
+        z-index: 20;
+    }
+
+        .action-bar .saved {
+            font-size: .83rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .action-bar .btns {
+            display: flex;
+            gap: .6rem;
+            flex-wrap: wrap;
+        }
+
+
+    /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+    @@media (max-width: 991px) {
+
+        .image-preview-box.preview-container {
+            min-height: 220px;
+        }
+    }
+
+
+    @@media (max-width: 767px) {
+
+        .page-intro {
+            align-items: flex-start;
+        }
+
+            .page-intro .btn-ghost {
+                width: 100%;
+            }
+
+        .sec {
+            padding: 1.2rem;
+        }
+
+        .action-bar {
+            padding: .8rem;
+        }
+
+            .action-bar .saved {
+                width: 100%;
+            }
+
+            .action-bar .btns {
+                width: 100%;
+            }
+
+                .action-bar .btns a,
+                .action-bar .btns button {
+                    flex: 1;
+                }
+
+        .image-preview-box.preview-container {
+            min-height: 220px;
+        }
+    }
+
+
+    @@media (max-width: 575px) {
+
+        .page-intro h1 {
+            font-size: 1.45rem;
+        }
+
+        .action-bar {
+            position: static;
+        }
+
+            .action-bar .btns {
+                flex-direction: column;
+            }
+
+                .action-bar .btns a,
+                .action-bar .btns button {
+                    width: 100%;
+                }
+
+        .switch-card {
+            align-items: flex-start;
+        }
+    }
+
+</style>
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <button class="hamb"
+                onclick="toggleSidebar(true)"
+                aria-label="Menü">
+
+            <svg width="20"
+                 height="20"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round">
+
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+
+            </svg>
+
+        </button>
+
+
+        <span class="tb-title">
+            Destinasyonu Güncelle
+        </span>
+
+
+        <div class="tb-search">
+
+            <svg width="16"
+                 height="16"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+
+                <circle cx="11"
+                        cy="11"
+                        r="8" />
+
+                <line x1="21"
+                      y1="21"
+                      x2="16.65"
+                      y2="16.65" />
+
+            </svg>
+
+            <input type="text"
+                   placeholder="Ara: destinasyon, şehir, ülke..." />
+
+        </div>
+
+
+        <div class="tb-right">
+
+            <button class="tb-icon"
+                    aria-label="Bildirimler">
+
+                <svg width="18"
+                     height="18"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+
+                </svg>
+
+                <span class="n-badge">
+                    3
+                </span>
+
+            </button>
+
+
+            <div class="tb-user">
+
+                <div class="av">
+                    MY
+                </div>
+
+                <div class="nm">
+
+                    <b>
+                        Murat Yücedağ
+                    </b>
+
+                    <span>
+                        Yönetici
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+        <!-- BREADCRUMB -->
+
+        <div class="crumb">
+
+            <a asp-area="Admin"
+               asp-controller="Dashboard"
+               asp-action="Index">
+
+                Dashboard
+
+            </a>
+
+            /
+
+            <a asp-area="Admin"
+               asp-controller="Destination"
+               asp-action="Index">
+
+                Destinasyonlar
+
+            </a>
+
+            /
+
+            <span class="cur">
+                Destinasyonu Güncelle
+            </span>
+
+        </div>
+
+
+        <!-- PAGE INTRO -->
+
+        <div class="page-intro">
+
+            <div>
+
+                <h1>
+                    Destinasyonu Güncelle
+                </h1>
+
+                <p>
+                    Mevcut destinasyonun ülke, şehir, açıklama,
+                    görsel ve yayın bilgilerini güncelleyin.
+                </p>
+
+            </div>
+
+
+            <a asp-area="Admin"
+               asp-controller="Destination"
+               asp-action="Index"
+               class="btn-ghost">
+
+                <svg width="16"
+                     height="16"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <line x1="19"
+                          y1="12"
+                          x2="5"
+                          y2="12" />
+
+                    <polyline points="12 19 5 12 12 5" />
+
+                </svg>
+
+                Destinasyonlara Dön
+
+            </a>
+
+        </div>
+
+
+        <!-- VALIDATION -->
+
+        <div asp-validation-summary="ModelOnly"
+             class="validation-summary-errors">
+        </div>
+
+
+        <!-- FORM -->
+
+        <form asp-area="Admin"
+              asp-controller="Destination"
+              asp-action="Update"
+              method="post">
+
+            <!-- ID -->
+
+            <input asp-for="Id"
+                   type="hidden" />
+
+
+            <!-- =====================================
+                 1. TEMEL BİLGİLER
+                 ===================================== -->
+
+            <div class="sec">
+
+                <div class="sec-head">
+
+                    <h2>
+
+                        <span class="sec-ic">
+
+                            <svg width="17"
+                                 height="17"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <circle cx="12"
+                                        cy="12"
+                                        r="10" />
+
+                                <path d="M12 16v-4" />
+
+                                <path d="M12 8h.01" />
+
+                            </svg>
+
+                        </span>
+
+                        Temel Bilgiler
+
+                    </h2>
+
+                    <p>
+                        Destinasyonun ülke, şehir ve açıklama bilgilerini güncelleyin.
+                    </p>
+
+                </div>
+
+
+                <div class="row g-3">
+
+                    <!-- ÜLKE -->
+
+                    <div class="col-md-6 field">
+
+                        <label asp-for="Country">
+
+                            Ülke
+
+                            <span class="req">
+                                *
+                            </span>
+
+                        </label>
+
+                        <input asp-for="Country"
+                               class="ctrl"
+                               placeholder="Örn. İtalya" />
+
+                        <span asp-validation-for="Country">
+                        </span>
+
+                    </div>
+
+
+                    <!-- ŞEHİR -->
+
+                    <div class="col-md-6 field">
+
+                        <label asp-for="City">
+
+                            Şehir
+
+                            <span class="req">
+                                *
+                            </span>
+
+                        </label>
+
+                        <input asp-for="City"
+                               class="ctrl"
+                               placeholder="Örn. Roma" />
+
+                        <span asp-validation-for="City">
+                        </span>
+
+                    </div>
+
+
+                    <!-- AÇIKLAMA -->
+
+                    <div class="col-12 field">
+
+                        <label asp-for="Description">
+
+                            Destinasyon Açıklaması
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="ctrl"
+                                  rows="5"
+                                  placeholder="Destinasyon hakkında kısa bir açıklama yazın."></textarea>
+
+                        <span asp-validation-for="Description">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 2. GÖRSEL BİLGİLERİ
+                 ===================================== -->
+
+            <div class="sec">
+
+                <div class="sec-head">
+
+                    <h2>
+
+                        <span class="sec-ic">
+
+                            <svg width="17"
+                                 height="17"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <rect x="3"
+                                      y="3"
+                                      width="18"
+                                      height="18"
+                                      rx="2" />
+
+                                <circle cx="8.5"
+                                        cy="8.5"
+                                        r="1.5" />
+
+                                <polyline points="21 15 16 10 5 21" />
+
+                            </svg>
+
+                        </span>
+
+                        Görsel Bilgileri
+
+                    </h2>
+
+                    <p>
+                        Destinasyon görselinin URL bilgisini güncelleyin.
+                    </p>
+
+                </div>
+
+
+                <div class="row g-4">
+
+                    <!-- SOL TARAF -->
+
+                    <div class="col-lg-7 field">
+
+                        <label asp-for="ImageUrl">
+
+                            Görsel URL
+
+                        </label>
+
+
+                        <input asp-for="ImageUrl"
+                               id="imageUrl"
+                               class="ctrl"
+                               placeholder="https://example.com/roma.jpg"
+                               oninput="previewImage(this.value)" />
+
+
+                        <span asp-validation-for="ImageUrl">
+                        </span>
+
+
+                        <!-- IMAGE INFO -->
+
+                        <div class="image-info">
+
+                            <div class="image-info-icon">
+
+                                <svg width="16"
+                                     height="16"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <circle cx="12"
+                                            cy="12"
+                                            r="10" />
+
+                                    <path d="M12 16v-4" />
+
+                                    <path d="M12 8h.01" />
+
+                                </svg>
+
+                            </div>
+
+
+                            <div class="image-info-text">
+
+                                <b>
+                                    Görsel önerisi
+                                </b>
+
+                                <span>
+                                    Kaliteli ve yatay formatta destinasyon görselleri kullanmanız önerilir.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- UPDATE INFO -->
+
+                        <div class="update-info">
+
+                            <svg width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <circle cx="12"
+                                        cy="12"
+                                        r="10" />
+
+                                <path d="M12 16v-4" />
+
+                                <path d="M12 8h.01" />
+
+                            </svg>
+
+                            <span>
+                                Yeni bir URL girerseniz mevcut görsel değiştirilecektir.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SAĞ TARAF -->
+
+                    <div class="col-lg-5">
+
+                        <div id="imagePreview"
+                             class="image-preview-box preview-container">
+
+
+                            <!-- MEVCUT GÖRSEL ETİKETİ -->
+
+                            <div class="current-image-label"
+                                 id="currentImageLabel">
+
+                                Mevcut Görsel
+
+                            </div>
+
+
+                            <!-- BOŞ DURUM -->
+
+                            <div class="image-preview-empty"
+                                 id="imageEmpty">
+
+                                <svg width="35"
+                                     height="35"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     style="margin-bottom:.6rem;">
+
+                                    <rect x="3"
+                                          y="3"
+                                          width="18"
+                                          height="18"
+                                          rx="2" />
+
+                                    <circle cx="8.5"
+                                            cy="8.5"
+                                            r="1.5" />
+
+                                    <polyline points="21 15 16 10 5 21" />
+
+                                </svg>
+
+
+                                <div>
+                                    Görsel önizlemesi
+                                </div>
+
+                                <small>
+                                    Görsel URL'si girdiğinizde burada görünecek.
+                                </small>
+
+                            </div>
+
+
+                            <!-- GÖRSEL -->
+
+                            <img id="previewImg"
+                                 src=""
+                                 alt="Destinasyon görsel önizleme"
+                                 style="display:none;" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 3. YAYIN AYARLARI
+                 ===================================== -->
+
+            <div class="sec">
+
+                <div class="sec-head">
+
+                    <h2>
+
+                        <span class="sec-ic">
+
+                            <svg width="17"
+                                 height="17"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <path d="M9 11l3 3L22 4" />
+
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+
+                            </svg>
+
+                        </span>
+
+                        Yayın Ayarları
+
+                    </h2>
+
+                    <p>
+                        Destinasyonun sitede yayınlanıp yayınlanmayacağını belirleyin.
+                    </p>
+
+                </div>
+
+
+                <div class="switch-card">
+
+                    <div class="switch-info">
+
+                        <b>
+                            Destinasyonu Aktif Et
+                        </b>
+
+                        <span>
+                            Aktif destinasyonlar ziyaretçilere gösterilir.
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-check form-switch m-0">
+
+                        <input asp-for="IsActive"
+                               class="form-check-input"
+                               type="checkbox"
+                               role="switch" />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 ACTION BAR
+                 ===================================== -->
+
+            <div class="action-bar">
+
+                <div class="saved">
+
+                    <svg width="15"
+                         height="15"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="10" />
+
+                        <polyline points="12 6 12 12 16 14" />
+
+                    </svg>
+
+                    Değişiklikler kaydedilmeye hazır.
+
+                </div>
+
+
+                <div class="btns">
+
+                    <a asp-area="Admin"
+                       asp-controller="Destination"
+                       asp-action="Index"
+                       class="btn-ghost">
+
+                        İptal
+
+                    </a>
+
+
+                    <button type="submit"
+                            class="btn-teal">
+
+                        <svg width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+
+                            <polyline points="17 21 17 13 7 13 7 21" />
+
+                            <polyline points="7 3 7 8 15 8" />
+
+                        </svg>
+
+                        Değişiklikleri Kaydet
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer class="admin-foot">
+
+        <span>
+            © 2026 Travelio Admin Panel
+        </span>
+
+        <span>
+            v1.0
+        </span>
+
+    </footer>
+
+</div>
+
+
+<script>
+
+    /* =========================================
+       SIDEBAR
+       ========================================= */
+
+    function toggleSidebar(show) {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        const overlay =
+            document.getElementById("sbOverlay");
+
+
+        if (sidebar) {
+
+            sidebar.classList.toggle("show", show);
+
+        }
+
+
+        if (overlay) {
+
+            overlay.classList.toggle("show", show);
+
+        }
+
+    }
+
+
+    /* =========================================
+       IMAGE PREVIEW
+       ========================================= */
+
+    function previewImage(url) {
+
+        const image =
+            document.getElementById("previewImg");
+
+        const empty =
+            document.getElementById("imageEmpty");
+
+        const currentLabel =
+            document.getElementById("currentImageLabel");
+
+
+        if (!image || !empty) {
+            return;
+        }
+
+
+        if (!url || !url.trim()) {
+
+            image.style.display = "none";
+
+            image.src = "";
+
+            empty.style.display = "block";
+
+            if (currentLabel) {
+                currentLabel.style.display = "none";
+            }
+
+            return;
+        }
+
+
+        image.onload = function () {
+
+            empty.style.display = "none";
+
+            image.style.display = "block";
+
+            if (currentLabel) {
+                currentLabel.style.display = "block";
+            }
+
+        };
+
+
+        image.onerror = function () {
+
+            image.style.display = "none";
+
+            empty.style.display = "block";
+
+            if (currentLabel) {
+                currentLabel.style.display = "none";
+            }
+
+        };
+
+
+        image.src = url;
+
+    }
+
+
+    /* =========================================
+       INITIAL IMAGE PREVIEW
+       ========================================= */
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const imageUrl =
+            document.getElementById("imageUrl");
+
+
+        if (imageUrl && imageUrl.value) {
+
+            previewImage(imageUrl.value);
+
+        }
+
+    });
+
+</script>

@@ -4,10 +4,12 @@ namespace Travel.Web.Entities
 {
     public class Route : BaseEntity
     {
-        public string City { get; set; }
-        public string Country { get; set; }
-        public string Duration { get; set; }
-        public string ImageUrl { get; set; }
+        public string DestinationId { get; set; } = string.Empty;
+
+        public string Duration { get; set; } = string.Empty;
+
+        public string ImageUrl { get; set; } = string.Empty;
+
         public decimal Price { get; set; }
 
     }

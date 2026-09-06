@@ -1,1179 +1,1738 @@
 ﻿
+@model Travel.Web.DTOs.TourDtos.TourCreateDto
+
 @{
-    ViewData["Title"] = "TourCreate";
+    ViewData["Title"] = "Yeni Tur Oluştur";
     Layout = "~/Views/AdminLayout/Layout.cshtml";
 }
 
 <style>
+    :root {
+        --navy: #122033;
+        --muted: #7b8794;
+        --line: #e8edf2;
+        --line-2: #dce3ea;
+        --teal: #12a594;
+        --teal-dark: #087f72;
+        --cream: #f7fafb;
+        --r: 14px;
+        --shadow-sm: 0 2px 8px rgba(18,32,51,.05);
+        --shadow-md: 0 10px 30px rgba(18,32,51,.08);
+        --cancel-fg: #8b4b4b;
+        --cancel-bg: #fff4f4;
+        --wait-fg: #946b00;
+        --wait-bg: #fff8df;
+    }
 
-    /* =========================================
-           PAGE INTRO
-           ========================================= */
+    .content {
+        padding: 28px;
+    }
 
-    .page-intro {
+    .page-head {
         display: flex;
+        align-items: flex-start;
         justify-content: space-between;
-        align-items: flex-end;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 1.5rem;
+        gap: 20px;
+        margin-bottom: 24px;
     }
 
-        .page-intro h1 {
-            font-weight: 700;
-            font-size: 1.7rem;
-            color: var(--navy);
-            margin: .15rem 0 .3rem;
-        }
+    .page-title {
+        margin: 0;
+        color: var(--navy);
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -.5px;
+    }
 
-        .page-intro p {
-            color: var(--muted);
-            margin: 0;
-            font-size: .94rem;
-            max-width: 64ch;
-        }
-
-
-    /* =========================================
-           BREADCRUMB
-           ========================================= */
-
-    .crumb {
-        font-size: .8rem;
+    .page-subtitle {
+        margin: 7px 0 0;
         color: var(--muted);
-        margin-bottom: .4rem;
+        font-size: 14px;
     }
 
-        .crumb a {
-            color: var(--muted);
+    .head-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-ui {
+        border: 1px solid var(--line-2);
+        background: #fff;
+        color: var(--navy);
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+        .btn-ui:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
-            .crumb a:hover {
-                color: var(--teal-dark);
-            }
-
-        .crumb .cur {
-            color: var(--navy);
-            font-weight: 600;
-        }
-
-
-    /* =========================================
-           BUTTONS
-           ========================================= */
-
-    .btn-teal {
+    .btn-primary-ui {
         background: var(--teal);
         color: #fff;
-        border: none;
-        border-radius: 999px;
-        font-weight: 600;
-        padding: .7rem 1.3rem;
-        font-size: .9rem;
-        transition: .25s;
-        display: inline-flex;
-        align-items: center;
-        gap: .5rem;
-        white-space: nowrap;
-        cursor: pointer;
+        border-color: var(--teal);
     }
 
-        .btn-teal:hover {
+        .btn-primary-ui:hover {
             background: var(--teal-dark);
             color: #fff;
-            box-shadow: 0 12px 26px rgba(15,163,163,.3);
         }
 
-    .btn-ghost {
+    .btn-secondary-ui {
+        background: #fff;
+    }
+
+    .btn-danger-ui {
+        color: #a33f3f;
+        background: #fff;
+        border-color: #f0d5d5;
+    }
+
+    .form-card {
         background: #fff;
         border: 1px solid var(--line);
-        border-radius: 999px;
-        font-weight: 600;
-        padding: .65rem 1.2rem;
-        font-size: .88rem;
-        color: var(--navy);
-        transition: .2s;
-        display: inline-flex;
-        align-items: center;
-        gap: .5rem;
-        white-space: nowrap;
-        cursor: pointer;
-    }
-
-        .btn-ghost:hover {
-            border-color: var(--teal);
-            color: var(--teal-dark);
-        }
-
-    .btn-navy {
-        background: var(--navy);
-        border: none;
-        border-radius: 999px;
-        font-weight: 600;
-        padding: .7rem 1.3rem;
-        font-size: .9rem;
-        color: #fff;
-        transition: .2s;
-        cursor: pointer;
-    }
-
-        .btn-navy:hover {
-            background: var(--navy-2);
-        }
-
-    .btn-add {
-        background: rgba(15,163,163,.08);
-        border: 1px dashed rgba(15,163,163,.4);
-        color: var(--teal-dark);
-        border-radius: 11px;
-        font-weight: 600;
-        padding: .6rem 1rem;
-        font-size: .86rem;
-        display: inline-flex;
-        align-items: center;
-        gap: .45rem;
-        cursor: pointer;
-        transition: .2s;
-    }
-
-        .btn-add:hover {
-            background: rgba(15,163,163,.14);
-            border-style: solid;
-        }
-
-
-    /* =========================================
-           SECTION CARD
-           ========================================= */
-
-    .sec {
-        background: #fff;
-        border: 1px solid var(--line-2);
         border-radius: var(--r);
         box-shadow: var(--shadow-sm);
-        padding: 1.5rem 1.6rem;
-        margin-bottom: 1.3rem;
-    }
-
-    .sec-head {
-        margin-bottom: 1.2rem;
-    }
-
-        .sec-head h2 {
-            font-family: 'Sora';
-            font-weight: 700;
-            font-size: 1.12rem;
-            color: var(--navy);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-        }
-
-        .sec-head .sec-ic {
-            width: 32px;
-            height: 32px;
-            border-radius: 9px;
-            background: rgba(15,163,163,.1);
-            color: var(--teal-dark);
-            display: grid;
-            place-items: center;
-            flex: none;
-        }
-
-        .sec-head p {
-            color: var(--muted);
-            font-size: .86rem;
-            margin: .4rem 0 0;
-        }
-
-
-    /* =========================================
-           FORM FIELDS
-           ========================================= */
-
-    .field {
-        margin-bottom: 1rem;
-    }
-
-        .field label {
-            display: block;
-            font-size: .8rem;
-            font-weight: 600;
-            color: var(--navy);
-            margin-bottom: .35rem;
-        }
-
-            .field label .req {
-                color: var(--cancel-fg);
-            }
-
-    .ctrl {
-        width: 100%;
-        border: 1px solid var(--line);
-        background: var(--cream);
-        border-radius: 11px;
-        padding: .68rem .9rem;
-        font-size: .9rem;
-        color: var(--navy);
-        outline: none;
-        transition: .2s;
-        font-family: inherit;
-    }
-
-        .ctrl::placeholder {
-            color: #a7b2ba;
-        }
-
-        .ctrl:focus {
-            border-color: var(--teal);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(15,163,163,.12);
-        }
-
-    select.ctrl {
-        cursor: pointer;
-        padding-right: 2rem;
-    }
-
-    textarea.ctrl {
-        resize: vertical;
-        min-height: 80px;
-        line-height: 1.6;
-    }
-
-    .input-group-x {
-        position: relative;
-    }
-
-        .input-group-x .suffix {
-            position: absolute;
-            right: .9rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: .85rem;
-            font-weight: 600;
-            color: var(--muted);
-        }
-
-    .ctrl.err {
-        border-color: var(--cancel-fg);
-        background: #fdf3f1;
-        box-shadow: 0 0 0 3px rgba(180,90,79,.12);
-    }
-
-
-    /* =========================================
-           DYNAMIC DATE ROWS
-           ========================================= */
-
-    .drow {
-        display: flex;
-        gap: .7rem;
-        align-items: flex-end;
-        background: var(--cream);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: .8rem .9rem;
-        margin-bottom: .7rem;
-        flex-wrap: wrap;
-    }
-
-        .drow .field {
-            margin-bottom: 0;
-            flex: 1;
-            min-width: 130px;
-        }
-
-            .drow .field label {
-                font-size: .72rem;
-            }
-
-        .drow .ctrl {
-            background: #fff;
-        }
-
-    .del-mini {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
-        background: #fff;
-        border: 1px solid var(--line);
-        color: var(--cancel-fg);
-        display: grid;
-        place-items: center;
-        cursor: pointer;
-        transition: .2s;
-        flex: none;
-    }
-
-        .del-mini:hover {
-            background: var(--cancel-bg);
-            border-color: var(--cancel-fg);
-        }
-
-        .del-mini:disabled {
-            opacity: .35;
-            cursor: not-allowed;
-        }
-
-
-    /* =========================================
-           ITINERARY ACCORDION
-           ========================================= */
-
-    .day {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        margin-bottom: .7rem;
+        margin-bottom: 20px;
         overflow: hidden;
-        background: #fff;
     }
 
-        .day.open {
-            box-shadow: var(--shadow-sm);
-            border-color: rgba(15,163,163,.4);
-        }
-
-    .day-head {
-        display: flex;
-        align-items: center;
-        gap: .8rem;
-        padding: .85rem 1rem;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .day-tag {
-        font-family: 'Sora';
-        font-weight: 700;
-        font-size: .72rem;
-        color: var(--teal-dark);
-        background: rgba(15,163,163,.1);
-        padding: .3rem .65rem;
-        border-radius: 999px;
-        white-space: nowrap;
-        flex: none;
-    }
-
-    .day-name {
-        font-family: 'Sora';
-        font-weight: 600;
-        color: var(--navy);
-        font-size: .92rem;
-        flex: 1;
-        min-width: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .day-actions {
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        flex: none;
-    }
-
-    .day-chev {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: var(--cream);
-        display: grid;
-        place-items: center;
-        color: var(--navy);
-        transition: .3s;
-    }
-
-    .day.open .day-chev {
-        background: var(--navy);
-        color: #fff;
-        transform: rotate(180deg);
-    }
-
-    .day-body {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height .3s ease;
-    }
-
-    .day-inner {
-        padding: 0 1rem 1.1rem;
-    }
-
-
-    /* =========================================
-           DYNAMIC LIST ITEMS
-           ========================================= */
-
-    .litem {
-        display: flex;
-        gap: .6rem;
-        align-items: center;
-        margin-bottom: .6rem;
-    }
-
-        .litem .ctrl {
-            background: #fff;
-        }
-
-
-    /* =========================================
-           UPLOAD
-           ========================================= */
-
-    .upload {
-        border: 1.5px dashed var(--line);
-        border-radius: 14px;
-        padding: 1.8rem 1rem;
-        text-align: center;
-        background: var(--cream);
-        cursor: pointer;
-        transition: .2s;
-    }
-
-        .upload:hover {
-            border-color: var(--teal);
-            background: rgba(15,163,163,.04);
-        }
-
-        .upload .uic {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            background: #fff;
-            border: 1px solid var(--line);
-            color: var(--teal-dark);
-            display: grid;
-            place-items: center;
-            margin: 0 auto .7rem;
-        }
-
-        .upload b {
-            font-family: 'Sora';
-            font-size: .9rem;
-            color: var(--navy);
-            display: block;
-        }
-
-        .upload span {
-            font-size: .78rem;
-            color: var(--muted);
-        }
-
-    .previews {
-        display: flex;
-        flex-wrap: wrap;
-        gap: .6rem;
-        margin-top: .9rem;
-    }
-
-    .thumb {
-        width: 74px;
-        height: 60px;
-        border-radius: 10px;
-        object-fit: cover;
-        border: 1px solid var(--line);
-    }
-
-    .cover-preview {
-        margin-top: .9rem;
-        border-radius: 12px;
-        overflow: hidden;
-        max-width: 280px;
-        border: 1px solid var(--line);
-    }
-
-        .cover-preview img {
-            width: 100%;
-            display: block;
-        }
-
-
-    /* =========================================
-           SWITCHES
-           ========================================= */
-
-    .switch-row {
+    .card-head {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--line);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: .7rem 0;
-        border-top: 1px solid var(--line-2);
+        gap: 15px;
     }
 
-        .switch-row:first-of-type {
-            border-top: none;
-        }
-
-        .switch-row .sl b {
-            font-family: 'Sora';
-            font-size: .9rem;
-            color: var(--navy);
-            display: block;
-        }
-
-        .switch-row .sl span {
-            font-size: .78rem;
-            color: var(--muted);
-        }
-
-    .form-check-input {
-        width: 2.6em;
-        height: 1.4em;
-        cursor: pointer;
+    .card-title {
+        margin: 0;
+        color: var(--navy);
+        font-size: 16px;
+        font-weight: 800;
     }
 
-        .form-check-input:checked {
-            background-color: var(--teal);
-            border-color: var(--teal);
-        }
-
-        .form-check-input:focus {
-            box-shadow: 0 0 0 3px rgba(15,163,163,.15);
-            border-color: var(--teal);
-        }
-
-
-    /* =========================================
-           STATUS PILLS
-           ========================================= */
-
-    .status-pills {
-        display: flex;
-        gap: .6rem;
-        flex-wrap: wrap;
+    .card-description {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 12px;
     }
 
-    .status-pill {
-        flex: 1;
-        min-width: 120px;
-        border: 1px solid var(--line);
-        border-radius: 11px;
-        padding: .7rem .9rem;
-        cursor: pointer;
-        transition: .2s;
-        background: var(--cream);
+    .card-body {
+        padding: 22px;
     }
 
-        .status-pill:hover {
-            border-color: var(--teal);
-        }
-
-        .status-pill.sel {
-            border-color: var(--teal);
-            background: rgba(15,163,163,.06);
-            box-shadow: 0 0 0 2px rgba(15,163,163,.12);
-        }
-
-        .status-pill b {
-            font-family: 'Sora';
-            font-size: .9rem;
-            color: var(--navy);
-            display: block;
-        }
-
-        .status-pill span {
-            font-size: .76rem;
-            color: var(--muted);
-        }
-
-        .status-pill input {
-            display: none;
-        }
-
-
-    /* =========================================
-           VALIDATION BANNER
-           ========================================= */
-
-    .val-banner {
-        display: none;
-        background: #fdf3f1;
-        border: 1px solid rgba(180,90,79,.3);
-        color: var(--cancel-fg);
-        border-radius: 12px;
-        padding: .85rem 1.1rem;
-        margin-bottom: 1.3rem;
-        font-size: .88rem;
+    .form-label {
+        color: var(--navy);
+        font-size: 12px;
+        font-weight: 800;
+        margin-bottom: 7px;
     }
 
-        .val-banner.show {
-            display: block;
-        }
+    .required {
+        color: #d44;
+    }
 
-        .val-banner b {
-            font-family: 'Sora';
-        }
-
-        .val-banner ul {
-            margin: .3rem 0 0;
-            padding-left: 1.1rem;
-        }
-
-
-    /* =========================================
-           ACTION BAR
-           ========================================= */
-
-    .action-bar {
-        position: sticky;
-        bottom: 0;
-        background: rgba(255,255,255,.92);
-        backdrop-filter: blur(10px);
+    .form-control,
+    .form-select {
+        min-height: 43px;
         border: 1px solid var(--line-2);
-        border-radius: 14px;
-        box-shadow: var(--shadow-md);
-        padding: .9rem 1.2rem;
+        border-radius: 10px;
+        font-size: 13px;
+        color: var(--navy);
+        box-shadow: none !important;
+    }
+
+    textarea.form-control {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--teal);
+    }
+
+    .form-help {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 5px;
+    }
+
+    .field-error {
+        color: #c44545;
+        font-size: 11px;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .section-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .section-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .full {
+        grid-column: 1 / -1;
+    }
+
+    /* Upload */
+    .upload-box {
+        border: 2px dashed var(--line-2);
+        border-radius: 13px;
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        cursor: pointer;
+        transition: .2s;
+        background: #fbfcfd;
+    }
+
+        .upload-box:hover {
+            border-color: var(--teal);
+            background: #f7fffd;
+        }
+
+    .upload-icon {
+        font-size: 34px;
+        color: var(--teal);
+        margin-bottom: 7px;
+    }
+
+    .upload-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--navy);
+    }
+
+    .upload-subtitle {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 4px;
+    }
+
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .preview-item {
+        position: relative;
+        height: 100px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #f5f7f8;
+    }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .preview-remove {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        width: 25px;
+        height: 25px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(0,0,0,.65);
+        color: #fff;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    /* Dynamic rows */
+    .dynamic-row {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        background: #fcfdfd;
+    }
+
+        .dynamic-row:last-child {
+            margin-bottom: 0;
+        }
+
+    .dynamic-row-head {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-top: .4rem;
-        margin-bottom: .4rem;
+        gap: 10px;
+        margin-bottom: 13px;
     }
 
-        .action-bar .saved {
-            font-size: .83rem;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            gap: .5rem;
+    .row-number {
+        color: var(--navy);
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .btn-add {
+        border: 1px dashed var(--teal);
+        color: var(--teal-dark);
+        background: #f5fffd;
+        border-radius: 9px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .btn-remove {
+        border: 1px solid #f0d5d5;
+        background: var(--cancel-bg);
+        color: var(--cancel-fg);
+        border-radius: 8px;
+        padding: 6px 9px;
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .list-item {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 9px;
+    }
+
+        .list-item:last-child {
+            margin-bottom: 0;
         }
 
-        .action-bar .btns {
-            display: flex;
-            gap: .6rem;
-            flex-wrap: wrap;
+        .list-item .form-control {
+            min-height: 39px;
         }
 
+    .remove-list-item {
+        flex: 0 0 auto;
+        width: 39px;
+        border: 1px solid #f0d5d5;
+        background: var(--cancel-bg);
+        color: var(--cancel-fg);
+        border-radius: 9px;
+        cursor: pointer;
+    }
 
-    /* =========================================
-           TOAST
-           ========================================= */
+    /* Status */
+    .status-options {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
 
-    .toast-ok {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        background: var(--navy);
-        color: #fff;
-        padding: .9rem 1.3rem;
-        border-radius: 14px;
-        box-shadow: var(--shadow-md);
-        font-size: .9rem;
-        font-weight: 500;
+    .status-option input {
+        display: none;
+    }
+
+    .status-option label {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid var(--line-2);
+        border-radius: 10px;
+        padding: 9px 13px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        color: var(--navy);
+        background: #fff;
+    }
+
+    .status-option input:checked + label {
+        border-color: var(--teal);
+        color: var(--teal-dark);
+        background: #f0fffc;
+    }
+
+    .switch-list {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .switch-item {
         display: flex;
         align-items: center;
-        gap: .6rem;
-        z-index: 1080;
+        gap: 8px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--navy);
+        background: #fff;
+    }
+
+        .switch-item input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--teal);
+        }
+
+    /* Bottom actions */
+    .bottom-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-top: 4px;
+        padding-bottom: 20px;
+    }
+
+    /* Toast */
+    .toast-ui {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 9999;
+        background: var(--navy);
+        color: #fff;
+        padding: 13px 17px;
+        border-radius: 11px;
+        box-shadow: var(--shadow-md);
+        font-size: 13px;
+        font-weight: 700;
         opacity: 0;
-        transform: translateY(12px);
-        transition: .3s;
+        transform: translateY(15px);
         pointer-events: none;
+        transition: .25s;
     }
 
-        .toast-ok.show {
+        .toast-ui.show {
             opacity: 1;
-            transform: none;
+            transform: translateY(0);
         }
 
-        .toast-ok svg {
-            color: #7fe3e3;
-        }
-
-
-    /* =========================================
-           RESPONSIVE
-           ========================================= */
-
-    @@media(max - width:575px) {
-        .page-intro
-
-    {
-        align-items: flex-start;
+    .validation-summary {
+        display: none;
+        background: #fff3f3;
+        color: #a33f3f;
+        border: 1px solid #f0d5d5;
+        border-radius: 11px;
+        padding: 13px 16px;
+        margin-bottom: 20px;
+        font-size: 12px;
+        font-weight: 700;
     }
 
-    .action-bar {
-        padding: .8rem;
-    }
-
-        .action-bar .btns {
-            width: 100%;
+        .validation-summary ul {
+            margin: 7px 0 0 18px;
+            padding: 0;
+            font-weight: 500;
         }
 
-            .action-bar .btns button {
-                flex: 1;
+    @@media (max-width: 992px) {
+        .section-grid-3 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .preview-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .content {
+            padding: 18px;
+        }
+
+        .page-head {
+            flex-direction: column;
+        }
+
+        .section-grid,
+        .section-grid-3 {
+            grid-template-columns: 1fr;
+        }
+
+        .preview-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 575px) {
+        .content {
+            padding: 14px;
+        }
+
+        .card-body,
+        .card-head {
+            padding: 16px;
+        }
+
+        .preview-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .bottom-actions {
+            flex-direction: column;
+        }
+
+            .bottom-actions .btn-ui {
+                width: 100%;
             }
-
-    .drow {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-        .drow .field {
-            width: 100%;
-        }
-
     }
 </style>
 
+<form id="tourForm"
+      asp-area="Admin"
+      asp-controller="Tour"
+      asp-action="TourCreate"
+      method="post"
+      enctype="multipart/form-data">
 
-<!-- MAIN -->
-<div class="main">
-    <header class="topbar">
-        <button class="hamb" onclick="toggleSidebar(true)" aria-label="Menü"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg></button>
-        <span class="tb-title">Yeni Tur Ekle</span>
-        <div class="tb-search">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-            <input type="text" placeholder="Ara: rezervasyon, tur, kullanıcı...">
-        </div>
-        <div class="tb-right">
-            <button class="tb-icon" aria-label="Bildirimler"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg><span class="n-badge">3</span></button>
-            <div class="tb-user"><div class="av">MY</div><div class="nm"><b>Murat Yücedağ</b><span>Yönetici</span></div></div>
-        </div>
-    </header>
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Status" id="statusValue" />
 
     <div class="content">
-        <div class="crumb"><a href="admin-dashboard.html">Dashboard</a> / <a href="admin-tours.html">Turlar</a> / <span class="cur">Yeni Tur Ekle</span></div>
-        <div class="page-intro">
+
+        <!-- PAGE HEADER -->
+        <div class="page-head">
             <div>
-                <h1>Yeni Tur Ekle</h1>
-                <p>Yeni bir tur oluşturmak için genel bilgileri, rota detaylarını ve satış seçeneklerini belirleyin.</p>
+                <h1 class="page-title">Yeni Tur Oluştur</h1>
+                <p class="page-subtitle">
+                    Travelio sistemine yeni bir tur ekleyin ve tur detaylarını yönetin.
+                </p>
             </div>
-            <a href="admin-tours.html" class="btn-ghost">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
-                Turlara Dön
+
+            <div class="head-actions">
+                <a class="btn-ui btn-secondary-ui"
+                   href="@Url.Action("TourIndex", "Tour", new { area = "Admin" })">
+                    <span>←</span>
+                    Turlara Dön
+                </a>
+            </div>
+        </div>
+
+        <div class="validation-summary" id="validationSummary">
+            <strong>Lütfen aşağıdaki alanları kontrol edin:</strong>
+            <ul id="validationList"></ul>
+        </div>
+
+        <!-- TEMEL BİLGİLER -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Temel Bilgiler</h2>
+                    <p class="card-description">
+                        Turun temel bilgilerini girin.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="section-grid">
+
+                    <div>
+                        <label asp-for="Name" class="form-label">
+                            Tur Adı <span class="required">*</span>
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Örn: Roma Kültür Turu"
+                               maxlength="200" />
+                    </div>
+
+                    <div>
+                        <label asp-for="TourType" class="form-label">
+                            Tur Tipi
+                        </label>
+
+                        <select asp-for="TourType" class="form-select">
+                            <option value="">Tur tipi seçin</option>
+                            <option value="Kültür">Kültür Turu</option>
+                            <option value="Yurtdışı">Yurtdışı Turu</option>
+                            <option value="Yurtiçi">Yurtiçi Turu</option>
+                            <option value="Doğa">Doğa Turu</option>
+                            <option value="Deniz">Deniz Turu</option>
+                            <option value="Macera">Macera Turu</option>
+                            <option value="Gastronomi">Gastronomi Turu</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label asp-for="CategoryId" class="form-label">
+                            Kategori <span class="required">*</span>
+                        </label>
+
+                        <select asp-for="CategoryId" class="form-select">
+                            <option value="">Kategori seçin</option>
+                            <option value="Kultur">Kültür</option>
+                            <option value="Yurtdisi">Yurtdışı</option>
+                            <option value="Yurtici">Yurtiçi</option>
+                            <option value="Doga">Doğa</option>
+                            <option value="Macera">Macera</option>
+                            <option value="Gastronomi">Gastronomi</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label asp-for="DestinationId" class="form-label">
+                            Destinasyon <span class="required">*</span>
+                        </label>
+
+                        <select asp-for="DestinationId" class="form-select">
+                            <option value="">Destinasyon seçin</option>
+                            <option value="Istanbul">İstanbul</option>
+                            <option value="Roma">Roma</option>
+                            <option value="Paris">Paris</option>
+                            <option value="Londra">Londra</option>
+                            <option value="Barcelona">Barcelona</option>
+                            <option value="Dubai">Dubai</option>
+                            <option value="Amsterdam">Amsterdam</option>
+                            <option value="Prag">Prag</option>
+                        </select>
+                    </div>
+
+                    <div class="full">
+                        <label asp-for="ShortDescription" class="form-label">
+                            Kısa Açıklama
+                        </label>
+
+                        <input asp-for="ShortDescription"
+                               class="form-control"
+                               placeholder="Turun kısa tanıtımını yazın..."
+                               maxlength="500" />
+                    </div>
+
+                    <div class="full">
+                        <label asp-for="Description" class="form-label">
+                            Açıklama
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  placeholder="Tur hakkında detaylı açıklama..."></textarea>
+                    </div>
+
+                    <div class="full">
+                        <label asp-for="Route" class="form-label">
+                            Tur Rotası
+                        </label>
+
+                        <input asp-for="Route"
+                               class="form-control"
+                               placeholder="Örn: Roma → Floransa → Venedik → Milano" />
+
+                        <div class="form-help">
+                            Turun genel güzergahını yazabilirsiniz.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SÜRE / FİYAT / KAPASİTE -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Süre, Fiyat ve Kapasite</h2>
+                    <p class="card-description">
+                        Turun süresini, fiyatını ve katılımcı limitlerini belirleyin.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="section-grid-3">
+
+                    <div>
+                        <label asp-for="Price" class="form-label">
+                            Kişi Başı Fiyat <span class="required">*</span>
+                        </label>
+
+                        <input asp-for="Price"
+                               class="form-control"
+                               type="number"
+                               min="0.01"
+                               step="0.01"
+                               placeholder="0.00" />
+                    </div>
+
+                    <div>
+                        <label asp-for="DurationDays" class="form-label">
+                            Gün Sayısı <span class="required">*</span>
+                        </label>
+
+                        <input asp-for="DurationDays"
+                               id="durationDays"
+                               class="form-control"
+                               type="number"
+                               min="1"
+                               placeholder="Örn: 6" />
+                    </div>
+
+                    <div>
+                        <label asp-for="DurationNights" class="form-label">
+                            Gece Sayısı
+                        </label>
+
+                        <input asp-for="DurationNights"
+                               id="durationNights"
+                               class="form-control"
+                               type="number"
+                               min="0"
+                               placeholder="Örn: 5" />
+                    </div>
+
+                    <div>
+                        <label asp-for="MaxCapacity" class="form-label">
+                            Maksimum Kapasite <span class="required">*</span>
+                        </label>
+
+                        <input asp-for="MaxCapacity"
+                               class="form-control"
+                               type="number"
+                               min="1"
+                               placeholder="Örn: 40" />
+                    </div>
+
+                    <div>
+                        <label asp-for="MinParticipants" class="form-label">
+                            Minimum Katılımcı <span class="required">*</span>
+                        </label>
+
+                        <input asp-for="MinParticipants"
+                               class="form-control"
+                               type="number"
+                               min="1"
+                               placeholder="Örn: 2" />
+                    </div>
+
+                    <div>
+                        <label asp-for="DepartureCity" class="form-label">
+                            Başlangıç Şehri
+                        </label>
+
+                        <input asp-for="DepartureCity"
+                               class="form-control"
+                               placeholder="Örn: İstanbul" />
+                    </div>
+
+                    <div>
+                        <label asp-for="Transportation" class="form-label">
+                            Ulaşım
+                        </label>
+
+                        <select asp-for="Transportation" class="form-select">
+                            <option value="">Seçin</option>
+                            <option value="Uçak">Uçak</option>
+                            <option value="Otobüs">Otobüs</option>
+                            <option value="Tren">Tren</option>
+                            <option value="Gemi">Gemi</option>
+                            <option value="Özel Araç">Özel Araç</option>
+                            <option value="Karma">Karma</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label asp-for="Accommodation" class="form-label">
+                            Konaklama
+                        </label>
+
+                        <input asp-for="Accommodation"
+                               class="form-control"
+                               placeholder="Örn: 4 yıldızlı otel" />
+                    </div>
+
+                    <div>
+                        <label asp-for="GuideLanguage" class="form-label">
+                            Rehber Dili
+                        </label>
+
+                        <input asp-for="GuideLanguage"
+                               class="form-control"
+                               placeholder="Örn: Türkçe / İngilizce" />
+                    </div>
+
+                    <div class="full">
+                        <label asp-for="VisaInfo" class="form-label">
+                            Vize Bilgisi
+                        </label>
+
+                        <textarea asp-for="VisaInfo"
+                                  class="form-control"
+                                  style="min-height:80px;"
+                                  placeholder="Vize gerekliliği ve gerekli bilgiler..."></textarea>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- KAPAK / GALERİ -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Görseller</h2>
+                    <p class="card-description">
+                        Kapak ve galeri görsellerini ekleyin.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="section-grid">
+
+                    <div>
+                        <label asp-for="CoverImageUrl" class="form-label">
+                            Kapak Görseli URL
+                        </label>
+
+                        <input asp-for="CoverImageUrl"
+                               class="form-control"
+                               placeholder="https://..." />
+
+                        <div class="form-help">
+                            MongoDB'de CoverImageUrl alanında tutulacak görsel adresi.
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">
+                            Kapak Görseli Önizleme
+                        </label>
+
+                        <div id="coverPreview"
+                             style="height:43px;border:1px solid var(--line-2);border-radius:10px;display:flex;align-items:center;padding:0 12px;color:var(--muted);font-size:12px;">
+                            Görsel URL'si girildiğinde burada görüntülenir.
+                        </div>
+                    </div>
+
+                    <div class="full">
+                        <label class="form-label">
+                            Galeri Görselleri
+                        </label>
+
+                        <div>
+                            <input asp-for="GalleryImages"
+                                   id="galleryImages"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="Görsel URL'sini yazın ve Enter'a basın..." />
+
+                            <div class="form-help">
+                                Birden fazla URL ekleyebilirsiniz.
+                            </div>
+                        </div>
+
+                        <div id="galleryList" class="preview-grid"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TUR TARİHLERİ -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Tur Tarihleri</h2>
+                    <p class="card-description">
+                        Her turun tarihinin kendi kapasitesi bulunabilir.
+                    </p>
+                </div>
+
+                <button type="button"
+                        class="btn-add"
+                        onclick="addTourDate()">
+                    + Tarih Ekle
+                </button>
+            </div>
+
+            <div class="card-body">
+                <div id="tourDatesContainer"></div>
+            </div>
+        </section>
+
+        <!-- GÜNLÜK PROGRAM -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Gün Gün Program</h2>
+                    <p class="card-description">
+                        Turun her günü için program, şehir, ulaşım ve öğün bilgilerini girin.
+                    </p>
+                </div>
+
+                <button type="button"
+                        class="btn-add"
+                        onclick="addDayProgram()">
+                    + Gün Ekle
+                </button>
+            </div>
+
+            <div class="card-body">
+                <div id="dayProgramsContainer"></div>
+            </div>
+        </section>
+
+        <!-- DAHİL / HARİÇ -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Dahil / Hariç</h2>
+                    <p class="card-description">
+                        Tur ücretine dahil olan ve olmayan hizmetleri belirtin.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="section-grid">
+
+                    <div>
+                        <label class="form-label">
+                            Fiyata Dahil
+                        </label>
+
+                        <div id="includesContainer"></div>
+
+                        <button type="button"
+                                class="btn-add mt-2"
+                                onclick="addListItem('includes')">
+                            + Hizmet Ekle
+                        </button>
+                    </div>
+
+                    <div>
+                        <label class="form-label">
+                            Fiyata Dahil Değil
+                        </label>
+
+                        <div id="excludesContainer"></div>
+
+                        <button type="button"
+                                class="btn-add mt-2"
+                                onclick="addListItem('excludes')">
+                            + Hizmet Ekle
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ÖNE ÇIKANLAR -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Öne Çıkanlar</h2>
+                    <p class="card-description">
+                        Turun öne çıkan özelliklerini ekleyin.
+                    </p>
+                </div>
+
+                <button type="button"
+                        class="btn-add"
+                        onclick="addListItem('highlights')">
+                    + Özellik Ekle
+                </button>
+            </div>
+
+            <div class="card-body">
+                <div id="highlightsContainer"></div>
+            </div>
+        </section>
+
+        <!-- YAYIN AYARLARI -->
+        <section class="form-card">
+            <div class="card-head">
+                <div>
+                    <h2 class="card-title">Yayın Ayarları</h2>
+                    <p class="card-description">
+                        Turun durumunu ve öne çıkarma seçeneklerini belirleyin.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        Durum
+                    </label>
+
+                    <div class="status-options">
+
+                        <div class="status-option">
+                            <input type="radio"
+                                   id="statusDraft"
+                                   name="statusUi"
+                                   value="Draft"
+                                   checked />
+
+                            <label for="statusDraft">
+                                Taslak
+                            </label>
+                        </div>
+
+                        <div class="status-option">
+                            <input type="radio"
+                                   id="statusActive"
+                                   name="statusUi"
+                                   value="Active" />
+
+                            <label for="statusActive">
+                                Aktif
+                            </label>
+                        </div>
+
+                        <div class="status-option">
+                            <input type="radio"
+                                   id="statusPassive"
+                                   name="statusUi"
+                                   value="Passive" />
+
+                            <label for="statusPassive">
+                                Pasif
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Etiketler
+                    </label>
+
+                    <div class="switch-list">
+
+                        <label class="switch-item">
+                            <input asp-for="IsFeatured" />
+                            Öne Çıkan
+                        </label>
+
+                        <label class="switch-item">
+                            <input asp-for="IsBestSeller" />
+                            Çok Satan
+                        </label>
+
+                        <label class="switch-item">
+                            <input asp-for="IsNew" />
+                            Yeni Tur
+                        </label>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ACTIONS -->
+        <div class="bottom-actions">
+
+            <a href="@Url.Action("TourIndex", "Tour", new { area = "Admin" })"
+               class="btn-ui btn-secondary-ui">
+                İptal
             </a>
-        </div>
 
-        <!-- VALIDATION BANNER -->
-        <div class="val-banner" id="valBanner">
-            <b>Lütfen eksik alanları tamamlayın:</b>
-            <ul id="valList"></ul>
-        </div>
-
-        <!-- 1. TEMEL BİLGİLER -->
-        <div class="sec">
-            <div class="sec-head">
-                <h2><span class="sec-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg></span> Temel Bilgiler</h2>
-                <p>Turun kullanıcı tarafında görünen temel bilgilerini girin.</p>
-            </div>
-            <div class="field">
-                <label>Tur Adı <span class="req">*</span></label>
-                <input class="ctrl" id="tName" placeholder="Örn. Roma & Toskana Keşfi">
-            </div>
-            <div class="field">
-                <label>Kısa Açıklama</label>
-                <textarea class="ctrl" rows="2" placeholder="Turun öne çıkan özelliklerini birkaç cümleyle anlatın."></textarea>
-            </div>
-            <div class="field">
-                <label>Tur Açıklaması</label>
-                <textarea class="ctrl" rows="4" placeholder="Turun konsepti, deneyimi ve önemli detayları..."></textarea>
-            </div>
-            <div class="row g-3">
-                <div class="col-md-6 field">
-                    <label>Kategori <span class="req">*</span></label>
-                    <select class="ctrl" id="tCat">
-                        <option value="">Kategori Seçiniz</option>
-                        <option>Kültür Turları</option>
-                        <option>Şehir Turları</option>
-                        <option>Doğa & Macera</option>
-                        <option>Romantik Rotalar</option>
-                        <option>Gastronomi</option>
-                        <option>Kış & Kuzey Işıkları</option>
-                        <option>Uzak Doğu</option>
-                    </select>
-                </div>
-                <div class="col-md-6 field">
-                    <label>Destinasyon <span class="req">*</span></label>
-                    <select class="ctrl" id="tDest">
-                        <option value="">Destinasyon Seçiniz</option>
-                        <option>Fransa</option>
-                        <option>İtalya</option>
-                        <option>İspanya</option>
-                        <option>Hollanda</option>
-                        <option>Avusturya</option>
-                        <option>İsviçre</option>
-                        <option>Norveç</option>
-                        <option>Japonya</option>
-                        <option>Portekiz</option>
-                    </select>
-                </div>
-                <div class="col-md-8 field">
-                    <label>Tur Rotası</label>
-                    <input class="ctrl" placeholder="Roma · Vatikan · Floransa · Pisa · Toskana">
-                </div>
-                <div class="col-md-4 field">
-                    <label>Tur Tipi</label>
-                    <select class="ctrl">
-                        <option>Kültür Turu</option>
-                        <option>Şehir Turu</option>
-                        <option>Doğa & Macera</option>
-                        <option>Romantik Rota</option>
-                        <option>Gastronomi</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. FİYAT & KONTENJAN -->
-        <div class="sec">
-            <div class="sec-head">
-                <h2><span class="sec-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg></span> Fiyat & Kontenjan</h2>
-                <p>Satış fiyatı, süre ve katılımcı limitlerini belirleyin.</p>
-            </div>
-            <div class="row g-3">
-                <div class="col-6 col-lg-3 field">
-                    <label>Kişi Başı Fiyat <span class="req">*</span></label>
-                    <div class="input-group-x"><input class="ctrl" id="tPrice" inputmode="numeric" placeholder="42.500" style="padding-right:2.6rem"><span class="suffix">TL</span></div>
-                </div>
-                <div class="col-3 col-lg-2 field">
-                    <label>Gün <span class="req">*</span></label>
-                    <input class="ctrl" id="tDays" type="number" min="1" placeholder="6">
-                </div>
-                <div class="col-3 col-lg-2 field">
-                    <label>Gece</label>
-                    <input class="ctrl" type="number" min="0" placeholder="5">
-                </div>
-                <div class="col-6 col-lg-2 field">
-                    <label>Maks. Kontenjan</label>
-                    <input class="ctrl" type="number" min="1" placeholder="28">
-                </div>
-                <div class="col-6 col-lg-3 field">
-                    <label>Min. Katılımcı</label>
-                    <input class="ctrl" type="number" min="1" placeholder="12">
-                </div>
-            </div>
-            <div class="row g-3">
-                <div class="col-md-6 col-lg-3 field">
-                    <label>Başlangıç Şehri</label>
-                    <select class="ctrl"><option selected>İstanbul</option><option>Ankara</option><option>İzmir</option></select>
-                </div>
-                <div class="col-md-6 col-lg-3 field">
-                    <label>Ulaşım</label>
-                    <select class="ctrl"><option>Uçak</option><option>Otobüs</option><option selected>Uçak + Otobüs</option><option>Tren</option></select>
-                </div>
-                <div class="col-md-6 col-lg-3 field">
-                    <label>Konaklama</label>
-                    <input class="ctrl" placeholder="4 Yıldızlı Oteller">
-                </div>
-                <div class="col-md-6 col-lg-3 field">
-                    <label>Rehber Dili</label>
-                    <select class="ctrl"><option selected>Türkçe</option><option>İngilizce</option><option>Türkçe + İngilizce</option></select>
-                </div>
-                <div class="col-md-6 col-lg-3 field">
-                    <label>Vize Bilgisi</label>
-                    <select class="ctrl"><option>Vize Gerekiyor</option><option>Vizesiz</option><option>Kapıda Vize</option><option selected>Schengen Vizesi</option></select>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. TUR TARİHLERİ -->
-        <div class="sec">
-            <div class="sec-head">
-                <h2><span class="sec-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg></span> Tur Tarihleri <span class="req">*</span></h2>
-                <p>Aynı tur için birden fazla kalkış tarihi ekleyebilirsiniz.</p>
-            </div>
-            <div id="dateList"></div>
-            <button class="btn-add" onclick="addDate()">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                Yeni Tarih Ekle
+            <button type="submit"
+                    class="btn-ui btn-secondary-ui"
+                    onclick="return submitTour('Draft')">
+                Taslak Olarak Kaydet
             </button>
-        </div>
 
-        <!-- 4. GÜN GÜN PROGRAM -->
-        <div class="sec">
-            <div class="sec-head">
-                <h2><span class="sec-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></svg></span> Gün Gün Tur Programı <span class="req">*</span></h2>
-                <p>Misafirlerin tur detay sayfasında göreceği günlük programı oluşturun.</p>
-            </div>
-            <div id="dayList"></div>
-            <button class="btn-add" onclick="addDay()">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                Yeni Gün Ekle
+            <button type="submit"
+                    class="btn-ui btn-primary-ui"
+                    onclick="return submitTour('Active')">
+                Turu Yayınla
             </button>
+
         </div>
 
-        <!-- 5. HİZMETLER -->
-        <div class="sec">
-            <div class="sec-head">
-                <h2><span class="sec-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg></span> Hizmetler & Öne Çıkanlar</h2>
-                <p>Fiyata dahil olan / olmayan hizmetleri ve turun öne çıkan özelliklerini yönetin.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <label style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.6rem;display:block">Fiyata Dahil Olanlar</label>
-                    <div id="incList"></div>
-                    <button class="btn-add" onclick="addItem('incList','Yeni hizmet')">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg> Yeni Hizmet Ekle
-                    </button>
-                </div>
-                <div class="col-lg-6">
-                    <label style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.6rem;display:block">Fiyata Dahil Olmayanlar</label>
-                    <div id="excList"></div>
-                    <button class="btn-add" onclick="addItem('excList','Yeni madde')">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg> Yeni Madde Ekle
-                    </button>
-                </div>
-                <div class="col-12">
-                    <label style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.6rem;display:block">Turun Öne Çıkanları</label>
-                    <div id="hlList"></div>
-                    <button class="btn-add" onclick="addItem('hlList','Öne çıkan özellik')">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg> Öne Çıkan Özellik Ekle
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. GÖRSELLER & YAYIN -->
-        <div class="sec">
-            <div class="sec-head">
-                <h2><span class="sec-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg></span> Görseller & Yayın Ayarları</h2>
-                <p>Kapak görselini, galeriyi ve turun yayın durumunu belirleyin.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <label style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.5rem;display:block">Ana Kapak Görseli</label>
-                    <label class="upload" for="coverInput">
-                        <div class="uic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg></div>
-                        <b>Ana tur görselini buraya sürükleyin veya seçin.</b>
-                        <span>JPG, PNG · Önerilen 1600x900</span>
-                    </label>
-                    <input type="file" id="coverInput" accept="image/*" hidden onchange="previewCover(this)">
-                    <div class="cover-preview" id="coverPreview" style="display:none"><img id="coverImg" alt="Kapak önizleme"></div>
-                </div>
-                <div class="col-lg-6">
-                    <label style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.5rem;display:block">Galeri Görselleri</label>
-                    <label class="upload" for="galleryInput">
-                        <div class="uic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg></div>
-                        <b>Galeri görsellerini seçin.</b>
-                        <span>Tur galerisi için en fazla 8 görsel ekleyebilirsiniz.</span>
-                    </label>
-                    <input type="file" id="galleryInput" accept="image/*" multiple hidden onchange="previewGallery(this)">
-                    <div class="previews" id="galleryPreviews"></div>
-                </div>
-
-                <div class="col-lg-7">
-                    <label style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.5rem;display:block">Tur Durumu</label>
-                    <div class="status-pills">
-                        <label class="status-pill" data-status="Aktif"><input type="radio" name="pubStatus" value="Aktif"><b>Aktif</b><span>Sitede yayında</span></label>
-                        <label class="status-pill" data-status="Pasif"><input type="radio" name="pubStatus" value="Pasif"><b>Pasif</b><span>Gizli</span></label>
-                        <label class="status-pill sel" data-status="Taslak"><input type="radio" name="pubStatus" value="Taslak" checked><b>Taslak</b><span>Yayınlanmadı</span></label>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <label style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.2rem;display:block">Rozetler</label>
-                    <div class="switch-row">
-                        <div class="sl"><b>Ana sayfada öne çıkar</b><span>Öne çıkan tur</span></div>
-                        <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" id="swFeatured"></div>
-                    </div>
-                    <div class="switch-row">
-                        <div class="sl"><b>Çok Satan etiketi göster</b><span>"Çok Satan" rozeti</span></div>
-                        <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" id="swBest" onchange="oneBadge(this,'swNew')"></div>
-                    </div>
-                    <div class="switch-row">
-                        <div class="sl"><b>Yeni etiketi göster</b><span>"Yeni" rozeti</span></div>
-                        <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" id="swNew" onchange="oneBadge(this,'swBest')"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ACTION BAR -->
-        <div class="action-bar">
-            <div class="saved" id="savedInfo">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                Son kaydedilme: Henüz kaydedilmedi
-            </div>
-            <div class="btns">
-                <a href="admin-tours.html" class="btn-ghost">İptal</a>
-                <button class="btn-navy" onclick="saveDraft()">Taslak Kaydet</button>
-                <button class="btn-teal" onclick="publish()">Turu Yayınla</button>
-            </div>
-        </div>
     </div>
+</form>
 
-    <footer class="admin-foot">
-        <span>© 2026 Travelio Admin Panel</span>
-        <span>v1.0</span>
-    </footer>
-</div>
-
-<!-- TOAST -->
-<div class="toast-ok" id="toast">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-    <span id="toastMsg">Kaydedildi.</span>
-</div>
+<div id="toast" class="toast-ui"></div>
 
 <script>
-    function toggleSidebar(show){
-      document.getElementById("sidebar").classList.toggle("show", show);
-      document.getElementById("sbOverlay").classList.toggle("show", show);
-    }
-    function toast(msg){ const t=document.getElementById("toast"); document.getElementById("toastMsg").textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2600); }
+    let tourDateIndex = 0;
+    let dayProgramIndex = 0;
 
-    /* ---------- TUR TARİHLERİ ---------- */
-    const dateList=document.getElementById("dateList");
-    function dateRowHTML(start="",end="",cap="",status="Aktif"){
-      return `
-      <div class="drow">
-        <div class="field"><label>Başlangıç Tarihi</label><input type="date" class="ctrl d-start" value="${start}"></div>
-        <div class="field"><label>Bitiş Tarihi</label><input type="date" class="ctrl d-end" value="${end}"></div>
-        <div class="field" style="max-width:120px"><label>Kontenjan</label><input type="number" min="1" class="ctrl d-cap" value="${cap}" placeholder="28"></div>
-        <div class="field" style="max-width:130px"><label>Durum</label>
-          <select class="ctrl d-status"><option ${status==='Aktif'?'selected':''}>Aktif</option><option ${status==='Pasif'?'selected':''}>Pasif</option></select>
-        </div>
-        <button class="del-mini" onclick="removeRow(this,'.drow')" aria-label="Sil">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-        </button>
-      </div>`;
-    }
-    function addDate(){ dateList.insertAdjacentHTML("beforeend", dateRowHTML()); refreshDateDelState(); }
-    function refreshDateDelState(){
-      const rows=dateList.querySelectorAll(".drow");
-      rows.forEach(r=> r.querySelector(".del-mini").disabled = rows.length<=1);
-    }
-    // seed one example
-    dateList.insertAdjacentHTML("beforeend", dateRowHTML("2026-10-12","2026-10-17","28","Aktif"));
-    refreshDateDelState();
+    const listIndexes = {
+        includes: 0,
+        excludes: 0,
+        highlights: 0
+    };
 
-    /* ---------- GÜN GÜN PROGRAM ---------- */
-    const dayList=document.getElementById("dayList");
-    function dayHTML(open,title=""){
-      return `
-      <div class="day ${open?'open':''}">
-        <div class="day-head" onclick="toggleDay(this)">
-          <span class="day-tag">GÜN</span>
-          <span class="day-name">${title||"Yeni gün"}</span>
-          <div class="day-actions">
-            <button class="del-mini" onclick="removeDay(event,this)" aria-label="Günü sil"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
-            <span class="day-chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </div>
-        </div>
-        <div class="day-body">
-          <div class="day-inner">
-            <div class="field"><label>Gün Başlığı</label><input class="ctrl day-title" placeholder="Örn. İstanbul → Roma" oninput="syncDayName(this)"></div>
-            <div class="field"><label>Program Açıklaması</label><textarea class="ctrl" rows="3" placeholder="Günün programını, gezilecek yerleri ve önemli notları yazın..."></textarea></div>
-            <div class="row g-2">
-              <div class="col-md-4 field" style="margin-bottom:0"><label>Konaklama</label><input class="ctrl" placeholder="Roma"></div>
-              <div class="col-md-4 field" style="margin-bottom:0"><label>Ulaşım</label><input class="ctrl" placeholder="Uçak + Transfer"></div>
-              <div class="col-md-4 field" style="margin-bottom:0"><label>Öğün</label><input class="ctrl" placeholder="Kahvaltı"></div>
+    /* ----------------------------------------
+       TOAST
+    ---------------------------------------- */
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2500);
+    }
+
+    /* ----------------------------------------
+       TOUR DATES
+    ---------------------------------------- */
+
+    function addTourDate() {
+
+        const container = document.getElementById("tourDatesContainer");
+
+        const index = tourDateIndex++;
+
+        const row = document.createElement("div");
+
+        row.className = "dynamic-row tour-date-row";
+
+        row.dataset.index = index;
+
+        row.innerHTML = `
+            <div class="dynamic-row-head">
+                <div class="row-number">
+                    Tur Tarihi #${index + 1}
+                </div>
+
+                <button type="button"
+                        class="btn-remove"
+                        onclick="removeRow(this)">
+                    Sil
+                </button>
             </div>
-          </div>
-        </div>
-      </div>`;
-    }
-    function renumberDays(){
-      dayList.querySelectorAll(".day").forEach((d,i)=>{
-        d.querySelector(".day-tag").textContent = (i+1)+". GÜN";
-        // first day delete disabled
-        d.querySelector(".del-mini").disabled = dayList.querySelectorAll(".day").length<=1 || i===0;
-      });
-    }
-    function addDay(){
-      dayList.insertAdjacentHTML("beforeend", dayHTML(true));
-      const last=dayList.lastElementChild;
-      const body=last.querySelector(".day-body"); body.style.maxHeight=body.scrollHeight+80+"px";
-      renumberDays();
-    }
-    function toggleDay(head){
-      const day=head.closest(".day"); const body=day.querySelector(".day-body");
-      if(day.classList.contains("open")){ day.classList.remove("open"); body.style.maxHeight="0"; }
-      else{ day.classList.add("open"); body.style.maxHeight=body.scrollHeight+80+"px"; }
-    }
-    function removeDay(e,btn){ e.stopPropagation(); btn.closest(".day").remove(); renumberDays(); }
-    function syncDayName(inp){
-      const day=inp.closest(".day");
-      const idx=[...dayList.children].indexOf(day)+1;
-      day.querySelector(".day-name").textContent = inp.value.trim() ? inp.value : (idx+". gün");
-    }
-    // seed first day (open, not deletable)
-    dayList.insertAdjacentHTML("beforeend", dayHTML(true,"İstanbul → Roma"));
-    (function(){
-      const first=dayList.firstElementChild;
-      first.querySelector(".day-title").value="İstanbul → Roma";
-      first.querySelector("textarea").value="İstanbul Havalimanı'nda buluşma, Roma uçuşu, havalimanı transferi ve otele yerleşme. Akşam serbest zaman.";
-      const inputs=first.querySelectorAll(".row .ctrl"); inputs[0].value="Roma"; inputs[1].value="Uçak + Transfer"; inputs[2].value="Kahvaltı";
-      const body=first.querySelector(".day-body"); body.style.maxHeight=body.scrollHeight+80+"px";
-      renumberDays();
-    })();
 
-    /* ---------- DİNAMİK LİSTELER ---------- */
-    function itemHTML(ph,val=""){
-      return `<div class="litem">
-        <input class="ctrl" placeholder="${ph}" value="${val}">
-        <button class="del-mini" onclick="removeRow(this,'.litem')" aria-label="Sil"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
-      </div>`;
+            <div class="section-grid-3">
+
+                <div>
+                    <label class="form-label">
+                        Başlangıç Tarihi <span class="required">*</span>
+                    </label>
+
+                    <input type="date"
+                           class="form-control date-start" />
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Bitiş Tarihi
+                    </label>
+
+                    <input type="date"
+                           class="form-control date-end" />
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Kapasite <span class="required">*</span>
+                    </label>
+
+                    <input type="number"
+                           class="form-control date-capacity"
+                           min="1"
+                           placeholder="Örn: 40" />
+                </div>
+
+            </div>
+        `;
+
+        container.appendChild(row);
+
+        updateRowNumbers("tour-date-row");
     }
-    function addItem(listId,ph){ document.getElementById(listId).insertAdjacentHTML("beforeend", itemHTML(ph)); }
-    function removeRow(btn,sel){ btn.closest(sel).remove(); if(sel==='.drow') refreshDateDelState(); }
 
-    // seed lists
-    [["incList","Gidiş-dönüş uçak bileti"],["incList","5 gece otel konaklaması"],["incList","Kahvaltılar"],["incList","Havalimanı transferleri"],["incList","Profesyonel Türkçe rehberlik"]].forEach(([l,v])=>document.getElementById(l).insertAdjacentHTML("beforeend",itemHTML("Yeni hizmet",v)));
-    [["excList","Müze giriş ücretleri"],["excList","Öğle ve akşam yemekleri"],["excList","Kişisel harcamalar"],["excList","Seyahat sağlık sigortası"],["excList","Opsiyonel etkinlikler"]].forEach(([l,v])=>document.getElementById(l).insertAdjacentHTML("beforeend",itemHTML("Yeni madde",v)));
-    [["hlList","Kolezyum ve tarihi Roma turu"],["hlList","Vatikan"],["hlList","Floransa şehir turu"],["hlList","Pisa Kulesi"],["hlList","Toskana kasabaları"]].forEach(([l,v])=>document.getElementById(l).insertAdjacentHTML("beforeend",itemHTML("Öne çıkan özellik",v)));
+    /* ----------------------------------------
+       DAY PROGRAMS
+    ---------------------------------------- */
 
-    /* ---------- STATUS PILLS ---------- */
-    document.querySelectorAll(".status-pill").forEach(p=>{
-      p.addEventListener("click",()=>{
-        document.querySelectorAll(".status-pill").forEach(x=>x.classList.remove("sel"));
-        p.classList.add("sel"); p.querySelector("input").checked=true;
-      });
+    function addDayProgram() {
+
+        const container = document.getElementById("dayProgramsContainer");
+
+        const index = dayProgramIndex++;
+
+        const row = document.createElement("div");
+
+        row.className = "dynamic-row day-program-row";
+
+        row.dataset.index = index;
+
+        row.innerHTML = `
+            <div class="dynamic-row-head">
+                <div class="row-number">
+                    ${index + 1}. Gün
+                </div>
+
+                <button type="button"
+                        class="btn-remove"
+                        onclick="removeRow(this)">
+                    Sil
+                </button>
+            </div>
+
+            <div class="section-grid">
+
+                <div>
+                    <label class="form-label">
+                        Gün Başlığı <span class="required">*</span>
+                    </label>
+
+                    <input type="text"
+                           class="form-control day-title"
+                           placeholder="Örn: Roma Şehir Turu" />
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Şehir
+                    </label>
+
+                    <input type="text"
+                           class="form-control day-city"
+                           placeholder="Örn: Roma" />
+                </div>
+
+                <div class="full">
+                    <label class="form-label">
+                        Program Açıklaması <span class="required">*</span>
+                    </label>
+
+                    <textarea class="form-control day-description"
+                              placeholder="Bu gün yapılacak aktiviteleri açıklayın..."></textarea>
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Konaklama
+                    </label>
+
+                    <input type="text"
+                           class="form-control day-accommodation"
+                           placeholder="Örn: Roma Hotel" />
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Ulaşım
+                    </label>
+
+                    <input type="text"
+                           class="form-control day-transportation"
+                           placeholder="Örn: Otobüs / Yürüyüş" />
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Öğün
+                    </label>
+
+                    <input type="text"
+                           class="form-control day-meal"
+                           placeholder="Örn: Kahvaltı, Öğle Yemeği" />
+                </div>
+
+            </div>
+        `;
+
+        container.appendChild(row);
+
+        updateRowNumbers("day-program-row");
+    }
+
+    /* ----------------------------------------
+       REMOVE DYNAMIC ROW
+    ---------------------------------------- */
+
+    function removeRow(button) {
+
+        const row = button.closest(".dynamic-row");
+
+        if (!row) {
+            return;
+        }
+
+        row.remove();
+
+        updateRowNumbers("tour-date-row");
+        updateRowNumbers("day-program-row");
+    }
+
+    function updateRowNumbers(className) {
+
+        const rows = document.querySelectorAll("." + className);
+
+        rows.forEach((row, index) => {
+
+            const number = row.querySelector(".row-number");
+
+            if (!number) {
+                return;
+            }
+
+            if (className === "tour-date-row") {
+                number.textContent = `Tur Tarihi #${index + 1}`;
+            }
+            else {
+                number.textContent = `${index + 1}. Gün`;
+            }
+        });
+    }
+
+    /* ----------------------------------------
+       LIST ITEMS
+    ---------------------------------------- */
+
+    function addListItem(type, value = "") {
+
+        const container = document.getElementById(type + "Container");
+
+        const index = listIndexes[type]++;
+
+        const item = document.createElement("div");
+
+        item.className = "list-item";
+
+        item.dataset.index = index;
+
+        item.innerHTML = `
+            <input type="text"
+                   class="form-control list-value"
+                   value="${escapeHtml(value)}"
+                   placeholder="Bilgi girin..." />
+
+            <button type="button"
+                    class="remove-list-item"
+                    onclick="this.parentElement.remove()">
+                ×
+            </button>
+        `;
+
+        container.appendChild(item);
+
+        updateListNames(type);
+    }
+
+    function updateListNames(type) {
+
+        const items = document.querySelectorAll(
+            `#${type}Container .list-item`
+        );
+
+        items.forEach((item, index) => {
+
+            const input = item.querySelector(".list-value");
+
+            input.name = `${capitalize(type)}[${index}]`;
+        });
+    }
+
+    function capitalize(value) {
+
+        return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    /* ----------------------------------------
+       NESTED FIELD NAMES
+    ---------------------------------------- */
+
+    function syncTourDateNames() {
+
+        const rows = document.querySelectorAll(".tour-date-row");
+
+        rows.forEach((row, index) => {
+
+            const start = row.querySelector(".date-start");
+            const end = row.querySelector(".date-end");
+            const capacity = row.querySelector(".date-capacity");
+
+            /*
+                TourDateDto property isimleri bilinmediği için
+                burada standart ASP.NET nested binding kullanıyoruz.
+
+                Eğer TourDateDto içinde isimler farklıysa
+                sadece bu üç property ismini değiştirmen yeterli.
+            */
+
+            start.name = `TourDates[${index}].StartDate`;
+            end.name = `TourDates[${index}].EndDate`;
+            capacity.name = `TourDates[${index}].Capacity`;
+        });
+    }
+
+    function syncDayProgramNames() {
+
+        const rows = document.querySelectorAll(".day-program-row");
+
+        rows.forEach((row, index) => {
+
+            const title = row.querySelector(".day-title");
+            const description = row.querySelector(".day-description");
+            const city = row.querySelector(".day-city");
+            const accommodation = row.querySelector(".day-accommodation");
+            const transportation = row.querySelector(".day-transportation");
+            const meal = row.querySelector(".day-meal");
+
+            /*
+                DayProgramDto property isimleri bilinmediği için
+                standart isimler kullanılıyor.
+            */
+
+            title.name = `DayPrograms[${index}].Title`;
+            description.name = `DayPrograms[${index}].Description`;
+            city.name = `DayPrograms[${index}].City`;
+            accommodation.name = `DayPrograms[${index}].Accommodation`;
+            transportation.name = `DayPrograms[${index}].Transportation`;
+            meal.name = `DayPrograms[${index}].Meal`;
+        });
+    }
+
+    function syncAllDynamicNames() {
+
+        syncTourDateNames();
+        syncDayProgramNames();
+
+        updateListNames("includes");
+        updateListNames("excludes");
+        updateListNames("highlights");
+    }
+
+    /* ----------------------------------------
+       VALIDATION
+    ---------------------------------------- */
+
+    function validatePublish() {
+
+        const errors = [];
+
+        const name = document.getElementById("Name");
+
+        if (!name || !name.value.trim()) {
+            errors.push("Tur adı zorunludur.");
+        }
+
+        const category = document.getElementById("CategoryId");
+
+        if (!category || !category.value) {
+            errors.push("Kategori seçilmelidir.");
+        }
+
+        const destination = document.getElementById("DestinationId");
+
+        if (!destination || !destination.value) {
+            errors.push("Destinasyon seçilmelidir.");
+        }
+
+        const price = document.getElementById("Price");
+
+        if (!price || Number(price.value) <= 0) {
+            errors.push("Fiyat 0'dan büyük olmalıdır.");
+        }
+
+        const days = document.getElementById("durationDays");
+
+        if (!days || Number(days.value) < 1) {
+            errors.push("Tur süresi en az 1 gün olmalıdır.");
+        }
+
+        const maxCapacity = document.getElementById("MaxCapacity");
+
+        if (!maxCapacity || Number(maxCapacity.value) < 1) {
+            errors.push("Maksimum kapasite en az 1 olmalıdır.");
+        }
+
+        const minParticipants =
+            document.getElementById("MinParticipants");
+
+        if (!minParticipants || Number(minParticipants.value) < 1) {
+            errors.push("Minimum katılımcı en az 1 olmalıdır.");
+        }
+
+        const dateRows =
+            document.querySelectorAll(".tour-date-row");
+
+        if (dateRows.length === 0) {
+            errors.push("En az bir tur tarihi eklenmelidir.");
+        }
+
+        dateRows.forEach((row, index) => {
+
+            const start =
+                row.querySelector(".date-start");
+
+            const capacity =
+                row.querySelector(".date-capacity");
+
+            if (!start || !start.value) {
+                errors.push(
+                    `${index + 1}. tur tarihi için başlangıç tarihi girilmelidir.`
+                );
+            }
+
+            if (!capacity || Number(capacity.value) < 1) {
+                errors.push(
+                    `${index + 1}. tur tarihi için kapasite girilmelidir.`
+                );
+            }
+        });
+
+        const dayRows =
+            document.querySelectorAll(".day-program-row");
+
+        if (dayRows.length === 0) {
+            errors.push("En az bir günlük program eklenmelidir.");
+        }
+
+        dayRows.forEach((row, index) => {
+
+            const title =
+                row.querySelector(".day-title");
+
+            const description =
+                row.querySelector(".day-description");
+
+            if (!title || !title.value.trim()) {
+                errors.push(
+                    `${index + 1}. gün için başlık girilmelidir.`
+                );
+            }
+
+            if (!description || !description.value.trim()) {
+                errors.push(
+                    `${index + 1}. gün için program açıklaması girilmelidir.`
+                );
+            }
+        });
+
+        showValidationErrors(errors);
+
+        return errors.length === 0;
+    }
+
+    function showValidationErrors(errors) {
+
+        const summary =
+            document.getElementById("validationSummary");
+
+        const list =
+            document.getElementById("validationList");
+
+        list.innerHTML = "";
+
+        if (errors.length === 0) {
+
+            summary.style.display = "none";
+
+            return;
+        }
+
+        errors.forEach(error => {
+
+            const li = document.createElement("li");
+
+            li.textContent = error;
+
+            list.appendChild(li);
+        });
+
+        summary.style.display = "block";
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    /* ----------------------------------------
+       SUBMIT
+    ---------------------------------------- */
+
+    function submitTour(status) {
+
+        syncAllDynamicNames();
+
+        document.getElementById("statusValue").value = status;
+
+        if (status === "Active") {
+
+            if (!validatePublish()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /* ----------------------------------------
+       COVER IMAGE PREVIEW
+    ---------------------------------------- */
+
+    const coverInput =
+        document.getElementById("CoverImageUrl");
+
+    if (coverInput) {
+
+        coverInput.addEventListener("input", function () {
+
+            const preview =
+                document.getElementById("coverPreview");
+
+            const url = this.value.trim();
+
+            if (!url) {
+
+                preview.innerHTML =
+                    "Görsel URL'si girildiğinde burada görüntülenir.";
+
+                preview.style.padding = "0 12px";
+
+                return;
+            }
+
+            preview.style.padding = "0";
+
+            preview.innerHTML = `
+                <img src="${escapeHtml(url)}"
+                     style="width:100%;height:100%;object-fit:cover;border-radius:9px;"
+                     onerror="this.style.display='none';" />
+            `;
+        });
+    }
+
+    /* ----------------------------------------
+       GALLERY URL
+    ---------------------------------------- */
+
+    const galleryInput =
+        document.getElementById("galleryImages");
+
+    let galleryUrls = [];
+
+    if (galleryInput) {
+
+        galleryInput.addEventListener("keydown", function (event) {
+
+            if (event.key !== "Enter") {
+                return;
+            }
+
+            event.preventDefault();
+
+            const url = this.value.trim();
+
+            if (!url) {
+                return;
+            }
+
+            if (!galleryUrls.includes(url)) {
+
+                galleryUrls.push(url);
+
+                renderGallery();
+            }
+
+            this.value = "";
+        });
+    }
+
+    function renderGallery() {
+
+        const container =
+            document.getElementById("galleryList");
+
+        container.innerHTML = "";
+
+        galleryUrls.forEach((url, index) => {
+
+            const item =
+                document.createElement("div");
+
+            item.className = "preview-item";
+
+            item.innerHTML = `
+                <img src="${escapeHtml(url)}"
+                     onerror="this.style.opacity='.3';" />
+
+                <button type="button"
+                        class="preview-remove"
+                        onclick="removeGalleryImage(${index})">
+                    ×
+                </button>
+
+                <input type="hidden"
+                       name="GalleryImages[${index}]"
+                       value="${escapeHtml(url)}" />
+            `;
+
+            container.appendChild(item);
+        });
+    }
+
+    function removeGalleryImage(index) {
+
+        galleryUrls.splice(index, 1);
+
+        renderGallery();
+    }
+
+    /* ----------------------------------------
+       DEFAULT ROWS
+    ---------------------------------------- */
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /*
+            Create sayfası boş başlar.
+            Kullanıcı isterse tarih/gün ekler.
+        */
+
+        addTourDate();
+        addDayProgram();
+
+        addListItem("includes");
+        addListItem("excludes");
+        addListItem("highlights");
+
+        syncAllDynamicNames();
     });
-    /* only one of best/new badge */
-    function oneBadge(me,otherId){ if(me.checked) document.getElementById(otherId).checked=false; }
 
-    /* ---------- UPLOAD PREVIEWS ---------- */
-    function previewCover(inp){
-      if(!inp.files||!inp.files[0]) return;
-      const url=URL.createObjectURL(inp.files[0]);
-      document.getElementById("coverImg").src=url;
-      document.getElementById("coverPreview").style.display="block";
-    }
-    function previewGallery(inp){
-      const wrap=document.getElementById("galleryPreviews"); wrap.innerHTML="";
-      [...inp.files].slice(0,8).forEach(f=>{
-        const img=document.createElement("img"); img.className="thumb"; img.src=URL.createObjectURL(f); wrap.appendChild(img);
-      });
-    }
-
-    /* ---------- SAVE / PUBLISH ---------- */
-    function markErr(el,on){ el.classList.toggle("err",on); }
-    function saveDraft(){
-      document.getElementById("savedInfo").innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Son kaydedilme: Az önce (taslak)';
-      toast("Tur taslak olarak kaydedildi.");
-    }
-    function publish(){
-      const banner=document.getElementById("valBanner");
-      const list=document.getElementById("valList");
-      const errs=[];
-      const name=document.getElementById("tName");
-      const cat=document.getElementById("tCat");
-      const dest=document.getElementById("tDest");
-      const price=document.getElementById("tPrice");
-      const days=document.getElementById("tDays");
-
-      [name,cat,dest,price,days].forEach(el=>markErr(el,false));
-
-      if(!name.value.trim()){ errs.push("Tur adı gerekli."); markErr(name,true); }
-      if(!cat.value){ errs.push("Kategori seçilmeli."); markErr(cat,true); }
-      if(!dest.value){ errs.push("Destinasyon seçilmeli."); markErr(dest,true); }
-      if(!price.value.trim()){ errs.push("Kişi başı fiyat girilmeli."); markErr(price,true); }
-      if(!days.value){ errs.push("Tur süresi (gün) girilmeli."); markErr(days,true); }
-      if(dateList.querySelectorAll(".drow").length<1) errs.push("En az bir tur tarihi eklenmeli.");
-      if(dayList.querySelectorAll(".day").length<1) errs.push("En az bir günlük program eklenmeli.");
-
-      if(errs.length){
-        list.innerHTML=errs.map(e=>`<li>${e}</li>`).join("");
-        banner.classList.add("show");
-        banner.scrollIntoView({behavior:"smooth",block:"center"});
-        return;
-      }
-      banner.classList.remove("show");
-      document.getElementById("savedInfo").innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Son kaydedilme: Az önce (yayınlandı)';
-      toast("Tur başarıyla oluşturuldu.");
-    }
 </script>
+

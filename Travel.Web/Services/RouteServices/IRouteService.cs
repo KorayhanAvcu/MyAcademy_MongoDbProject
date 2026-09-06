@@ -5,11 +5,17 @@ namespace Travel.Web.Services.RouteServices
 {
     public interface IRouteService
     {
-        Task<List<ResultRouteDto>> GetAllByCityAsync(string city);
         Task<List<ResultRouteDto>> GetAllAsync();
+
+        Task<List<ResultRouteDto>> GetAllByDestinationAsync(
+            string destinationId);
+
         Task<ResultRouteDto> GetByIdAsync(string id);
+
         Task CreateAsync(CreateRouteDto createRouteDto);
+
         Task DeleteAsync(string id);
+
         Task UpdateAsync(UpdateRouteDto updateRouteDto);
 
     }

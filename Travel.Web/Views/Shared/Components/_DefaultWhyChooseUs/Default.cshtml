@@ -1,0 +1,125 @@
+﻿@using Travel.Web.DTOs.WhyChooseUsDtos
+@model List<ResultWhyChooseUsDto>
+
+@{
+    Layout = null;
+}
+
+<!-- WHY -->
+
+<section id="hakkimizda">
+    <div class="container">
+
+        
+        <div class="section-head mb-5">
+            <div class="eyebrow">Neden biz</div>
+            <h2>Neden Travelio?</h2>
+            <p>Sadece bir tur değil, baştan sona düşünülmüş bir seyahat deneyimi.</p>
+        </div>
+
+        <div class="row g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="why-card">
+
+                        <div class="why-ico">
+
+                            @if (item.Icon == "map-pin")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                            }
+                            else if (item.Icon == "check-circle")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                            }
+                            else if (item.Icon == "coffee")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                                    <line x1="6" y1="1" x2="6" y2="4" />
+                                    <line x1="10" y1="1" x2="10" y2="4" />
+                                    <line x1="14" y1="1" x2="14" y2="4" />
+                                </svg>
+                            }
+                            else if (item.Icon == "star")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                </svg>
+                            }
+                            else if (item.Icon == "shield")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                            }
+                            else if (item.Icon == "heart")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
+                                </svg>
+                            }
+                            else if (item.Icon == "globe")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z" />
+                                </svg>
+                            }
+                            else if (item.Icon == "compass")
+                            {
+                                <svg width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                                </svg>
+                            }
+
+                        </div>
+
+                        <h4>@item.Title</h4>
+
+                        <p>@item.Description</p>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+    
+
+</section>

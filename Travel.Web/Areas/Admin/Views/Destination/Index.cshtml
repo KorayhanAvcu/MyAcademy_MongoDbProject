@@ -1,0 +1,2340 @@
+﻿
+@using Travel.Web.DTOs.DestinationDtos
+
+@model List<ResultDestinationDto>
+
+@{
+    ViewData["Title"] = "Destinasyonlar";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    /* =========================
+           PAGE HEADER
+        ========================= */
+
+    .page-head {
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        background: linear-gradient( 120deg, rgba(14, 42, 59, .92) 0%, rgba(18, 56, 76, .85) 55%, rgba(11, 127, 128, .78) 100% ), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=2000&q=80') center / cover;
+        padding: 4rem 0 4.6rem;
+    }
+
+        .page-head .eyebrow {
+            color: #7fe3e3;
+            font-size: .8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+        }
+
+        .page-head h1 {
+            font-weight: 800;
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            letter-spacing: -.5px;
+            margin-top: .5rem;
+            margin-bottom: 0;
+        }
+
+        .page-head p {
+            color: rgba(255, 255, 255, .9);
+            max-width: 56ch;
+            margin-top: .7rem;
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+    .breadcrumbz {
+        font-size: .85rem;
+        color: rgba(255, 255, 255, .7);
+    }
+
+        .breadcrumbz a {
+            color: rgba(255, 255, 255, .7);
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+            .breadcrumbz a:hover {
+                color: #fff;
+            }
+
+
+    /* =========================
+           LISTING
+        ========================= */
+
+    .listing {
+        padding: 3rem 0 4rem;
+    }
+
+    .sticky-side {
+        position: sticky;
+        top: 1.5rem;
+    }
+
+
+    /* =========================
+           SIDEBAR
+        ========================= */
+
+    .filter-card {
+        background: #fff;
+        border-radius: var(--r);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid rgba(231, 226, 216, .7);
+        padding: 1.5rem 1.4rem;
+    }
+
+        .filter-card h2 {
+            font-family: 'Sora';
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--navy);
+            margin-bottom: .2rem;
+        }
+
+    .filter-sub {
+        font-size: .82rem;
+        color: var(--muted);
+        margin-bottom: 1.3rem;
+        line-height: 1.5;
+    }
+
+    .filter-group {
+        padding: 1.1rem 0;
+        border-top: 1px solid var(--line);
+    }
+
+        .filter-group:first-of-type {
+            border-top: none;
+            padding-top: .3rem;
+        }
+
+        .filter-group h3 {
+            font-family: 'Sora';
+            font-weight: 600;
+            font-size: .82rem;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--navy);
+            margin-bottom: .85rem;
+        }
+
+
+    /* =========================
+           SEARCH
+        ========================= */
+
+    .search-wrap {
+        position: relative;
+    }
+
+        .search-wrap svg {
+            position: absolute;
+            left: .85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .65rem .9rem .65rem 2.4rem;
+            font-size: .9rem;
+            color: var(--navy);
+            outline: none;
+            background: var(--cream);
+            transition: .2s;
+        }
+
+            .search-wrap input:focus {
+                border-color: var(--teal);
+                background: #fff;
+                box-shadow: 0 0 0 3px rgba(15, 163, 163, .12);
+            }
+
+
+    /* =========================
+           CHECKBOX
+        ========================= */
+
+    .fcheck {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: .6rem;
+        cursor: pointer;
+    }
+
+        .fcheck:last-child {
+            margin-bottom: 0;
+        }
+
+        .fcheck .lbl {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .92rem;
+            color: var(--navy);
+        }
+
+        .fcheck input {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--teal-dark);
+            cursor: pointer;
+        }
+
+        .fcheck .cnt {
+            font-size: .78rem;
+            color: var(--muted);
+        }
+
+
+    /* =========================
+           FILTER ACTIONS
+        ========================= */
+
+    .filter-actions {
+        padding-top: 1.2rem;
+        border-top: 1px solid var(--line);
+        margin-top: .3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: .65rem;
+    }
+
+        .filter-actions .btn-teal {
+            width: 100%;
+            min-height: 42px;
+            background: var(--teal);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            padding: .65rem 1rem;
+            font-size: .88rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+            .filter-actions .btn-teal:hover {
+                background: var(--teal-dark);
+                transform: translateY(-1px);
+                box-shadow: 0 6px 15px rgba(15, 163, 163, .2);
+            }
+
+    .clear-link {
+        width: 100%;
+        min-height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 0;
+        padding: .55rem 1rem;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        color: var(--muted);
+        font-size: .84rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+        .clear-link:hover {
+            color: var(--teal-dark);
+            background: rgba(15, 163, 163, .07);
+            border-color: rgba(15, 163, 163, .15);
+        }
+
+
+    /* =========================
+           TOOLBAR
+        ========================= */
+
+    .toolbar {
+        background: #fff;
+        border-radius: var(--r);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid rgba(231, 226, 216, .7);
+        padding: 1rem 1.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.4rem;
+    }
+
+        .toolbar h2 {
+            font-family: 'Sora';
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        .toolbar .count {
+            font-size: .86rem;
+            color: var(--muted);
+            margin-top: .1rem;
+        }
+
+
+    /* =========================
+           SORT
+        ========================= */
+
+    .sort-wrap {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+        .sort-wrap label {
+            font-size: .85rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .sort-wrap select {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .5rem 2rem .5rem 1rem;
+            font-size: .88rem;
+            font-weight: 600;
+            color: var(--navy);
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+            .sort-wrap select:focus {
+                border-color: var(--teal);
+                box-shadow: 0 0 0 3px rgba(15, 163, 163, .08);
+            }
+
+
+    /* =========================
+           BUTTONS
+        ========================= */
+
+    .btn-teal {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        transition: .25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        white-space: nowrap;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(15, 163, 163, .3);
+            transform: translateY(-1px);
+        }
+
+    .btn-filter-mobile {
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .55rem 1.1rem;
+        font-size: .88rem;
+        transition: .2s ease;
+    }
+
+        .btn-filter-mobile:hover {
+            background: var(--teal-dark);
+        }
+
+    .destination-create-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .45rem;
+        padding: .65rem 1rem;
+        border-radius: 12px;
+        font-size: .85rem;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: all .2s ease;
+    }
+
+        .destination-create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 163, 163, .22);
+        }
+
+
+    /* =========================
+           ACTIVE CHIPS
+        ========================= */
+
+    .active-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        margin-bottom: 1.2rem;
+        min-height: 0;
+    }
+
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: rgba(15, 163, 163, .1);
+        color: var(--teal-dark);
+        font-size: .82rem;
+        font-weight: 600;
+        padding: .35rem .8rem;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+        .chip:hover {
+            background: rgba(15, 163, 163, .2);
+            transform: translateY(-1px);
+        }
+
+        .chip .x {
+            font-weight: 700;
+            font-size: .95rem;
+            line-height: 1;
+        }
+
+
+    /* =========================
+           DESTINATION LIST
+        ========================= */
+
+    .destination-list {
+        background: #fff;
+        border-radius: var(--r);
+        border: 1px solid rgba(231, 226, 216, .7);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+
+    /* =========================
+           LIST HEADER
+        ========================= */
+
+    .destination-list-header {
+        display: grid;
+        grid-template-columns: minmax(250px, 1.5fr) minmax(220px, 1.2fr) 100px 180px;
+        align-items: center;
+        gap: 1rem;
+        padding: .85rem 1.2rem;
+        background: #f8fafb;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: .72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+    }
+
+
+    /* =========================
+           LIST ITEM
+        ========================= */
+
+    .destination-item {
+        display: grid;
+        grid-template-columns: minmax(250px, 1.5fr) minmax(220px, 1.2fr) 100px 180px;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.2rem;
+        border-bottom: 1px solid var(--line);
+        transition: background .2s ease, transform .2s ease;
+    }
+
+        .destination-item:last-child {
+            border-bottom: none;
+        }
+
+        .destination-item:hover {
+            background: rgba(15, 163, 163, .025);
+        }
+
+
+    /* =========================
+           DESTINATION INFO
+        ========================= */
+
+    .destination-main {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        min-width: 0;
+    }
+
+    .destination-thumb {
+        width: 70px;
+        height: 62px;
+        border-radius: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #edf2f3;
+        border: 1px solid var(--line);
+    }
+
+        .destination-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .3s ease;
+        }
+
+    .destination-item:hover .destination-thumb img {
+        transform: scale(1.06);
+    }
+
+    .destination-info {
+        min-width: 0;
+    }
+
+    .destination-country {
+        color: var(--muted);
+        font-size: .72rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-weight: 700;
+        margin-bottom: .2rem;
+    }
+
+    .destination-city {
+        color: var(--navy);
+        font-family: 'Sora';
+        font-size: 1rem;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* =========================
+           DESCRIPTION
+        ========================= */
+
+    .destination-description {
+        color: var(--muted);
+        font-size: .82rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin: 0;
+    }
+
+
+    /* =========================
+           STATUS
+        ========================= */
+
+    .status-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    .status-active,
+    .status-passive {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .38rem .7rem;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .status-active {
+        color: #198754;
+        background: rgba(25, 135, 84, .1);
+    }
+
+    .status-passive {
+        color: #dc3545;
+        background: rgba(220, 53, 69, .1);
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+
+    /* =========================
+           ACTIONS
+        ========================= */
+
+    .destination-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: .45rem;
+        flex-wrap: wrap;
+    }
+
+        .destination-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            min-height: 36px;
+            padding: .45rem .75rem;
+            border-radius: 10px;
+            font-size: .75rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all .2s ease;
+            white-space: nowrap;
+        }
+
+        .destination-actions svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+
+    /* =========================
+           EDIT
+        ========================= */
+
+    .btn-destination-edit {
+        color: var(--navy);
+        background: #f4f7f8;
+        border: 1px solid #dce5e7;
+    }
+
+        .btn-destination-edit:hover {
+            color: #fff;
+            background: var(--teal);
+            border-color: var(--teal);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(15, 163, 163, .2);
+        }
+
+
+    /* =========================
+           DELETE
+        ========================= */
+
+    .btn-destination-delete {
+        color: #dc3545;
+        background: #fff5f5;
+        border: 1px solid #f3d2d5;
+    }
+
+        .btn-destination-delete:hover {
+            color: #fff;
+            background: #dc3545;
+            border-color: #dc3545;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(220, 53, 69, .2);
+        }
+
+
+    /* =========================
+           EMPTY STATE
+        ========================= */
+
+    .empty-state {
+        background: #fff;
+        border-radius: var(--r);
+        border: 1px solid rgba(231, 226, 216, .7);
+        box-shadow: var(--shadow-sm);
+        padding: 3.5rem 2rem;
+        text-align: center;
+    }
+
+        .empty-state .ico {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: rgba(15, 163, 163, .1);
+            color: var(--teal-dark);
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1.2rem;
+        }
+
+        .empty-state h3 {
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 1.3rem;
+            margin-bottom: .5rem;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            max-width: 40ch;
+            margin: .4rem auto 1.4rem;
+        }
+
+        .empty-state .btn-teal {
+            min-width: 180px;
+            min-height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--teal);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: .65rem 1.2rem;
+            font-size: .88rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .2s ease;
+        }
+
+            .empty-state .btn-teal:hover {
+                background: var(--teal-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(15, 163, 163, .2);
+            }
+
+
+    /* =========================
+           CTA
+        ========================= */
+
+    .mini-cta {
+        background: var(--navy);
+        border-radius: 24px;
+        padding: 2.8rem 2rem;
+        text-align: center;
+        color: #fff;
+        margin-top: 3.5rem;
+    }
+
+        .mini-cta .eyebrow {
+            color: #7fe3e3;
+            font-size: .8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+        }
+
+        .mini-cta h2 {
+            font-weight: 700;
+            font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+            letter-spacing: -.5px;
+            margin-top: .5rem;
+        }
+
+        .mini-cta p {
+            color: rgba(255, 255, 255, .82);
+            max-width: 50ch;
+            margin: .8rem auto 1.5rem;
+            line-height: 1.7;
+        }
+
+
+    /* =========================
+           MOBILE FILTER
+        ========================= */
+
+    .offcanvas {
+        max-width: 320px;
+    }
+
+
+    /* =========================
+           RESPONSIVE
+        ========================= */
+
+    @@media (max-width: 1199px) {
+
+        .destination-list-header,
+        .destination-item {
+            grid-template-columns: minmax(210px, 1.4fr) minmax(170px, 1fr) 90px 160px;
+        }
+    }
+
+
+    @@media (max-width: 991px) {
+
+        .listing {
+            padding-top: 2rem;
+        }
+    }
+
+
+    @@media (max-width: 767px) {
+
+        .page-head {
+            padding: 3rem 0 3.5rem;
+        }
+
+        .toolbar {
+            align-items: flex-start;
+        }
+
+            .toolbar > div:last-child {
+                width: 100%;
+            }
+
+        .destination-list-header {
+            display: none;
+        }
+
+        .destination-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: .9rem;
+            padding: 1rem;
+        }
+
+        .destination-main {
+            grid-column: 1 / -1;
+        }
+
+        .destination-description {
+            grid-column: 1 / -1;
+        }
+
+        .status-wrapper {
+            grid-column: 1;
+        }
+
+        .destination-actions {
+            grid-column: 2;
+            justify-content: flex-end;
+        }
+
+            .destination-actions a {
+                flex: none;
+            }
+
+        .mini-cta {
+            padding: 2.2rem 1.3rem;
+        }
+    }
+
+
+    @@media (max-width: 575px) {
+
+        .sort-wrap {
+            flex: 1;
+        }
+
+            .sort-wrap select {
+                width: 100%;
+            }
+
+        .destination-create-btn {
+            width: 100%;
+        }
+
+        .toolbar > div:last-child {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: .7rem !important;
+        }
+
+        .destination-main {
+            align-items: flex-start;
+        }
+
+        .destination-thumb {
+            width: 62px;
+            height: 58px;
+        }
+
+        .destination-city {
+            font-size: .95rem;
+        }
+
+        .destination-description {
+            font-size: .78rem;
+        }
+
+        .destination-item {
+            grid-template-columns: 1fr;
+        }
+
+        .status-wrapper,
+        .destination-actions {
+            grid-column: 1;
+        }
+
+        .destination-actions {
+            justify-content: stretch;
+        }
+
+            .destination-actions a {
+                flex: 1;
+            }
+
+        .mini-cta .destination-create-btn {
+            width: 100%;
+        }
+    }
+
+</style>
+
+
+<!-- =========================
+     PAGE CONTENT
+========================= -->
+
+<div class="content">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================= -->
+
+    <header class="page-head">
+
+        <div class="container">
+
+            <div class="breadcrumbz mb-3">
+
+                <a asp-controller="Home"
+                   asp-action="Index">
+                    Ana Sayfa
+                </a>
+
+                · Destinasyonlar
+
+            </div>
+
+            <div class="eyebrow">
+                Dünyayı keşfet
+            </div>
+
+            <h1>
+                Destinasyonları Yönet
+            </h1>
+
+            <p>
+                Seyahat rotalarında kullanılacak şehir ve ülkeleri
+                buradan yönetebilir, yeni destinasyonlar ekleyebilirsin.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         LISTING
+    ========================= -->
+
+    <section class="listing">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+                <!-- =========================
+                     SIDEBAR
+                ========================= -->
+
+                <div class="col-lg-3 d-none d-lg-block">
+
+                    <div class="sticky-side">
+
+                        <div class="filter-card">
+
+                            <h2>
+                                Destinasyonları Filtrele
+                            </h2>
+
+                            <p class="filter-sub">
+                                Aradığın destinasyonu kolayca bul.
+                            </p>
+
+
+                            <!-- SEARCH -->
+
+                            <div class="filter-group">
+
+                                <h3>
+                                    Destinasyon Ara
+                                </h3>
+
+                                <div class="search-wrap">
+
+                                    <svg width="16"
+                                         height="16"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+
+                                        <circle cx="11"
+                                                cy="11"
+                                                r="8" />
+
+                                        <line x1="21"
+                                              y1="21"
+                                              x2="16.65"
+                                              y2="16.65" />
+
+                                    </svg>
+
+                                    <input type="text"
+                                           id="searchInput"
+                                           placeholder="Şehir veya ülke ara..." />
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- COUNTRY -->
+
+                            <div class="filter-group">
+
+                                <h3>
+                                    Ülke
+                                </h3>
+
+                                @foreach (var country in Model
+                                                                .Select(x => x.Country)
+                                                                .Where(x => !string.IsNullOrWhiteSpace(x))
+                                                                .Distinct()
+                                                                .OrderBy(x => x))
+                                {
+                                    <label class="fcheck">
+
+                                        <span class="lbl">
+
+                                            <input type="checkbox"
+                                                   class="country-filter"
+                                                   value="@country" />
+
+                                            @country
+
+                                        </span>
+
+                                        <span class="cnt">
+                                            (@Model.Count(x => x.Country == country))
+                                        </span>
+
+                                    </label>
+                                }
+
+                            </div>
+
+
+                            <!-- STATUS -->
+
+                            <div class="filter-group">
+
+                                <h3>
+                                    Durum
+                                </h3>
+
+                                <label class="fcheck">
+
+                                    <span class="lbl">
+
+                                        <input type="checkbox"
+                                               class="status-filter"
+                                               value="active" />
+
+                                        Aktif
+
+                                    </span>
+
+                                    <span class="cnt">
+                                        (@Model.Count(x => x.IsActive))
+                                    </span>
+
+                                </label>
+
+                                <label class="fcheck">
+
+                                    <span class="lbl">
+
+                                        <input type="checkbox"
+                                               class="status-filter"
+                                               value="passive" />
+
+                                        Pasif
+
+                                    </span>
+
+                                    <span class="cnt">
+                                        (@Model.Count(x => !x.IsActive))
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+
+                            <!-- ACTIONS -->
+
+                            <div class="filter-actions">
+
+                                <button type="button"
+                                        class="btn-teal"
+                                        onclick="applyFilters()">
+
+                                    Filtreleri Uygula
+
+                                </button>
+
+                                <button type="button"
+                                        class="clear-link"
+                                        onclick="clearFilters()">
+
+                                    Filtreleri Temizle
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     RESULTS
+                ========================= -->
+
+                <div class="col-lg-9">
+
+                    <!-- TOOLBAR -->
+
+                    <div class="toolbar">
+
+                        <div>
+
+                            <h2>
+                                Destinasyonlar
+                            </h2>
+
+                            <div class="count">
+
+                                <span id="resultCount">
+                                    @Model.Count
+                                </span>
+
+                                destinasyon bulundu
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                            <!-- MOBILE FILTER -->
+
+                            <button class="btn-filter-mobile d-lg-none"
+                                    type="button"
+                                    data-bs-toggle="offcanvas"
+                                    data-bs-target="#filterOffcanvas">
+
+                                Filtrele
+
+                            </button>
+
+
+                            <!-- SORT -->
+
+                            <div class="sort-wrap">
+
+                                <label for="sortSelect"
+                                       class="d-none d-sm-block">
+
+                                    Sırala:
+
+                                </label>
+
+                                <select id="sortSelect">
+
+                                    <option value="city-asc">
+                                        Şehir A-Z
+                                    </option>
+
+                                    <option value="city-desc">
+                                        Şehir Z-A
+                                    </option>
+
+                                    <option value="country-asc">
+                                        Ülke A-Z
+                                    </option>
+
+                                    <option value="country-desc">
+                                        Ülke Z-A
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- CREATE -->
+
+                            <a asp-area="Admin"
+                               asp-controller="Destination"
+                               asp-action="Create"
+                               class="btn-teal destination-create-btn">
+
+                                <svg width="16"
+                                     height="16"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <line x1="12"
+                                          y1="5"
+                                          x2="12"
+                                          y2="19" />
+
+                                    <line x1="5"
+                                          y1="12"
+                                          x2="19"
+                                          y2="12" />
+
+                                </svg>
+
+                                Yeni Destinasyon
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ACTIVE CHIPS -->
+
+                    <div class="active-chips"
+                         id="activeChips">
+                    </div>
+
+
+                    <!-- =========================
+                         DESTINATION LIST
+                    ========================= -->
+
+                    <div class="destination-list"
+                         id="destinationGrid">
+
+                        <!-- LIST HEADER -->
+
+                        <div class="destination-list-header">
+
+                            <div>
+                                Destinasyon
+                            </div>
+
+                            <div>
+                                Açıklama
+                            </div>
+
+                            <div>
+                                Durum
+                            </div>
+
+                            <div class="text-end">
+                                İşlemler
+                            </div>
+
+                        </div>
+
+
+                        <!-- LIST ITEMS -->
+                        @foreach (var item in Model)
+                        {
+                            <div class="destination-item"
+                                 data-city="@((item.City ?? "").ToLowerInvariant())"
+                                 data-country="@((item.Country ?? "").ToLowerInvariant())"
+                                 data-description="@((item.Description ?? "").ToLowerInvariant())"
+                                 data-status="@(item.IsActive ? "active" : "passive")">
+
+                                <!-- DESTINATION -->
+
+                                <div class="destination-main">
+
+                                    <div class="destination-thumb">
+
+                                        @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl"
+                                                 alt="@item.City"
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80';" />
+                                        }
+                                        else
+                                        {
+                                            <img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80"
+                                                 alt="@item.City"
+                                                 loading="lazy" />
+                                        }
+
+                                </div>
+
+                                <div class="destination-info">
+
+                                    <div class="destination-country">
+                                        @item.Country
+                                    </div>
+
+                                    <div class="destination-city">
+                                        @item.City
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <div>
+
+                                <p class="destination-description">
+
+                                    @(string.IsNullOrWhiteSpace(item.Description)
+                                                                        ? "Bu destinasyon için henüz açıklama eklenmemiş."
+                                                                        : item.Description)
+
+                                </p>
+
+                                </div>
+
+
+                                <!-- STATUS -->
+
+                                <div class="status-wrapper">
+
+                                @if (item.IsActive)
+                                    {
+                                        <span class="status-active">
+
+                                            <span class="status-dot"></span>
+
+                                            Aktif
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-passive">
+
+                                            <span class="status-dot"></span>
+
+                                            Pasif
+
+                                        </span>
+                                    }
+
+                                </div>
+
+
+                                <!-- ACTIONS -->
+
+                                <div class="destination-actions">
+
+                                    <!-- UPDATE -->
+
+                                    <a asp-area="Admin"
+                                       asp-controller="Destination"
+                                       asp-action="Update"
+                                       asp-route-id="@item.Id"
+                                       class="btn-destination-edit">
+
+                                        <svg viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="2"
+                                             stroke-linecap="round"
+                                             stroke-linejoin="round">
+
+                                            <path d="M12 20h9" />
+
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+
+                                        </svg>
+
+                                        Güncelle
+
+                                    </a>
+
+
+                                    <!-- DELETE -->
+
+                                    <a asp-area="Admin"
+                                       asp-controller="Destination"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn-destination-delete"
+                                       onclick="return confirm('Bu destinasyonu silmek istediğinize emin misiniz?');">
+
+                                        <svg viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="2"
+                                             stroke-linecap="round"
+                                             stroke-linejoin="round">
+
+                                            <polyline points="3 6 5 6 21 6" />
+
+                                            <path d="M19 6l-1 14H6L4 6" />
+
+                                            <path d="M10 11v6" />
+
+                                            <path d="M14 11v6" />
+
+                                            <path d="M9 6V4h6v2" />
+
+                                        </svg>
+
+                                        Sil
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <!-- =========================
+                         EMPTY STATE
+                    ========================= -->
+
+                    <div id="emptyState"
+                         style="display:none">
+
+                        <div class="empty-state">
+
+                            <div class="ico">
+
+                                <svg width="28"
+                                     height="28"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <circle cx="11"
+                                            cy="11"
+                                            r="8" />
+
+                                    <line x1="21"
+                                          y1="21"
+                                          x2="16.65"
+                                          y2="16.65" />
+
+                                </svg>
+
+                            </div>
+
+                            <h3>
+                                Aradığın destinasyon bulunamadı.
+                            </h3>
+
+                            <p>
+                                Filtreleri değiştirmeyi veya aramayı
+                                temizlemeyi deneyebilirsin.
+                            </p>
+
+                            <button type="button"
+                                    class="btn-teal"
+                                    onclick="clearFilters()">
+
+                                Filtreleri Temizle
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================
+                         CTA
+                    ========================= -->
+
+                    <div class="mini-cta">
+
+                        <div class="eyebrow">
+                            Yeni rota oluştur
+                        </div>
+
+                        <h2>
+                            Yeni Bir Destinasyon Eklemek İster misin?
+                        </h2>
+
+                        <p>
+                            Yeni bir şehir veya ülke ekleyerek
+                            rotalarda kullanılabilir hale getirebilirsin.
+                        </p>
+
+                        <a asp-area="Admin"
+                           asp-controller="Destination"
+                           asp-action="Create"
+                           class="btn-teal destination-create-btn">
+
+                            <svg width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2.5"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <line x1="12"
+                                      y1="5"
+                                      x2="12"
+                                      y2="19" />
+
+                                <line x1="5"
+                                      y1="12"
+                                      x2="19"
+                                      y2="12" />
+
+                            </svg>
+
+                            Yeni Destinasyon Ekle
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         MOBILE FILTER
+    ========================= -->
+
+    <div class="offcanvas offcanvas-start"
+         tabindex="-1"
+         id="filterOffcanvas">
+
+        <div class="offcanvas-header">
+
+            <h5 class="offcanvas-title"
+                style="font-family:'Sora';font-weight:700;color:var(--navy)">
+
+                Filtrele
+
+            </h5>
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas">
+            </button>
+
+        </div>
+
+
+        <div class="offcanvas-body">
+
+            <div class="filter-card"
+                 style="box-shadow:none;border:none;padding:0">
+
+                <!-- SEARCH -->
+
+                <div class="filter-group">
+
+                    <h3>
+                        Destinasyon Ara
+                    </h3>
+
+                    <div class="search-wrap">
+
+                        <svg width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <circle cx="11"
+                                    cy="11"
+                                    r="8" />
+
+                            <line x1="21"
+                                  y1="21"
+                                  x2="16.65"
+                                  y2="16.65" />
+
+                        </svg>
+
+                        <input type="text"
+                               id="mobileSearchInput"
+                               placeholder="Şehir veya ülke ara..." />
+
+                    </div>
+
+                </div>
+
+
+                <!-- COUNTRY -->
+
+                <div class="filter-group">
+
+                    <h3>
+                        Ülke
+                    </h3>
+
+                    @foreach (var country in Model
+                                        .Select(x => x.Country)
+                                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                                        .Distinct()
+                                        .OrderBy(x => x))
+                    {
+                        <label class="fcheck">
+
+                            <span class="lbl">
+
+                                <input type="checkbox"
+                                       class="mobile-country-filter"
+                                       value="@country" />
+
+                                @country
+
+                            </span>
+
+                        </label>
+                    }
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="filter-group">
+
+                    <h3>
+                        Durum
+                    </h3>
+
+                    <label class="fcheck">
+
+                        <span class="lbl">
+
+                            <input type="checkbox"
+                                   class="mobile-status-filter"
+                                   value="active" />
+
+                            Aktif
+
+                        </span>
+
+                    </label>
+
+                    <label class="fcheck">
+
+                        <span class="lbl">
+
+                            <input type="checkbox"
+                                   class="mobile-status-filter"
+                                   value="passive" />
+
+                            Pasif
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="filter-actions">
+
+                    <button type="button"
+                            class="btn-teal"
+                            onclick="applyMobileFilters()">
+
+                        Filtreleri Uygula
+
+                    </button>
+
+                    <button type="button"
+                            class="clear-link"
+                            onclick="clearFilters()">
+
+                        Filtreleri Temizle
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       ELEMENTS
+    ========================= */
+
+    const items = [
+        ...document.querySelectorAll(".destination-item")
+    ];
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const mobileSearchInput =
+        document.getElementById("mobileSearchInput");
+
+    const resultCount =
+        document.getElementById("resultCount");
+
+    const emptyState =
+        document.getElementById("emptyState");
+
+    const activeChips =
+        document.getElementById("activeChips");
+
+    const sortSelect =
+        document.getElementById("sortSelect");
+
+    const turkishLocale =
+        new Intl.Collator("tr-TR", {
+            sensitivity: "base"
+        });
+
+
+    /* =========================
+       FILTER DATA
+    ========================= */
+
+    function getCountries() {
+
+        return [
+            ...document.querySelectorAll(
+                ".country-filter:checked"
+            )
+        ].map(input =>
+            input.value
+                .trim()
+                .toLocaleLowerCase("tr-TR")
+        );
+
+    }
+
+
+    function getStatuses() {
+
+        return [
+            ...document.querySelectorAll(
+                ".status-filter:checked"
+            )
+        ].map(input =>
+            input.value
+        );
+
+    }
+
+
+    /* =========================
+       RENDER
+    ========================= */
+
+    function render() {
+
+        const search =
+            searchInput.value
+                .trim()
+                .toLocaleLowerCase("tr-TR");
+
+        const countries =
+            getCountries();
+
+        const statuses =
+            getStatuses();
+
+        let visibleCount = 0;
+
+
+        items.forEach(item => {
+
+            const city =
+                item.dataset.city || "";
+
+            const country =
+                item.dataset.country || "";
+
+            const description =
+                item.dataset.description || "";
+
+            const status =
+                item.dataset.status || "";
+
+
+            const searchMatch =
+                !search ||
+                city.includes(search) ||
+                country.includes(search) ||
+                description.includes(search);
+
+
+            const countryMatch =
+                countries.length === 0 ||
+                countries.includes(country);
+
+
+            const statusMatch =
+                statuses.length === 0 ||
+                statuses.includes(status);
+
+
+            const visible =
+                searchMatch &&
+                countryMatch &&
+                statusMatch;
+
+
+            item.style.display =
+                visible ? "grid" : "none";
+
+
+            if (visible) {
+                visibleCount++;
+            }
+
+        });
+
+
+        resultCount.textContent =
+            visibleCount;
+
+
+        emptyState.style.display =
+            visibleCount === 0
+                ? "block"
+                : "none";
+
+
+        updateChips(
+            search,
+            countries,
+            statuses
+        );
+
+    }
+
+
+    /* =========================
+       CHIPS
+    ========================= */
+
+    function updateChips(
+        search,
+        countries,
+        statuses
+    ) {
+
+        let html = "";
+
+
+        countries.forEach(country => {
+
+            const originalCountry =
+                [...document.querySelectorAll(".country-filter")]
+                    .find(input =>
+                        input.value
+                            .trim()
+                            .toLocaleLowerCase("tr-TR") === country
+                    )?.value || country;
+
+
+            html += `
+                <span class="chip"
+                      onclick="removeCountry('${escapeHtml(country)}')">
+
+                    ${escapeHtml(originalCountry)}
+
+                    <span class="x">
+                        ×
+                    </span>
+
+                </span>
+            `;
+
+        });
+
+
+        statuses.forEach(status => {
+
+            html += `
+                <span class="chip"
+                      onclick="removeStatus('${status}')">
+
+                    ${status === "active"
+                        ? "Aktif"
+                        : "Pasif"}
+
+                    <span class="x">
+                        ×
+                    </span>
+
+                </span>
+            `;
+
+        });
+
+
+        if (search) {
+
+            html += `
+                <span class="chip"
+                      onclick="removeSearch()">
+
+                    "${escapeHtml(search)}"
+
+                    <span class="x">
+                        ×
+                    </span>
+
+                </span>
+            `;
+
+        }
+
+
+        activeChips.innerHTML =
+            html;
+
+    }
+
+
+    /* =========================
+       HTML ESCAPE
+    ========================= */
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =========================
+       REMOVE COUNTRY
+    ========================= */
+
+    function removeCountry(country) {
+
+        const normalizedCountry =
+            country
+                .trim()
+                .toLocaleLowerCase("tr-TR");
+
+
+        document
+            .querySelectorAll(".country-filter")
+            .forEach(input => {
+
+                if (
+                    input.value
+                        .trim()
+                        .toLocaleLowerCase("tr-TR") === normalizedCountry
+                ) {
+
+                    input.checked = false;
+
+                }
+
+            });
+
+
+        document
+            .querySelectorAll(".mobile-country-filter")
+            .forEach(input => {
+
+                if (
+                    input.value
+                        .trim()
+                        .toLocaleLowerCase("tr-TR") === normalizedCountry
+                ) {
+
+                    input.checked = false;
+
+                }
+
+            });
+
+
+        render();
+
+    }
+
+
+    /* =========================
+       REMOVE STATUS
+    ========================= */
+
+    function removeStatus(status) {
+
+        document
+            .querySelectorAll(".status-filter")
+            .forEach(input => {
+
+                if (input.value === status) {
+                    input.checked = false;
+                }
+
+            });
+
+
+        document
+            .querySelectorAll(".mobile-status-filter")
+            .forEach(input => {
+
+                if (input.value === status) {
+                    input.checked = false;
+                }
+
+            });
+
+
+        render();
+
+    }
+
+
+    /* =========================
+       REMOVE SEARCH
+    ========================= */
+
+    function removeSearch() {
+
+        searchInput.value = "";
+
+        mobileSearchInput.value = "";
+
+        render();
+
+    }
+
+
+    /* =========================
+       APPLY FILTER
+    ========================= */
+
+    function applyFilters() {
+
+        render();
+
+    }
+
+
+    /* =========================
+       MOBILE FILTER
+    ========================= */
+
+    function applyMobileFilters() {
+
+        searchInput.value =
+            mobileSearchInput.value;
+
+
+        document
+            .querySelectorAll(".country-filter")
+            .forEach(desktop => {
+
+                const mobile =
+                    [...document.querySelectorAll(
+                        ".mobile-country-filter"
+                    )]
+                    .find(input =>
+                        input.value === desktop.value
+                    );
+
+                desktop.checked =
+                    mobile?.checked || false;
+
+            });
+
+
+        document
+            .querySelectorAll(".status-filter")
+            .forEach(desktop => {
+
+                const mobile =
+                    [...document.querySelectorAll(
+                        ".mobile-status-filter"
+                    )]
+                    .find(input =>
+                        input.value === desktop.value
+                    );
+
+                desktop.checked =
+                    mobile?.checked || false;
+
+            });
+
+
+        render();
+
+
+        const offcanvas =
+            document.getElementById(
+                "filterOffcanvas"
+            );
+
+
+        const instance =
+            bootstrap.Offcanvas.getInstance(
+                offcanvas
+            );
+
+
+        if (instance) {
+            instance.hide();
+        }
+
+    }
+
+
+    /* =========================
+       CLEAR FILTERS
+    ========================= */
+
+    function clearFilters() {
+
+        searchInput.value = "";
+
+        mobileSearchInput.value = "";
+
+
+        document
+            .querySelectorAll(
+                ".country-filter, " +
+                ".status-filter, " +
+                ".mobile-country-filter, " +
+                ".mobile-status-filter"
+            )
+            .forEach(input => {
+
+                input.checked = false;
+
+            });
+
+
+        sortSelect.value =
+            "city-asc";
+
+
+        sortItems();
+
+        render();
+
+    }
+
+
+    /* =========================
+       SORT
+    ========================= */
+
+    function sortItems() {
+
+        const grid =
+            document.getElementById(
+                "destinationGrid"
+            );
+
+
+        const sorted =
+            [...items].sort((a, b) => {
+
+                const cityA =
+                    a.dataset.city || "";
+
+                const cityB =
+                    b.dataset.city || "";
+
+                const countryA =
+                    a.dataset.country || "";
+
+                const countryB =
+                    b.dataset.country || "";
+
+
+                switch (sortSelect.value) {
+
+                    case "city-desc":
+
+                        return turkishLocale.compare(
+                            cityB,
+                            cityA
+                        );
+
+
+                    case "country-asc":
+
+                        return turkishLocale.compare(
+                            countryA,
+                            countryB
+                        );
+
+
+                    case "country-desc":
+
+                        return turkishLocale.compare(
+                            countryB,
+                            countryA
+                        );
+
+
+                    default:
+
+                        return turkishLocale.compare(
+                            cityA,
+                            cityB
+                        );
+
+                }
+
+            });
+
+
+        sorted.forEach(item => {
+
+            grid.appendChild(item);
+
+        });
+
+    }
+
+
+    /* =========================
+       EVENTS
+    ========================= */
+
+    searchInput.addEventListener(
+        "input",
+        render
+    );
+
+
+    mobileSearchInput.addEventListener(
+        "input",
+        function () {
+
+            searchInput.value =
+                mobileSearchInput.value;
+
+            render();
+
+        }
+    );
+
+
+    document
+        .querySelectorAll(
+            ".country-filter, .status-filter"
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                "change",
+                render
+            );
+
+        });
+
+
+    sortSelect.addEventListener(
+        "change",
+        function () {
+
+            sortItems();
+
+            render();
+
+        }
+    );
+
+
+    /* =========================
+       INITIALIZE
+    ========================= */
+
+    sortItems();
+
+    render();
+
+</script>
+

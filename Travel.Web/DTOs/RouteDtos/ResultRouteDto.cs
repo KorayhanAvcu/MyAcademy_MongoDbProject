@@ -2,9 +2,8 @@
 {
     public class ResultRouteDto
     {
-        public string Id { get; set; }
-        public string? City { get; set; }
-        public string? Country { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string DestinationId { get; set; } = string.Empty;
         public string? Duration { get; set; }
         public string? ImageUrl { get; set; }
         public decimal Price { get; set; }

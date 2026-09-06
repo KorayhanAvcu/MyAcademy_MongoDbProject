@@ -1,0 +1,455 @@
+﻿
+@model Travel.Web.DTOs.CategoryDtos.CategoryCreateDto
+
+@{
+    ViewData["Title"] = "Yeni Kategori";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    /* =========================================
+           PAGE INTRO
+           ========================================= */
+
+    .page-intro {
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+        }
+
+
+    /* =========================================
+           BREADCRUMB
+           ========================================= */
+
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+
+    /* =========================================
+           SECTION CARD
+           ========================================= */
+
+    .category-form-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .form-header {
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .form-header h5 {
+            margin: 0;
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: .95rem;
+        }
+
+        .form-header span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+    .form-body {
+        padding: 1.4rem;
+    }
+
+
+    /* =========================================
+           FORM
+           ========================================= */
+
+    .form-label {
+        color: var(--navy);
+        font-size: .84rem;
+        font-weight: 600;
+        margin-bottom: .45rem;
+    }
+
+    .form-control {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .72rem .85rem;
+        font-size: .88rem;
+        color: var(--navy);
+    }
+
+        .form-control:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 .2rem rgba(15,163,163,.1);
+        }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+
+    /* =========================================
+           CHECKBOX
+           ========================================= */
+
+    .form-check-input:checked {
+        background-color: var(--teal);
+        border-color: var(--teal);
+    }
+
+    .form-check-label {
+        color: var(--navy);
+        font-size: .88rem;
+    }
+
+
+    /* =========================================
+           BUTTONS
+           ========================================= */
+
+    .btn-teal {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        transition: .25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(15,163,163,.3);
+        }
+
+    .btn-cancel {
+        background: #fff;
+        color: var(--navy);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        text-decoration: none;
+        transition: .2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-cancel:hover {
+            background: #fafbfb;
+            color: var(--navy);
+            border-color: var(--teal);
+        }
+
+</style>
+
+
+<!-- CONTENT -->
+
+<div class="content">
+
+
+    <!-- BREADCRUMB -->
+
+    <div class="crumb">
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index">
+
+            Dashboard
+
+        </a>
+
+        /
+
+        <a asp-area="Admin"
+           asp-controller="Category"
+           asp-action="Index">
+
+            Kategoriler
+
+        </a>
+
+        /
+
+        <span class="cur">
+
+            Yeni Kategori
+
+        </span>
+
+    </div>
+
+
+    <!-- PAGE INTRO -->
+
+    <div class="page-intro">
+
+        <h1>
+            Yeni Kategori
+        </h1>
+
+        <p>
+            Travelio için yeni bir tur kategorisi oluşturun.
+        </p>
+
+    </div>
+
+
+    <!-- CATEGORY FORM -->
+
+    <div class="category-form-card">
+
+
+        <!-- FORM HEADER -->
+
+        <div class="form-header">
+
+            <h5>
+                Kategori Bilgileri
+            </h5>
+
+            <span>
+                Kategori bilgilerini eksiksiz doldurun.
+            </span>
+
+        </div>
+
+
+        <!-- FORM BODY -->
+
+        <div class="form-body">
+
+            <form asp-area="Admin"
+                  asp-controller="Category"
+                  asp-action="CategoryCreate"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+
+                <!-- VALIDATION SUMMARY -->
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-4">
+                </div>
+
+
+                <div class="row g-4">
+
+
+                    <!-- CATEGORY NAME -->
+
+                    <div class="col-md-8">
+
+                        <label asp-for="Name"
+                               class="form-label">
+
+                            Kategori Adı
+
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Örn: Kültür Turları" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- DISPLAY ORDER -->
+
+                    <div class="col-md-4">
+
+                        <label asp-for="DisplayOrder"
+                               class="form-label">
+
+                            Görüntülenme Sırası
+
+                        </label>
+
+                        <input asp-for="DisplayOrder"
+                               type="number"
+                               min="0"
+                               class="form-control"
+                               placeholder="1" />
+
+                        <span asp-validation-for="DisplayOrder"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Description"
+                               class="form-label">
+
+                            Açıklama
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Kategori hakkında kısa bir açıklama yazın..."></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- IMAGE URL -->
+
+                    <div class="col-12">
+
+                        <label asp-for="ImageUrl"
+                               class="form-label">
+
+                            Görsel URL
+
+                        </label>
+
+                        <input asp-for="ImageUrl"
+                               class="form-control"
+                               placeholder="https://example.com/category.jpg" />
+
+                        <span asp-validation-for="ImageUrl"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- ACTIVE -->
+
+                    <div class="col-12">
+
+                        <div class="form-check">
+
+                            <input asp-for="IsActive"
+                                   class="form-check-input" />
+
+                            <label asp-for="IsActive"
+                                   class="form-check-label">
+
+                                Kategori aktif
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+
+                    <!-- CANCEL -->
+
+                    <a asp-area="Admin"
+                       asp-controller="Category"
+                       asp-action="Index"
+                       class="btn-cancel">
+
+                        İptal
+
+                    </a>
+
+
+                    <!-- CREATE -->
+
+                    <button type="submit"
+                            class="btn-teal">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <polyline points="20 6 9 17 4 12" />
+
+                        </svg>
+
+                        Kategori Oluştur
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

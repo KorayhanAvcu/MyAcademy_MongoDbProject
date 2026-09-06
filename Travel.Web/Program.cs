@@ -5,7 +5,11 @@ using Microsoft.Extensions.Options;
 using System.Reflection;
 using Travel.Web.Entities;
 using Travel.Web.Services.BannerServices;
+using Travel.Web.Services.CategoryServices;
+using Travel.Web.Services.DestinationServices;
 using Travel.Web.Services.RouteServices;
+using Travel.Web.Services.TourServices;
+using Travel.Web.Services.WhyChooseUsServices;
 using Travel.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,8 +37,10 @@ builder.Services.AddSingleton<IDatabaseSettings>(sp =>
 
 builder.Services.AddScoped<IBannerService, BannerService>();
 builder.Services.AddScoped<IRouteService, RouteService>();
-
-
+builder.Services.AddScoped<IDestinationService, DestinationService>();
+builder.Services.AddScoped<IWhyChooseUsService, WhyChooseUsService>();
+builder.Services.AddScoped<ITourService, TourService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 var databaseSettings = builder.Configuration
     .GetSection("DatabaseSettings")
     .Get<DatabaseSettings>();
