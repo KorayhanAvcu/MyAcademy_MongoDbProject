@@ -18,6 +18,9 @@ namespace Travel.Web.Entities
 
         public DateTime? AnsweredAt { get; set; }
 
-        public bool IsAnswered { get; set; }
+        public bool IsAnswered { get; set; } = false;
+
+        public bool IsRead { get; set; } = false;
     }
 }
+

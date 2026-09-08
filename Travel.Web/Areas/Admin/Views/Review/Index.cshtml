@@ -1,0 +1,760 @@
+﻿
+@using Travel.Web.DTOs.ReviewDtos
+@model List<ReviewListDto>
+
+@{
+    ViewData["Title"] = "Review Yönetimi";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+    .page-intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+            max-width: 60ch;
+        }
+
+    .kpi {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+    }
+
+        .kpi .ic {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: rgba(15,163,163,.1);
+            color: var(--teal-dark);
+            flex: none;
+        }
+
+        .kpi .num {
+            font-family: 'Sora';
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--navy);
+            line-height: 1;
+        }
+
+        .kpi .lab {
+            font-size: .82rem;
+            color: var(--muted);
+            margin-top: .15rem;
+        }
+
+    .review-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .review-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .review-card-header h5 {
+            margin: 0;
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: .95rem;
+        }
+
+        .review-card-header span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+    .review-table {
+        width: 100%;
+        min-width: 1050px;
+        border-collapse: collapse;
+    }
+
+        .review-table th {
+            padding: .9rem 1rem;
+            background: #fafbfb;
+            color: var(--muted);
+            font-size: .78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        .review-table td {
+            padding: .9rem 1rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+            color: var(--navy);
+            font-size: .88rem;
+        }
+
+        .review-table tbody tr {
+            transition: .2s;
+        }
+
+            .review-table tbody tr:hover {
+                background: #fcfefe;
+            }
+
+            .review-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+        min-width: 180px;
+    }
+
+    .user-image {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--line);
+        background: var(--cream);
+        flex: none;
+    }
+
+    .user-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(15,163,163,.1);
+        color: var(--teal-dark);
+        flex: none;
+    }
+
+    .user-name {
+        font-family: 'Sora';
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: .15rem;
+    }
+
+    .user-id {
+        color: var(--muted);
+        font-size: .72rem;
+    }
+
+    .tour-name {
+        font-family: 'Sora';
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: .15rem;
+        max-width: 220px;
+    }
+
+    .tour-id {
+        color: var(--muted);
+        font-size: .72rem;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: .12rem;
+        white-space: nowrap;
+    }
+
+        .rating svg {
+            width: 16px;
+            height: 16px;
+        }
+
+    .rating-number {
+        margin-left: .35rem;
+        font-weight: 700;
+        color: var(--navy);
+    }
+
+    .review-comment {
+        max-width: 330px;
+        color: var(--muted);
+        line-height: 1.45;
+    }
+
+    .status-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        gap: .3rem;
+        padding: .3rem .6rem;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+        .status-badge.read {
+            background: rgba(15,163,163,.1);
+            color: var(--teal-dark);
+        }
+
+        .status-badge.unread {
+            background: #fff4df;
+            color: #a66a00;
+        }
+
+        .status-badge.active {
+            background: #e9f7ef;
+            color: #21864b;
+        }
+
+        .status-badge.passive {
+            background: #fbeaea;
+            color: #b23a3a;
+        }
+
+    .actions {
+        display: flex;
+        gap: .45rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: #fff;
+        transition: .2s;
+        text-decoration: none;
+    }
+
+        .action-btn.detail {
+            color: var(--teal-dark);
+        }
+
+            .action-btn.detail:hover {
+                background: rgba(15,163,163,.08);
+                border-color: var(--teal);
+            }
+
+    .empty {
+        text-align: center;
+        padding: 4rem 1rem;
+    }
+
+        .empty .eic {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: rgba(15,163,163,.1);
+            color: var(--teal-dark);
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1rem;
+        }
+
+        .empty h3 {
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 1.2rem;
+            margin-bottom: .4rem;
+        }
+
+        .empty p {
+            color: var(--muted);
+            margin: 0;
+        }
+
+    .tbl-wrap {
+        overflow-x: auto;
+    }
+
+    @@media (max-width: 768px) {
+        .page-intro {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="crumb">
+    <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index">
+        Dashboard
+    </a>
+    /
+    <span class="cur">
+        Yorumlar
+    </span>
+</div>
+
+<div class="page-intro">
+    <div>
+        <h1>Yorum Yönetimi</h1>
+        <p>
+            Kullanıcılar tarafından gönderilen yorumları
+            görüntüleyebilir ve yorumların durumunu yönetebilirsiniz.
+        </p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-12 col-md-4">
+        <div class="kpi">
+            <div class="ic">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+                </svg>
+            </div>
+
+            <div>
+                <div class="num">
+                    @(Model?.Count ?? 0)
+                </div>
+
+                <div class="lab">
+                    Toplam Yorum
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="kpi">
+            <div class="ic">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M4 4h16v12H5.17L4 17.17V4z" />
+                    <polyline points="8 9 10 11 14 7" />
+                </svg>
+            </div>
+
+            <div>
+                <div class="num">
+                    @(Model?.Count(x => !x.IsRead) ?? 0)
+                </div>
+
+                <div class="lab">
+                    Okunmamış Yorum
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="kpi">
+            <div class="ic">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+            </div>
+
+            <div>
+                <div class="num">
+                    @(Model?.Count(x => x.IsActive) ?? 0)
+                </div>
+
+                <div class="lab">
+                    Aktif Yorum
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="review-card">
+
+    <div class="review-card-header">
+        <div>
+            <h5>
+                Yorum Listesi
+            </h5>
+
+            <span>
+                Sistemde kayıtlı kullanıcı yorumları
+            </span>
+        </div>
+
+        <span>
+            @(Model?.Count ?? 0) kayıt
+        </span>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="tbl-wrap">
+
+            <table class="review-table">
+
+                <thead>
+                    <tr>
+                        <th style="width:70px;">
+                            #
+                        </th>
+
+                        <th>
+                            Kullanıcı
+                        </th>
+
+                        <th>
+                            Tur
+                        </th>
+
+                        <th>
+                            Puan
+                        </th>
+
+                        <th>
+                            Yorum
+                        </th>
+
+                        <th>
+                            Durum
+                        </th>
+
+                        <th style="width:90px;">
+                            İşlem
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @{
+                        int count = 0;
+                    }
+
+                    @foreach (var item in Model)
+                    {
+                        count++;
+
+                        <tr>
+
+                            <td>
+                                <span style="font-weight:700;">
+                                    @count
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="user-info">
+
+                                    @if (!string.IsNullOrEmpty(item.UserImageUrl))
+                                    {
+                                        <img src="@item.UserImageUrl"
+                                             class="user-image"
+                                             alt="@item.UserName"
+                                             onerror="this.style.display='none';" />
+                                    }
+                                    else
+                                    {
+                                        <div class="user-placeholder">
+                                            <svg width="19"
+                                                 height="19"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="2"
+                                                 stroke-linecap="round"
+                                                 stroke-linejoin="round">
+                                                <path d="M20 21a8 8 0 0 0-16 0" />
+                                                <circle cx="12"
+                                                        cy="7"
+                                                        r="4" />
+                                            </svg>
+                                        </div>
+                                    }
+
+                                    <div>
+                                        <div class="user-name">
+                                            @item.UserName
+                                        </div>
+
+                                        <div class="user-id">
+                                            ID: @item.UserId
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="tour-name">
+                                    @item.TourName
+                                </div>
+
+                                <div class="tour-id">
+                                    ID: @item.TourId
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="rating">
+
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= item.Rating)
+                                        {
+                                            <svg viewBox="0 0 24 24"
+                                                 fill="currentColor"
+                                                 stroke="currentColor">
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                            </svg>
+                                        }
+                                        else
+                                        {
+                                            <svg viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor">
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                            </svg>
+                                        }
+                                    }
+
+                                    <span class="rating-number">
+                                        @item.Rating/5
+                                    </span>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="review-comment">
+
+                                    @if (!string.IsNullOrEmpty(item.Comment))
+                                    {
+                                        @(item.Comment.Length > 100
+                                            ? item.Comment.Substring(0, 100) + "..."
+                                            : item.Comment)
+                                    }
+                                    else
+                                    {
+                                        <span style="color:var(--muted);">
+                                            Yorum bulunmuyor
+                                        </span>
+                                    }
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="status-wrapper">
+
+                                    @if (item.IsRead)
+                                    {
+                                        <span class="status-badge read">
+                                            <svg width="13"
+                                                 height="13"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="2.5"
+                                                 stroke-linecap="round"
+                                                 stroke-linejoin="round">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                            Okundu
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge unread">
+                                            <span>●</span>
+                                            Yeni
+                                        </span>
+                                    }
+
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="status-badge active">
+                                            <svg width="13"
+                                                 height="13"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="2.5"
+                                                 stroke-linecap="round"
+                                                 stroke-linejoin="round">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                            Aktif
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge passive">
+                                            <svg width="13"
+                                                 height="13"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="2"
+                                                 stroke-linecap="round"
+                                                 stroke-linejoin="round">
+                                                <line x1="18"
+                                                      y1="6"
+                                                      x2="6"
+                                                      y2="18" />
+                                                <line x1="6"
+                                                      y1="6"
+                                                      x2="18"
+                                                      y2="18" />
+                                            </svg>
+                                            Pasif
+                                        </span>
+                                    }
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="actions">
+
+                                    <a asp-area="Admin"
+                                           asp-controller="Review"
+                                           asp-action="Detail"
+                                           asp-route-id="@item.Id"
+                                           class="action-btn detail"
+                                           title="Detay">
+
+                                        <svg width="16"
+                                             height="16"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="2"
+                                             stroke-linecap="round"
+                                             stroke-linejoin="round">
+                                            <circle cx="12"
+                                                    cy="12"
+                                                    r="10" />
+                                            <line x1="12"
+                                                  y1="16"
+                                                  x2="12"
+                                                  y2="12" />
+                                            <line x1="12"
+                                                  y1="8"
+                                                  x2="12.01"
+                                                  y2="8" />
+                                        </svg>
+
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <div class="empty">
+
+            <div class="eic">
+                <svg width="26"
+                     height="26"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+                </svg>
+            </div>
+
+            <h3>
+                Henüz yorum bulunmuyor
+            </h3>
+
+            <p>
+                Sisteme henüz bir kullanıcı yorumu gönderilmemiş.
+            </p>
+
+        </div>
+    }
+
+</div>
+

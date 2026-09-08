@@ -7,6 +7,8 @@ using Travel.Web.Entities;
 using Travel.Web.Services.BannerServices;
 using Travel.Web.Services.CategoryServices;
 using Travel.Web.Services.DestinationServices;
+using Travel.Web.Services.QuestionServices;
+using Travel.Web.Services.ReviewServices;
 using Travel.Web.Services.RouteServices;
 using Travel.Web.Services.TourServices;
 using Travel.Web.Services.WhyChooseUsServices;
@@ -41,6 +43,8 @@ builder.Services.AddScoped<IDestinationService, DestinationService>();
 builder.Services.AddScoped<IWhyChooseUsService, WhyChooseUsService>();
 builder.Services.AddScoped<ITourService, TourService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
 var databaseSettings = builder.Configuration
     .GetSection("DatabaseSettings")
     .Get<DatabaseSettings>();

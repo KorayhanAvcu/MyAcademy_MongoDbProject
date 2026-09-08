@@ -1,0 +1,528 @@
+﻿
+@using Travel.Web.DTOs.QuestionDtos
+@model List<QuestionListDto>
+
+@{
+    ViewData["Title"] = "Soru Yönetimi";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+
+    var totalQuestions = Model.Count;
+    var unreadQuestions = Model.Count(x => !x.IsRead);
+    var unansweredQuestions = Model.Count(x => !x.IsAnswered);
+    var answeredQuestions = Model.Count(x => x.IsAnswered);
+}
+
+<style>
+    :root {
+        --muted: #5d7180;
+        --teal-dark: #0b7f80;
+        --navy: #0e2a3b;
+        --line: #e7e2d8;
+        --teal: #0fa3a3;
+        --cream: #f7f5f0;
+    }
+
+    .question-page {
+        padding: 10px 0 40px;
+    }
+
+    .breadcrumb-area {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: .85rem;
+        color: var(--muted);
+        margin-bottom: 24px;
+    }
+
+        .breadcrumb-area a {
+            color: var(--teal-dark);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+    .page-heading {
+        margin-bottom: 28px;
+    }
+
+        .page-heading h1 {
+            color: var(--navy);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .95rem;
+        }
+
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .kpi-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 20px;
+    }
+
+    .kpi-label {
+        color: var(--muted);
+        font-size: .82rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .kpi-value {
+        color: var(--navy);
+        font-size: 1.7rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .table-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .table-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .table-header h2 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .question-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1050px;
+    }
+
+        .question-table th {
+            padding: 14px 18px;
+            background: var(--cream);
+            color: var(--muted);
+            font-size: .76rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            white-space: nowrap;
+        }
+
+        .question-table td {
+            padding: 16px 18px;
+            border-top: 1px solid var(--line);
+            vertical-align: middle;
+            color: var(--navy);
+            font-size: .88rem;
+        }
+
+        .question-table tbody tr {
+            transition: background .15s ease;
+        }
+
+            .question-table tbody tr:hover {
+                background: #fcfbf8;
+            }
+
+    .question-number {
+        color: var(--muted);
+        font-weight: 700;
+    }
+
+    .user-info,
+    .tour-info {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .user-name,
+    .tour-name {
+        font-weight: 800;
+        color: var(--navy);
+    }
+
+    .user-id,
+    .tour-id {
+        color: var(--muted);
+        font-size: .72rem;
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .question-text {
+        max-width: 330px;
+        color: var(--navy);
+        line-height: 1.5;
+    }
+
+        .question-text.unread {
+            font-weight: 700;
+        }
+
+    .status-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .status-unread {
+        background: #fff3df;
+        color: #9a6500;
+    }
+
+    .status-read {
+        background: #eef5f6;
+        color: var(--teal-dark);
+    }
+
+    .status-unanswered {
+        background: #fff0ee;
+        color: #a64b3e;
+    }
+
+    .status-answered {
+        background: #e9f7ef;
+        color: #28794d;
+    }
+
+    .date-text {
+        color: var(--muted);
+        font-size: .78rem;
+        white-space: nowrap;
+    }
+
+    .action-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--navy);
+        text-decoration: none;
+        transition: .15s ease;
+    }
+
+        .action-btn:hover {
+            border-color: var(--teal);
+            color: var(--teal-dark);
+            background: #f4fbfb;
+        }
+
+        .action-btn.delete {
+            color: #a64b3e;
+        }
+
+            .action-btn.delete:hover {
+                border-color: #e4b8b0;
+                background: #fff5f3;
+            }
+
+    .empty-state {
+        padding: 70px 30px;
+        text-align: center;
+    }
+
+    .empty-state-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        color: var(--teal-dark);
+        font-size: 1.5rem;
+    }
+
+    .empty-state h3 {
+        color: var(--navy);
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: var(--muted);
+        margin: 0;
+        font-size: .9rem;
+    }
+
+    @@media (max-width: 1100px) {
+        .kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .kpi-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-heading h1 {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+
+<div class="question-page">
+
+    <div class="breadcrumb-area">
+        <a asp-area="Admin"
+               asp-controller="Dashboard"
+               asp-action="Index">
+            Dashboard
+        </a>
+
+        <span>/</span>
+
+        <span>Sorular</span>
+    </div>
+
+    <div class="page-heading">
+        <h1>Soru Yönetimi</h1>
+        <p>
+            Kullanıcıların turlar hakkında gönderdiği soruları görüntüleyebilir
+            ve cevaplayabilirsiniz.
+        </p>
+    </div>
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <div class="kpi-label">Toplam Soru</div>
+            <div class="kpi-value">@totalQuestions</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-label">Okunmamış</div>
+            <div class="kpi-value">@unreadQuestions</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-label">Cevaplanmamış</div>
+            <div class="kpi-value">@unansweredQuestions</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-label">Cevaplanmış</div>
+            <div class="kpi-value">@answeredQuestions</div>
+        </div>
+
+    </div>
+
+    <div class="table-card">
+
+        <div class="table-header">
+            <h2>Kullanıcı Soruları</h2>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="question-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Kullanıcı</th>
+                            <th>Tur</th>
+                            <th>Soru</th>
+                            <th>Durum</th>
+                            <th>Tarih</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @{
+                            var index = 1;
+                        }
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <span class="question-number">
+                                        @index
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="user-info">
+                                        <span class="user-name">
+                                            Kullanıcı
+                                        </span>
+
+                                        <span class="user-id">
+                                            @item.UserId
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="tour-info">
+                                        <span class="tour-name">
+                                            @item.TourName
+                                        </span>
+
+                                        <span class="tour-id">
+                                            @item.TourId
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="question-text @(item.IsRead ? "" : "unread")">
+                                        @item.QuestionText
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="status-wrapper">
+
+                                        @if (item.IsRead)
+                                        {
+                                            <span class="status-badge status-read">
+                                                Okundu
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge status-unread">
+                                                Okunmadı
+                                            </span>
+                                        }
+
+                                        @if (item.IsAnswered)
+                                        {
+                                            <span class="status-badge status-answered">
+                                                Cevaplandı
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge status-unanswered">
+                                                Cevaplanmadı
+                                            </span>
+                                        }
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="date-text">
+                                        @item.CreatedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="action-group">
+
+                                        <a asp-area="Admin"
+                                               asp-controller="Question"
+                                               asp-action="Detail"
+                                               asp-route-id="@item.Id"
+                                               class="action-btn"
+                                               title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <form asp-area="Admin"
+                                              asp-controller="Question"
+                                              asp-action="Delete"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              onsubmit="return confirm('Bu soruyu silmek istediğinize emin misiniz?');">
+
+                                            <button type="submit"
+                                                    class="action-btn delete"
+                                                    title="Sil">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            index++;
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    <i class="bi bi-question-circle"></i>
+                </div>
+
+                <h3>Henüz soru bulunmuyor</h3>
+
+                <p>
+                    Kullanıcılardan gelen sorular burada görüntülenecek.
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
