@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
@@ -16,7 +15,9 @@
 
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -90,6 +91,8 @@
                 font-weight: 700;
                 color: var(--teal-dark);
             }
+
+            /* SIDEBAR */
 
             .sidebar {
                 position: fixed;
@@ -251,12 +254,16 @@
                     color: rgba(255,255,255,.55);
                 }
 
+            /* MAIN */
+
             .main {
                 margin-left: var(--sidebar-w);
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
             }
+
+            /* TOPBAR */
 
             .topbar {
                 position: sticky;
@@ -399,6 +406,8 @@
                         color: var(--muted);
                     }
 
+            /* CONTENT */
+
             .content {
                 padding: 1.8rem;
                 flex: 1;
@@ -470,6 +479,8 @@
             .card-body {
                 padding: 1.3rem;
             }
+
+            /* KPI */
 
             .kpi {
                 background: #fff;
@@ -544,6 +555,8 @@
                         font-weight: 600;
                     }
 
+            /* CHART */
+
             .chart-select {
                 border: 1px solid var(--line);
                 background: #fff;
@@ -560,6 +573,8 @@
                 position: relative;
                 height: 280px;
             }
+
+            /* POPULAR TOUR */
 
             .pt-item {
                 display: flex;
@@ -612,6 +627,8 @@
                     text-align: center;
                     flex: none;
                 }
+
+            /* TABLE */
 
             .tbl-wrap {
                 overflow-x: auto;
@@ -737,6 +754,8 @@
                     color: var(--teal-dark);
                 }
 
+            /* REVIEW */
+
             .rv {
                 padding: .85rem 0;
                 border-top: 1px solid var(--line-2);
@@ -798,6 +817,8 @@
                     line-height: 1.5;
                 }
 
+            /* QUESTIONS */
+
             .qz {
                 padding: .85rem 0;
                 border-top: 1px solid var(--line-2);
@@ -838,6 +859,8 @@
                     flex: none;
                     align-self: center;
                 }
+
+            /* QUICK ACTIONS */
 
             .qa-link {
                 display: flex;
@@ -886,6 +909,8 @@
                     color: var(--muted);
                 }
 
+            /* FOOTER */
+
             .admin-foot {
                 padding: 1.1rem 1.8rem;
                 border-top: 1px solid var(--line);
@@ -895,6 +920,8 @@
                 font-size: .82rem;
                 color: var(--muted);
             }
+
+            /* OVERLAY */
 
             .sb-overlay {
                 display: none;
@@ -907,6 +934,8 @@
                 .sb-overlay.show {
                     display: block;
                 }
+
+            /* RESPONSIVE */
 
             @@media(max-width:1100px) {
 
@@ -947,11 +976,16 @@
                 }
             }
     </style>
+
 </head>
 
 <body>
 
+    <!-- SIDEBAR -->
+
     <aside class="sidebar" id="sidebar">
+
+        <!-- BRAND -->
 
         <div class="sb-brand">
 
@@ -962,19 +996,32 @@
                 <span class="dot"></span>
 
                 <span class="txt">
+
                     <b>Travelio</b>
-                    <span>Admin Panel</span>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
                 </span>
 
             </a>
 
         </div>
 
+
+        <!-- MENU -->
+
         <nav class="sb-menu">
+
+            <!-- YÖNETİM -->
 
             <div class="sb-cap">
                 Yönetim
             </div>
+
+
+            <!-- DASHBOARD -->
 
             <a class="sb-link @(IsActiveController("Dashboard") ? "active" : "")"
                    asp-area="Admin"
@@ -990,16 +1037,38 @@
                      stroke-linecap="round"
                      stroke-linejoin="round">
 
-                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="3"
+                          y="3"
+                          width="7"
+                          height="7"
+                          rx="1.5" />
+
+                    <rect x="14"
+                          y="3"
+                          width="7"
+                          height="7"
+                          rx="1.5" />
+
+                    <rect x="3"
+                          y="14"
+                          width="7"
+                          height="7"
+                          rx="1.5" />
+
+                    <rect x="14"
+                          y="14"
+                          width="7"
+                          height="7"
+                          rx="1.5" />
 
                 </svg>
 
                 Dashboard
 
             </a>
+
+
+            <!-- TURLAR -->
 
             <a class="sb-link @(IsActiveController("Tour") ? "active" : "")"
                    asp-area="Admin"
@@ -1016,6 +1085,7 @@
                      stroke-linejoin="round">
 
                     <path d="M3 7h18v12H3z" />
+
                     <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
 
                 </svg>
@@ -1023,6 +1093,9 @@
                 Turlar
 
             </a>
+
+
+            <!-- BANNER -->
 
             <a class="sb-link @(IsActiveController("Banner") ? "active" : "")"
                    asp-area="Admin"
@@ -1038,7 +1111,12 @@
                      stroke-linecap="round"
                      stroke-linejoin="round">
 
-                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <rect x="3"
+                          y="5"
+                          width="18"
+                          height="14"
+                          rx="2" />
+
                     <path d="M3 9h18" />
 
                 </svg>
@@ -1046,6 +1124,9 @@
                 Bannerlar
 
             </a>
+
+
+            <!-- NEDEN BİZ -->
 
             <a class="sb-link @(IsActiveController("WhyChooseUs") ? "active" : "")"
                    asp-area="Admin"
@@ -1069,9 +1150,15 @@
 
             </a>
 
+
+            <!-- KATALOG -->
+
             <div class="sb-cap">
                 Katalog
             </div>
+
+
+            <!-- KATEGORİ -->
 
             <a class="sb-link @(IsActiveController("Category") ? "active" : "")"
                    asp-area="Admin"
@@ -1088,13 +1175,20 @@
                      stroke-linejoin="round">
 
                     <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-                    <line x1="7" y1="7" x2="7" y2="7" />
+
+                    <line x1="7"
+                          y1="7"
+                          x2="7"
+                          y2="7" />
 
                 </svg>
 
                 Kategoriler
 
             </a>
+
+
+            <!-- DESTİNASYON -->
 
             <a class="sb-link @(IsActiveController("Destination") ? "active" : "")"
                    asp-area="Admin"
@@ -1111,7 +1205,10 @@
                      stroke-linejoin="round">
 
                     <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
+
+                    <circle cx="12"
+                            cy="10"
+                            r="3" />
 
                 </svg>
 
@@ -1119,9 +1216,15 @@
 
             </a>
 
+
+            <!-- İLETİŞİM -->
+
             <div class="sb-cap">
                 İletişim
             </div>
+
+
+            <!-- YORUMLAR -->
 
             <a class="sb-link @(IsActiveController("Review") ? "active" : "")"
                    asp-area="Admin"
@@ -1138,7 +1241,9 @@
                      stroke-linejoin="round">
 
                     <path d="M20 15a3 3 0 0 1-3 3H8l-4 3v-3a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h13a3 3 0 0 1 3 3z" />
+
                     <path d="M8 8h8" />
+
                     <path d="M8 12h5" />
 
                 </svg>
@@ -1146,6 +1251,9 @@
                 Yorumlar
 
             </a>
+
+
+            <!-- SORULAR -->
 
             <a class="sb-link @(IsActiveController("Question") ? "active" : "")"
                    asp-area="Admin"
@@ -1175,9 +1283,51 @@
 
             </a>
 
+
+            <!-- KULLANICI YÖNETİMİ -->
+
+            <div class="sb-cap">
+                Kullanıcı Yönetimi
+            </div>
+
+
+            <!-- KULLANICILAR -->
+
+            <a class="sb-link @(IsActiveController("User") ? "active" : "")"
+                   asp-area="Admin"
+                   asp-controller="User"
+                   asp-action="Index">
+
+                <svg width="18"
+                     height="18"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+
+                    <circle cx="12"
+                            cy="7"
+                            r="4" />
+
+                </svg>
+
+                Kullanıcılar
+
+            </a>
+
+
+            <!-- DİĞER -->
+
             <div class="sb-cap">
                 Diğer
             </div>
+
+
+            <!-- SİTEYE DÖN -->
 
             <a class="sb-link"
                    asp-area=""
@@ -1194,6 +1344,7 @@
                      stroke-linejoin="round">
 
                     <path d="M3 12l9-9 9 9" />
+
                     <path d="M9 21V9h6v12" />
 
                 </svg>
@@ -1201,6 +1352,9 @@
                 Siteye Dön
 
             </a>
+
+
+            <!-- ÇIKIŞ -->
 
             <a class="sb-link"
                    asp-area=""
@@ -1233,6 +1387,9 @@
 
         </nav>
 
+
+        <!-- SIDEBAR USER -->
+
         <div class="sb-foot">
 
             <div class="sb-user">
@@ -1242,8 +1399,15 @@
                 </div>
 
                 <div>
-                    <b>Murat Yücedağ</b>
-                    <span>Yönetici</span>
+
+                    <b>
+                        Murat Yücedağ
+                    </b>
+
+                    <span>
+                        Yönetici
+                    </span>
+
                 </div>
 
             </div>
@@ -1252,14 +1416,26 @@
 
     </aside>
 
+
+    <!-- OVERLAY -->
+
     <div class="sb-overlay"
          id="sbOverlay"
          onclick="toggleSidebar(false)">
     </div>
 
+
+    <!-- MAIN -->
+
     <div class="main">
 
+
+        <!-- TOPBAR -->
+
         <header class="topbar">
+
+
+            <!-- MOBILE MENU -->
 
             <button class="hamb"
                     type="button"
@@ -1293,9 +1469,15 @@
 
             </button>
 
+
+            <!-- TITLE -->
+
             <div class="tb-title">
                 @(ViewData["Title"] ?? "Dashboard")
             </div>
+
+
+            <!-- SEARCH -->
 
             <div class="tb-search">
 
@@ -1324,7 +1506,13 @@
 
             </div>
 
+
+            <!-- RIGHT -->
+
             <div class="tb-right">
+
+
+                <!-- NOTIFICATION -->
 
                 <div class="tb-icon">
 
@@ -1348,6 +1536,9 @@
                     </span>
 
                 </div>
+
+
+                <!-- ADMIN USER -->
 
                 <div class="tb-user">
 
@@ -1373,11 +1564,17 @@
 
         </header>
 
+
+        <!-- PAGE CONTENT -->
+
         <main class="content">
 
             @RenderBody()
 
         </main>
+
+
+        <!-- FOOTER -->
 
         <footer class="admin-foot">
 
@@ -1393,11 +1590,20 @@
 
     </div>
 
+
+    <!-- BOOTSTRAP -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- CHART.JS -->
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
+
     <script>
+
+        /* SIDEBAR */
 
         function toggleSidebar(show) {
 
@@ -1411,6 +1617,9 @@
         .classList
         .toggle("show", show);
         }
+
+
+        /* IMAGES */
 
         const IMG = {
 
@@ -1428,7 +1637,11 @@
 
         swiss:
         "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=200&q=80"
+
         };
+
+
+        /* POPULAR TOURS */
 
         const popularToursEl =
         document.getElementById("popularTours");
@@ -1498,6 +1711,9 @@
         `).join("");
         }
 
+
+        /* BOOKINGS */
+
         const bookingRowsEl =
         document.getElementById("bookingRows");
 
@@ -1557,7 +1773,8 @@
 
         ];
 
-        const initials = n =>
+        const initials =
+        n =>
         n
         .split(" ")
         .map(w => w[0])
@@ -1636,6 +1853,9 @@
         `).join("");
         }
 
+
+        /* REVIEWS */
+
         const recentReviewsEl =
         document.getElementById("recentReviews");
 
@@ -1666,7 +1886,8 @@
 
         ];
 
-        const initials = n =>
+        const initials =
+        n =>
         n
         .split(" ")
         .map(w => w[0])
@@ -1684,6 +1905,7 @@
         i <= n
         ? "★"
         : "<span class='off'>★</span>";
+
         }
 
         return s;
@@ -1726,6 +1948,9 @@
 
         `).join("");
         }
+
+
+        /* QUESTIONS */
 
         const pendingQuestionsEl =
         document.getElementById("pendingQuestions");
@@ -1783,6 +2008,9 @@
 
         `).join("");
         }
+
+
+        /* QUICK ACTIONS */
 
         const quickActionsEl =
         document.getElementById("quickActions");
@@ -1855,6 +2083,9 @@
         `).join("");
         }
 
+
+        /* RESERVATION CHART */
+
         const ctx =
         document.getElementById("resChart");
 
@@ -1874,6 +2105,7 @@
         1,
         "rgba(15,163,163,0)"
         );
+
 
         const chart =
         new Chart(ctx, {
@@ -2024,6 +2256,7 @@
 
         });
 
+
         const rangeSelectEl =
         document.getElementById("rangeSelect");
 
@@ -2040,8 +2273,9 @@
 
     </script>
 
+
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
-</html>
 
+</html>

@@ -16,9 +16,19 @@ using Travel.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// =====================================================
+// AUTOMAPPER
+// =====================================================
+
 builder.Services.AddAutoMapper(
     Assembly.GetExecutingAssembly()
 );
+
+
+// =====================================================
+// FLUENT VALIDATION
+// =====================================================
 
 builder.Services
     .AddFluentValidationAutoValidation()
@@ -27,6 +37,10 @@ builder.Services
         Assembly.GetExecutingAssembly()
     );
 
+
+// =====================================================
+// DATABASE SETTINGS
+// =====================================================
 
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings")
@@ -37,14 +51,31 @@ builder.Services.AddSingleton<IDatabaseSettings>(sp =>
 );
 
 
+// =====================================================
+// SERVICES
+// =====================================================
+
 builder.Services.AddScoped<IBannerService, BannerService>();
+
 builder.Services.AddScoped<IRouteService, RouteService>();
+
 builder.Services.AddScoped<IDestinationService, DestinationService>();
+
 builder.Services.AddScoped<IWhyChooseUsService, WhyChooseUsService>();
+
 builder.Services.AddScoped<ITourService, TourService>();
+
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 builder.Services.AddScoped<IReviewService, ReviewService>();
+
 builder.Services.AddScoped<IQuestionService, QuestionService>();
+
+
+// =====================================================
+// DATABASE SETTINGS OBJECT
+// =====================================================
+
 var databaseSettings = builder.Configuration
     .GetSection("DatabaseSettings")
     .Get<DatabaseSettings>();
@@ -57,25 +88,47 @@ var databaseSettings = builder.Configuration
 builder.Services
     .AddIdentity<AppUser, AppRole>(options =>
     {
+        // -------------------------------------------------
         // USER
+        // -------------------------------------------------
+
         options.User.RequireUniqueEmail = true;
 
 
+        // -------------------------------------------------
         // PASSWORD
+        // -------------------------------------------------
+
         options.Password.RequiredLength = 8;
+
         options.Password.RequireDigit = true;
+
         options.Password.RequireUppercase = true;
+
         options.Password.RequireLowercase = true;
+
         options.Password.RequireNonAlphanumeric = true;
 
 
+        // -------------------------------------------------
         // LOCKOUT
+        // -------------------------------------------------
+
         options.Lockout.MaxFailedAccessAttempts = 5;
+
+
+        // -------------------------------------------------
+        // SIGN IN
+        // -------------------------------------------------
+
+        options.SignIn.RequireConfirmedAccount = false;
     })
+
     .AddMongoDbStores<AppUser, AppRole, string>(
         databaseSettings.ConnectionString,
         databaseSettings.DatabaseName
     )
+
     .AddDefaultTokenProviders();
 
 
@@ -85,35 +138,97 @@ builder.Services
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    // -------------------------------------------------
+    // LOGIN PAGE
+    // -------------------------------------------------
+
     options.LoginPath = "/Auth/SignIn";
+
+
+    // -------------------------------------------------
+    // ACCESS DENIED
+    // -------------------------------------------------
+
     options.AccessDeniedPath = "/Auth/AccessDenied";
 
+
+    // -------------------------------------------------
+    // COOKIE
+    // -------------------------------------------------
+
     options.ExpireTimeSpan = TimeSpan.FromHours(2);
+
     options.SlidingExpiration = true;
 });
 
 
+// =====================================================
+// AUTHORIZATION
+// =====================================================
+
+builder.Services.AddAuthorization();
+
+
+// =====================================================
+// MVC
+// =====================================================
+
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
 
+// =====================================================
+// ERROR / HSTS
+// =====================================================
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+
     app.UseHsts();
 }
 
+
+// =====================================================
+// HTTPS
+// =====================================================
+
 app.UseHttpsRedirection();
+
+
+// =====================================================
+// STATIC FILES
+// =====================================================
 
 app.UseStaticFiles();
 
+
+// =====================================================
+// ROUTING
+// =====================================================
+
 app.UseRouting();
+
+
+// =====================================================
+// AUTHENTICATION
+// =====================================================
 
 app.UseAuthentication();
 
+
+// =====================================================
+// AUTHORIZATION
+// =====================================================
+
 app.UseAuthorization();
 
+
+// =====================================================
+// CREATE DEFAULT ROLES
+// =====================================================
 
 using (var scope = app.Services.CreateScope())
 {
@@ -162,4 +277,3 @@ app.MapControllerRoute(
 
 
 app.Run();
-
