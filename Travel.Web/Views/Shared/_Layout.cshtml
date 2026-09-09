@@ -1,16 +1,28 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject UserManager<Travel.Web.Entities.AppUser> UserManager
+
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
+
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Travelio — Dünyayı Keşfet</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+          rel="stylesheet" />
+
     <style>
+
         :root {
             --navy: #0e2a3b;
             --navy-2: #12384c;
@@ -26,27 +38,37 @@
             --r: 18px;
         }
 
+
         * {
-            box-sizing: border-box
+            box-sizing: border-box;
         }
+
 
         html {
-            scroll-behavior: smooth
+            scroll-behavior: smooth;
         }
 
+
         body {
-            font-family: 'Inter',system-ui,sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             color: var(--ink);
             background: var(--cream);
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, h4, .brand, .display-font {
-            font-family: 'Sora',sans-serif;
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .brand,
+        .display-font {
+            font-family: 'Sora', sans-serif;
         }
 
+
         .eyebrow {
-            font-family: 'Sora',sans-serif;
+            font-family: 'Sora', sans-serif;
             text-transform: uppercase;
             letter-spacing: .22em;
             font-size: .72rem;
@@ -54,9 +76,13 @@
             color: var(--teal-dark);
         }
 
+
         a {
-            text-decoration: none
+            text-decoration: none;
         }
+
+
+        /* BUTTON */
 
         .btn-teal {
             background: var(--teal);
@@ -68,12 +94,14 @@
             transition: .25s;
         }
 
+
             .btn-teal:hover {
                 background: var(--teal-dark);
                 color: #fff;
                 transform: translateY(-2px);
-                box-shadow: 0 12px 26px rgba(15,163,163,.32)
+                box-shadow: 0 12px 26px rgba(15,163,163,.32);
             }
+
 
         .btn-ghost {
             background: transparent;
@@ -85,18 +113,22 @@
             transition: .25s;
         }
 
+
             .btn-ghost:hover {
                 background: #fff;
-                color: var(--navy)
+                color: var(--navy);
             }
 
+
         /* NAV */
+
         .navbar {
             background: rgba(247,245,240,.85);
             backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--line);
             padding: .9rem 0;
         }
+
 
         .brand {
             font-weight: 800;
@@ -108,25 +140,29 @@
             gap: .5rem;
         }
 
+
             .brand .dot {
                 width: 11px;
                 height: 11px;
                 border-radius: 50%;
                 background: var(--teal);
                 display: inline-block;
-                box-shadow: 0 0 0 4px rgba(15,163,163,.18)
+                box-shadow: 0 0 0 4px rgba(15,163,163,.18);
             }
+
 
         .navbar .nav-link {
             color: var(--navy);
             font-weight: 500;
             margin: 0 .35rem;
-            position: relative
+            position: relative;
         }
 
+
             .navbar .nav-link:hover {
-                color: var(--teal-dark)
+                color: var(--teal-dark);
             }
+
 
             .navbar .nav-link.active::after {
                 content: "";
@@ -136,8 +172,9 @@
                 bottom: -2px;
                 height: 2px;
                 background: var(--teal);
-                border-radius: 2px
+                border-radius: 2px;
             }
+
 
         .profile-pill {
             display: flex;
@@ -149,13 +186,15 @@
             padding: .35rem .35rem .35rem .95rem;
             font-weight: 600;
             color: var(--navy);
-            transition: .2s
+            transition: .2s;
         }
+
 
             .profile-pill:hover {
                 box-shadow: var(--shadow-sm);
-                color: var(--navy)
+                color: var(--navy);
             }
+
 
             .profile-pill .avatar {
                 width: 32px;
@@ -166,44 +205,52 @@
                 display: grid;
                 place-items: center;
                 font-size: .85rem;
-                font-weight: 700
+                font-weight: 700;
             }
 
+
         /* HERO */
+
         .hero {
             position: relative;
             min-height: 88vh;
             display: flex;
             align-items: center;
-            background: linear-gradient(180deg,rgba(14,42,59,.55) 0%,rgba(14,42,59,.35) 40%,rgba(14,42,59,.72) 100%), url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80') center/cover;
+            background: linear-gradient( 180deg, rgba(14,42,59,.55) 0%, rgba(14,42,59,.35) 40%, rgba(14,42,59,.72) 100% ), url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80') center / cover;
             color: #fff;
             overflow: hidden;
         }
 
+
         .hero-content {
-            padding: 6rem 0 8rem
+            padding: 6rem 0 8rem;
         }
+
 
         .hero h1 {
             font-weight: 800;
             font-size: clamp(2.4rem,5vw,4.1rem);
             line-height: 1.05;
             letter-spacing: -1px;
-            max-width: 14ch
+            max-width: 14ch;
         }
+
 
         .hero p.lead {
             font-size: clamp(1rem,1.4vw,1.22rem);
             max-width: 52ch;
             color: rgba(255,255,255,.9);
-            margin-top: 1.2rem
+            margin-top: 1.2rem;
         }
+
 
         .hero .eyebrow {
-            color: #7fe3e3
+            color: #7fe3e3;
         }
 
+
         /* SEARCH BOX */
+
         .search-box {
             background: rgba(255,255,255,.97);
             border-radius: 22px;
@@ -213,14 +260,17 @@
             max-width: 940px;
         }
 
+
         .search-field {
             padding: .5rem 1rem;
-            border-right: 1px solid var(--line)
+            border-right: 1px solid var(--line);
         }
 
+
             .search-field:last-of-type {
-                border-right: none
+                border-right: none;
             }
+
 
             .search-field label {
                 display: block;
@@ -229,8 +279,9 @@
                 letter-spacing: .12em;
                 font-weight: 700;
                 color: var(--muted);
-                margin-bottom: .15rem
+                margin-bottom: .15rem;
             }
+
 
             .search-field .control {
                 border: none;
@@ -242,53 +293,64 @@
                 background: transparent;
             }
 
+
         .search-box .btn-teal {
             width: 100%;
-            padding: .95rem
+            padding: .95rem;
         }
+
 
         .stats-row {
             margin-top: 2.4rem;
             display: flex;
             gap: 2.6rem;
-            flex-wrap: wrap
+            flex-wrap: wrap;
         }
+
 
         .stat b {
             font-family: 'Sora';
             font-size: 1.6rem;
             font-weight: 700;
             display: block;
-            line-height: 1
+            line-height: 1;
         }
+
 
         .stat span {
             font-size: .82rem;
-            color: rgba(255,255,255,.8)
+            color: rgba(255,255,255,.8);
         }
+
 
         /* SECTIONS */
+
         section {
-            padding: 5.5rem 0
+            padding: 5.5rem 0;
         }
 
+
         .section-head {
-            max-width: 640px
+            max-width: 640px;
         }
+
 
             .section-head h2 {
                 font-weight: 700;
                 font-size: clamp(1.8rem,3vw,2.6rem);
                 letter-spacing: -.5px;
-                margin-top: .6rem
+                margin-top: .6rem;
             }
+
 
             .section-head p {
                 color: var(--muted);
-                margin-top: .5rem
+                margin-top: .5rem;
             }
 
+
         /* TOUR CARDS */
+
         .tour-card {
             background: #fff;
             border-radius: var(--r);
@@ -301,27 +363,32 @@
             border: 1px solid rgba(231,226,216,.7);
         }
 
+
             .tour-card:hover {
                 transform: translateY(-6px);
-                box-shadow: var(--shadow-md)
+                box-shadow: var(--shadow-md);
             }
+
 
         .tour-media {
             position: relative;
             height: 215px;
-            overflow: hidden
+            overflow: hidden;
         }
+
 
             .tour-media img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                transition: .5s
+                transition: .5s;
             }
 
+
         .tour-card:hover .tour-media img {
-            transform: scale(1.07)
+            transform: scale(1.07);
         }
+
 
         .tour-badge {
             position: absolute;
@@ -334,6 +401,7 @@
             padding: .32rem .7rem;
             border-radius: 999px;
         }
+
 
         .fav {
             position: absolute;
@@ -348,35 +416,40 @@
             color: var(--navy);
             cursor: pointer;
             border: none;
-            transition: .2s
+            transition: .2s;
         }
+
 
             .fav:hover {
                 color: var(--teal-dark);
-                transform: scale(1.08)
+                transform: scale(1.08);
             }
+
 
         .tour-body {
             padding: 1.25rem 1.35rem 1.4rem;
             display: flex;
             flex-direction: column;
-            flex: 1
+            flex: 1;
         }
+
 
         .tour-country {
             font-size: .78rem;
             color: var(--teal-dark);
             font-weight: 600;
-            letter-spacing: .02em
+            letter-spacing: .02em;
         }
+
 
         .tour-title {
             font-family: 'Sora';
             font-weight: 700;
             font-size: 1.16rem;
             margin: .2rem 0 .55rem;
-            color: var(--navy)
+            color: var(--navy);
         }
+
 
         .tour-meta {
             display: flex;
@@ -384,17 +457,20 @@
             gap: .9rem;
             font-size: .84rem;
             color: var(--muted);
-            margin-bottom: 1rem
+            margin-bottom: 1rem;
         }
+
 
         .rating {
             color: #0e2a3b;
-            font-weight: 600
+            font-weight: 600;
         }
 
+
             .rating .star {
-                color: #f4a92c
+                color: #f4a92c;
             }
+
 
         .tour-foot {
             display: flex;
@@ -402,26 +478,30 @@
             justify-content: space-between;
             margin-top: auto;
             padding-top: .4rem;
-            border-top: 1px solid var(--line)
+            border-top: 1px solid var(--line);
         }
+
 
         .price small {
             color: var(--muted);
             font-size: .72rem;
-            display: block
+            display: block;
         }
+
 
         .price b {
             font-family: 'Sora';
             font-size: 1.32rem;
-            color: var(--navy)
+            color: var(--navy);
         }
+
 
             .price b span {
                 font-size: .85rem;
                 font-weight: 600;
-                color: var(--muted)
+                color: var(--muted);
             }
+
 
         .btn-incele {
             background: var(--navy);
@@ -431,31 +511,38 @@
             font-weight: 600;
             padding: .55rem 1.1rem;
             border: none;
-            transition: .25s
+            transition: .25s;
         }
+
 
             .btn-incele:hover {
                 background: var(--teal-dark);
-                color: #fff
+                color: #fff;
             }
+
 
         /* DESTINATIONS */
+
         .dest-section {
             background: var(--navy);
-            color: #fff
+            color: #fff;
         }
 
+
             .dest-section .section-head h2 {
-                color: #fff
+                color: #fff;
             }
+
 
             .dest-section .section-head p {
-                color: rgba(255,255,255,.72)
+                color: rgba(255,255,255,.72);
             }
 
+
             .dest-section .eyebrow {
-                color: #7fe3e3
+                color: #7fe3e3;
             }
+
 
         .dest-card {
             position: relative;
@@ -463,51 +550,60 @@
             overflow: hidden;
             height: 340px;
             display: block;
-            box-shadow: var(--shadow-md)
+            box-shadow: var(--shadow-md);
         }
+
 
             .dest-card img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                transition: .6s
+                transition: .6s;
             }
 
+
             .dest-card:hover img {
-                transform: scale(1.08)
+                transform: scale(1.08);
             }
+
 
             .dest-card::after {
                 content: "";
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(180deg,rgba(14,42,59,0) 35%,rgba(14,42,59,.85) 100%)
+                background: linear-gradient( 180deg, rgba(14,42,59,0) 35%, rgba(14,42,59,.85) 100% );
             }
 
+
             .dest-card.tall {
-                height: calc(680px + 1.5rem)
+                height: calc(680px + 1.5rem);
             }
+
 
         .dest-cap {
             position: absolute;
             left: 1.3rem;
             bottom: 1.2rem;
             z-index: 2;
-            color: #fff
+            color: #fff;
         }
+
 
             .dest-cap h3 {
                 font-weight: 700;
                 font-size: 1.4rem;
-                margin: 0
+                margin: 0;
             }
+
 
             .dest-cap span {
                 font-size: .85rem;
-                opacity: .85
+                opacity: .85;
             }
 
+
         /* WHY */
+
         .why-card {
             background: #fff;
             border-radius: var(--r);
@@ -515,13 +611,15 @@
             height: 100%;
             box-shadow: var(--shadow-sm);
             border: 1px solid rgba(231,226,216,.7);
-            transition: .25s
+            transition: .25s;
         }
+
 
             .why-card:hover {
                 transform: translateY(-4px);
-                box-shadow: var(--shadow-md)
+                box-shadow: var(--shadow-md);
             }
+
 
         .why-ico {
             width: 52px;
@@ -531,119 +629,139 @@
             color: var(--teal-dark);
             display: grid;
             place-items: center;
-            margin-bottom: 1.1rem
+            margin-bottom: 1.1rem;
         }
+
 
         .why-card h4 {
             font-weight: 700;
             font-size: 1.12rem;
-            color: var(--navy)
+            color: var(--navy);
         }
+
 
         .why-card p {
             color: var(--muted);
             font-size: .94rem;
-            margin: 0
+            margin: 0;
         }
 
+
         /* REVIEWS */
+
         .review-card {
             background: #fff;
             border-radius: var(--r);
             padding: 1.9rem;
             height: 100%;
             box-shadow: var(--shadow-sm);
-            border: 1px solid rgba(231,226,216,.7)
+            border: 1px solid rgba(231,226,216,.7);
         }
+
 
         .review-stars {
             color: #f4a92c;
             font-size: .95rem;
-            margin-bottom: .8rem
+            margin-bottom: .8rem;
         }
+
 
         .review-card p {
             color: var(--navy);
             font-size: 1rem;
-            line-height: 1.6
+            line-height: 1.6;
         }
+
 
         .review-user {
             display: flex;
             align-items: center;
             gap: .8rem;
-            margin-top: 1.3rem
+            margin-top: 1.3rem;
         }
+
 
             .review-user img {
                 width: 46px;
                 height: 46px;
                 border-radius: 50%;
-                object-fit: cover
+                object-fit: cover;
             }
+
 
             .review-user b {
                 display: block;
                 color: var(--navy);
-                font-size: .95rem
+                font-size: .95rem;
             }
+
 
             .review-user span {
                 color: var(--muted);
-                font-size: .82rem
+                font-size: .82rem;
             }
 
+
         /* CTA */
+
         .cta-wrap {
             border-radius: 28px;
             overflow: hidden;
             position: relative;
             color: #fff;
-            background: linear-gradient(120deg,rgba(11,127,128,.92),rgba(14,42,59,.9)), url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=2000&q=80') center/cover;
             padding: 4.5rem 2rem;
         }
+
 
             .cta-wrap h2 {
                 font-weight: 800;
                 font-size: clamp(1.8rem,3.2vw,2.7rem);
-                letter-spacing: -.5px
+                letter-spacing: -.5px;
             }
+
 
             .cta-wrap p {
                 color: rgba(255,255,255,.88);
                 max-width: 52ch;
-                margin: 1rem auto 0
+                margin: 1rem auto 0;
             }
 
+
         /* FOOTER */
+
         footer {
             background: var(--navy);
             color: rgba(255,255,255,.72);
-            padding: 4rem 0 2rem
+            padding: 4rem 0 2rem;
         }
 
+
             footer .brand {
-                color: #fff
+                color: #fff;
             }
+
 
             footer h6 {
                 color: #fff;
                 font-family: 'Sora';
                 font-weight: 600;
                 letter-spacing: .02em;
-                margin-bottom: 1rem
+                margin-bottom: 1rem;
             }
+
 
             footer a {
                 color: rgba(255,255,255,.72);
                 display: block;
                 margin-bottom: .55rem;
-                font-size: .92rem
+                font-size: .92rem;
             }
 
+
                 footer a:hover {
-                    color: #7fe3e3
+                    color: #7fe3e3;
                 }
+
 
         .foot-social a {
             display: inline-grid;
@@ -652,75 +770,146 @@
             height: 38px;
             border-radius: 50%;
             background: rgba(255,255,255,.08);
-            margin-right: .5rem
+            margin-right: .5rem;
         }
 
+
             .foot-social a:hover {
-                background: var(--teal)
+                background: var(--teal);
             }
+
 
         .foot-bottom {
             border-top: 1px solid rgba(255,255,255,.12);
             margin-top: 2.5rem;
             padding-top: 1.5rem;
-            font-size: .85rem
+            font-size: .85rem;
         }
 
-        @@media(max - width:767px) {
+
+        /* RESPONSIVE */
+
+        @@media (max-width: 767px) {
+
             .search-field {
                 border-right: none;
-                border-bottom: 1px solid var(--line)
+                border-bottom: 1px solid var(--line);
             }
+
 
             .dest-card.tall {
-                height: 340px
+                height: 340px;
             }
+
 
             .hero-content {
-                padding: 5rem 0 6rem
+                padding: 5rem 0 6rem;
             }
         }
+
     </style>
+
 </head>
+
+
 <body>
 
+
     <!-- NAV -->
+
     <nav class="navbar navbar-expand-lg sticky-top">
+
         <div class="container">
-            <a class="brand" href="/Default/Index"><span class="dot"></span>Travelio</a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+
+            <a class="brand" href="/Default/Index">
+                <span class="dot"></span>
+                Travelio
+            </a>
+
+
+            <button class="navbar-toggler border-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#nav">
+
                 <span class="navbar-toggler-icon"></span>
+
             </button>
+
+
             <div class="collapse navbar-collapse" id="nav">
+
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Ana Sayfa</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#turlar">Turlar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#destinasyonlar">Destinasyonlar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#yorumlar">Yorumlar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#hakkimizda">Hakkımızda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#iletisim">İletişim</a></li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            Ana Sayfa
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#turlar">
+                            Turlar
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#destinasyonlar">
+                            Destinasyonlar
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#yorumlar">
+                            Yorumlar
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hakkimizda">
+                            Hakkımızda
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#iletisim">
+                            İletişim
+                        </a>
+                    </li>
+
                 </ul>
+
+
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    
-
                     var currentUser = await UserManager.GetUserAsync(User);
 
                     if (currentUser != null)
                     {
-                        <a href="/Profile/Index" class="profile-pill">
+                        <a href="/Profile/Index"
+                           class="profile-pill">
 
                             <span class="avatar">
+
                                 <svg width="18"
                                      height="18"
                                      viewBox="0 0 24 24"
                                      fill="none"
                                      stroke="currentColor"
                                      stroke-width="2">
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                    <path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path>
+
+                                    <circle cx="12"
+                                            cy="7"
+                                            r="4">
+                                    </circle>
+
+                                    <path d="M5.5 21a6.5 6.5 0 0 1 13 0">
+                                    </path>
+
                                 </svg>
+
                             </span>
+
 
                             <span>
                                 @currentUser.FirstName @currentUser.LastName
@@ -738,6 +927,7 @@
                             Giriş Yap
                         </a>
 
+
                         <a href="/Auth/Register"
                            class="btn-teal">
                             Kayıt Ol
@@ -745,55 +935,221 @@
 
                     </div>
                 }
+
             </div>
+
         </div>
+
     </nav>
 
-    <div class="">
+
+    <div>
+
         <main role="main">
             @RenderBody()
         </main>
+
     </div>
 
+
     <!-- FOOTER -->
+
     <footer>
+
         <div class="container">
+
             <div class="row g-4">
+
+
+                <!-- BRAND -->
+
                 <div class="col-lg-4">
-                    <a class="brand mb-3" href="/Default/Index"><span class="dot"></span>Travelio</a>
-                    <p style="max-width:34ch">Dünyanın dört bir yanına, özenle tasarlanmış turlarla unutulmaz seyahatler.</p>
+
+                    <a class="brand mb-3"
+                       href="/Default/Index">
+
+                        <span class="dot"></span>
+                        Travelio
+
+                    </a>
+
+
+                    <p style="max-width:34ch">
+                        Dünyanın dört bir yanına,
+                        özenle tasarlanmış turlarla
+                        unutulmaz seyahatler.
+                    </p>
+
+
                     <div class="foot-social mt-3">
-                        <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" /></svg></a>
-                        <a href="#" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84 0 0 0 .497-3.753c-.002-.249 1.51-2.772 1.818-4.013z" /></svg></a>
-                        <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg></a>
+
+                        <a href="#"
+                           aria-label="Instagram">
+
+                            <svg width="18"
+                                 height="18"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2">
+
+                                <rect x="2"
+                                      y="2"
+                                      width="20"
+                                      height="20"
+                                      rx="5" />
+
+                                <circle cx="12"
+                                        cy="12"
+                                        r="4" />
+
+                                <circle cx="17.5"
+                                        cy="6.5"
+                                        r="1" />
+
+                            </svg>
+
+                        </a>
+
+
+                        <a href="#"
+                           aria-label="Twitter">
+
+                            <svg width="18"
+                                 height="18"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor">
+
+                                <path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84 0 0 0 .497-3.753c-.002-.249 1.51-2.772 1.818-4.013z" />
+
+                            </svg>
+
+                        </a>
+
+
+                        <a href="#"
+                           aria-label="Facebook">
+
+                            <svg width="18"
+                                 height="18"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor">
+
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+
+                            </svg>
+
+                        </a>
+
                     </div>
+
                 </div>
+
+
+                <!-- EXPLORE -->
+
                 <div class="col-6 col-lg-2">
+
                     <h6>Keşfet</h6>
-                    <a href="#turlar">Turlar</a><a href="#destinasyonlar">Destinasyonlar</a><a href="#yorumlar">Yorumlar</a><a href="#">Kampanyalar</a>
+
+                    <a href="#turlar">
+                        Turlar
+                    </a>
+
+                    <a href="#destinasyonlar">
+                        Destinasyonlar
+                    </a>
+
+                    <a href="#yorumlar">
+                        Yorumlar
+                    </a>
+
+                    <a href="#">
+                        Kampanyalar
+                    </a>
+
                 </div>
+
+
+                <!-- CORPORATE -->
+
                 <div class="col-6 col-lg-2">
+
                     <h6>Kurumsal</h6>
-                    <a href="#hakkimizda">Hakkımızda</a><a href="#">Kariyer</a><a href="#">Blog</a><a href="#iletisim">İletişim</a>
+
+                    <a href="#hakkimizda">
+                        Hakkımızda
+                    </a>
+
+                    <a href="#">
+                        Kariyer
+                    </a>
+
+                    <a href="#">
+                        Blog
+                    </a>
+
+                    <a href="#iletisim">
+                        İletişim
+                    </a>
+
                 </div>
+
+
+                <!-- NEWSLETTER -->
+
                 <div class="col-lg-4">
+
                     <h6>Bültene Katıl</h6>
-                    <p style="max-width:36ch">Yeni rotalardan ve erken rezervasyon fırsatlarından ilk sen haberdar ol.</p>
-                    <div class="d-flex gap-2 mt-2" style="max-width:360px">
-                        <input class="form-control" style="border-radius:999px" placeholder="E-posta adresin" />
-                        <button class="btn-teal" style="white-space:nowrap">Katıl</button>
+
+                    <p style="max-width:36ch">
+                        Yeni rotalardan ve erken rezervasyon
+                        fırsatlarından ilk sen haberdar ol.
+                    </p>
+
+
+                    <div class="d-flex gap-2 mt-2"
+                         style="max-width:360px">
+
+                        <input class="form-control"
+                               style="border-radius:999px"
+                               placeholder="E-posta adresin" />
+
+                        <button class="btn-teal"
+                                style="white-space:nowrap">
+
+                            Katıl
+
+                        </button>
+
                     </div>
+
                 </div>
+
             </div>
+
+
+            <!-- FOOT BOTTOM -->
+
             <div class="foot-bottom d-flex flex-wrap justify-content-between gap-2">
-                <span>© 2026 Travelio. Tüm hakları saklıdır.</span>
-                <span>Gizlilik · Kullanım Koşulları · Çerezler</span>
+
+                <span>
+                    © 2026 Travelio. Tüm hakları saklıdır.
+                </span>
+
+                <span>
+                    Gizlilik · Kullanım Koşulları · Çerezler
+                </span>
+
             </div>
+
         </div>
+
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-</body>
-</html>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

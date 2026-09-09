@@ -1,0 +1,142 @@
+﻿@using Travel.Web.DTOs.AltBannerDtos
+@model List<ResultAltBannerDto>
+
+@{
+    Layout = null;
+}
+
+@if (!Model.Any())
+{
+    <!-- CTA -->
+
+    <section id="iletisim">
+
+        <div class="container">
+
+            <div class="cta-wrap text-center"
+                 style="
+                        background-image:
+                            linear-gradient(
+                                120deg,
+                                rgba(11,127,128,.92),
+                                rgba(14,42,59,.90)
+                            ),
+                            url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=2000&q=80');
+                        background-position: center;
+                        background-size: cover;
+                     ">
+
+                <div class="eyebrow"
+                     style="color:#7fe3e3">
+
+                    Sıradaki durak sensin
+
+                </div>
+
+                <h2 class="mt-2">
+
+                    Bir Sonraki Maceran
+                    Bir Tık Uzağında
+
+                </h2>
+
+                <p>
+
+                    Hayalindeki rotayı seç,
+                    gerisini Travelio'ya bırak.
+                    Sınırlı kontenjanlı turlar için
+                    erken rezervasyon avantajlarını kaçırma.
+
+                </p>
+
+                <div class="mt-4 d-flex gap-3 justify-content-center flex-wrap">
+
+                    <a href="#turlar"
+                       class="btn btn-teal">
+
+                        Turları Keşfet
+
+                    </a>
+
+                    <a href="#iletisim"
+                       class="btn-ghost">
+
+                        Bize Ulaş
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+}
+else
+{
+    @foreach (var item in Model)
+    {
+        <!-- CTA -->
+
+        <section id="iletisim">
+
+            <div class="container">
+
+                <div class="cta-wrap text-center"
+                     style="
+                                background-image:
+                                    linear-gradient(
+                                        120deg,
+                                        rgba(11,127,128,.92),
+                                        rgba(14,42,59,.90)
+                                    ),
+                                    url('@item.ImageUrl');
+                                background-position: center;
+                                background-size: cover;
+                             ">
+
+                    <div class="eyebrow"
+                         style="color:#7fe3e3">
+
+                        @item.TopTitle
+
+                    </div>
+
+                    <h2 class="mt-2">
+
+                        @item.MainTitle
+
+                    </h2>
+
+                    <p>
+
+                        @item.Description
+
+                    </p>
+
+                    <div class="mt-4 d-flex gap-3 justify-content-center flex-wrap">
+
+                        <a href="@item.Button1Link"
+                           class="btn btn-teal">
+
+                            @item.Button1Text
+
+                        </a>
+
+                        <a href="@item.Button2Link"
+                           class="btn-ghost">
+
+                            @item.Button2Text
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+    }
+}

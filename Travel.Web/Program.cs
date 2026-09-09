@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Travel.Web.Entities;
+using Travel.Web.Services.AltBannerServices;
 using Travel.Web.Services.BannerServices;
 using Travel.Web.Services.CategoryServices;
 using Travel.Web.Services.DestinationServices;
@@ -71,6 +72,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 
+builder.Services.AddScoped<IAltBannerService, AltBannerService>();
 
 // =====================================================
 // DATABASE SETTINGS OBJECT

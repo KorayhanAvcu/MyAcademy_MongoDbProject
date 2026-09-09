@@ -2,84 +2,225 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    @await Component.InvokeAsync("_DefaultBanner")
 
-    <!-- TOURS -->
-    <section id="turlar">
-        <div class="container">
-            <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
-                <div class="section-head">
-                    <div class="eyebrow">Popüler rotalar</div>
-                    <h2>En Çok Tercih Edilen Turlar</h2>
-                    <p>Gezginlerin en çok rezervasyon yaptığı, özenle planlanmış rotalar.</p>
+@await Component.InvokeAsync("_DefaultBanner")
+
+
+<!-- TOURS -->
+
+<section id="turlar">
+
+    <div class="container">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
+
+            <div class="section-head">
+
+                <div class="eyebrow">
+                    Popüler rotalar
                 </div>
-                <a href="#" class="btn btn-teal d-none d-md-inline-block mt-3">Tüm turları gör</a>
+
+                <h2>
+                    En Çok Tercih Edilen Turlar
+                </h2>
+
+                <p>
+                    Gezginlerin en çok rezervasyon yaptığı,
+                    özenle planlanmış rotalar.
+                </p>
+
             </div>
 
-            <div class="row g-4" id="tourGrid"></div>
+
+            <a href="#"
+               class="btn btn-teal d-none d-md-inline-block mt-3">
+
+                Tüm turları gör
+
+            </a>
+
         </div>
-    </section>
 
-    
-    @await Component.InvokeAsync("_DefaultDestination")
-    
-    @await Component.InvokeAsync("_DefaultWhyChooseUs")
 
-    <!-- REVIEWS -->
-    <section id="yorumlar" style="background:#fff">
-        <div class="container">
-            <div class="section-head mb-5">
-                <div class="eyebrow">Gezgin yorumları</div>
-                <h2>Gezginler Ne Diyor?</h2>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p>Paris & Disneyland turu beklentimin çok üzerindeydi. Rehberimiz gerçekten şehri yaşayan biriydi, sıradan turlarda göremeyeceğin köşelere götürdü.</p>
-                        <div class="review-user">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt="" />
-                            <div><b>Elif Yıldız</b><span>Paris & Disneyland</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p>Roma & Toskana rotasında her şey dakikası dakikasına planlanmıştı ama hiç sıkışık hissettirmedi. Toskana'daki bağ turu tatilin en güzel anıydı.</p>
-                        <div class="review-user">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="" />
-                            <div><b>Mert Kaya</b><span>Roma & Toskana</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p>İlk kez yurt dışına çıkıyordum ve İsviçre Alpleri turunda kendimi hep güvende hissettim. Destek ekibi bir sorunumda gece yarısı bile anında yanıt verdi.</p>
-                        <div class="review-user">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="" />
-                            <div><b>Zeynep Demir</b><span>İsviçre Alpleri</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="row g-4"
+             id="tourGrid">
         </div>
-    </section>
 
-    <!-- CTA -->
-    <section id="iletisim">
-        <div class="container">
-            <div class="cta-wrap text-center">
-                <div class="eyebrow" style="color:#7fe3e3">Sıradaki durak sensin</div>
-                <h2 class="mt-2">Bir Sonraki Maceran Bir Tık Uzağında</h2>
-                <p>Hayalindeki rotayı seç, gerisini Travelio'ya bırak. Sınırlı kontenjanlı turlar için erken rezervasyon avantajlarını kaçırma.</p>
-                <div class="mt-4 d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="#turlar" class="btn btn-teal">Turları Keşfet</a>
-                    <a href="#" class="btn-ghost">Bize Ulaş</a>
-                </div>
+    </div>
+
+</section>
+
+
+
+@await Component.InvokeAsync("_DefaultDestination")
+
+
+@await Component.InvokeAsync("_DefaultWhyChooseUs")
+
+
+
+<!-- REVIEWS -->
+
+<section id="yorumlar"
+         style="background:#fff">
+
+    <div class="container">
+
+        <div class="section-head mb-5">
+
+            <div class="eyebrow">
+                Gezgin yorumları
             </div>
-        </div>
-    </section>
 
-    
+            <h2>
+                Gezginler Ne Diyor?
+            </h2>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- REVIEW 1 -->
+
+            <div class="col-md-4">
+
+                <div class="review-card">
+
+                    <div class="review-stars">
+                        ★★★★★
+                    </div>
+
+
+                    <p>
+                        Paris & Disneyland turu beklentimin
+                        çok üzerindeydi. Rehberimiz gerçekten
+                        şehri yaşayan biriydi, sıradan turlarda
+                        göremeyeceğin köşelere götürdü.
+                    </p>
+
+
+                    <div class="review-user">
+
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80"
+                             alt="Elif Yıldız" />
+
+
+                        <div>
+
+                            <b>
+                                Elif Yıldız
+                            </b>
+
+                            <span>
+                                Paris & Disneyland
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- REVIEW 2 -->
+
+            <div class="col-md-4">
+
+                <div class="review-card">
+
+                    <div class="review-stars">
+                        ★★★★★
+                    </div>
+
+
+                    <p>
+                        Roma & Toskana rotasında her şey
+                        dakikası dakikasına planlanmıştı ama
+                        hiç sıkışık hissettirmedi. Toskana'daki
+                        bağ turu tatilin en güzel anıydı.
+                    </p>
+
+
+                    <div class="review-user">
+
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+                             alt="Mert Kaya" />
+
+
+                        <div>
+
+                            <b>
+                                Mert Kaya
+                            </b>
+
+                            <span>
+                                Roma & Toskana
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- REVIEW 3 -->
+
+            <div class="col-md-4">
+
+                <div class="review-card">
+
+                    <div class="review-stars">
+                        ★★★★★
+                    </div>
+
+
+                    <p>
+                        İlk kez yurt dışına çıkıyordum ve İsviçre
+                        Alpleri turunda kendimi hep güvende hissettim.
+                        Destek ekibi bir sorunumda gece yarısı bile
+                        anında yanıt verdi.
+                    </p>
+
+
+                    <div class="review-user">
+
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80"
+                             alt="Zeynep Demir" />
+
+
+                        <div>
+
+                            <b>
+                                Zeynep Demir
+                            </b>
+
+                            <span>
+                                İsviçre Alpleri
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+@await Component.InvokeAsync("_DefaultAltBanner")

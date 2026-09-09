@@ -1,0 +1,590 @@
+﻿@model Travel.Web.DTOs.AltBannerDtos.UpdateAltBannerDto
+
+@{
+    ViewData["Title"] = "Alt Banner Güncelle";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    /* =========================================
+               PAGE INTRO
+               ========================================= */
+
+    .page-intro {
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+        }
+
+
+    /* =========================================
+               BREADCRUMB
+               ========================================= */
+
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+
+    /* =========================================
+               SECTION CARD
+               ========================================= */
+
+    .alt-banner-form-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .form-header {
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .form-header h5 {
+            margin: 0;
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: .95rem;
+        }
+
+        .form-header span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+    .form-body {
+        padding: 1.4rem;
+    }
+
+
+    /* =========================================
+               FORM
+               ========================================= */
+
+    .form-label {
+        color: var(--navy);
+        font-size: .84rem;
+        font-weight: 600;
+        margin-bottom: .45rem;
+    }
+
+    .form-control {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .72rem .85rem;
+        font-size: .88rem;
+        color: var(--navy);
+    }
+
+        .form-control:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 .2rem rgba(15,163,163,.1);
+        }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+
+    /* =========================================
+               BUTTONS
+               ========================================= */
+
+    .btn-teal {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        transition: .25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(15,163,163,.3);
+        }
+
+    .btn-cancel {
+        background: #fff;
+        color: var(--navy);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        text-decoration: none;
+        transition: .2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-cancel:hover {
+            background: #fafbfb;
+            color: var(--navy);
+            border-color: var(--teal);
+        }
+
+
+    /* =========================================
+               INFO BOX
+               ========================================= */
+
+    .info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding: .9rem 1rem;
+        border-radius: 10px;
+        background: rgba(15,163,163,.06);
+        border: 1px solid rgba(15,163,163,.15);
+        color: var(--muted);
+        font-size: .82rem;
+        line-height: 1.5;
+        margin-bottom: 1.4rem;
+    }
+
+        .info-box svg {
+            flex: none;
+            color: var(--teal-dark);
+            margin-top: 2px;
+        }
+
+
+    /* =========================================
+               ID INFO
+               ========================================= */
+
+    .record-id {
+        margin-top: .35rem;
+        color: var(--muted);
+        font-size: .72rem;
+    }
+
+</style>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+    
+    <!-- BREADCRUMB -->
+
+    <div class="crumb">
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index">
+
+            Dashboard
+
+        </a>
+
+        /
+
+        <a asp-area="Admin"
+           asp-controller="AltBanner"
+           asp-action="Index">
+
+            Alt Banner
+
+        </a>
+
+        /
+
+        <span class="cur">
+
+            Alt Banner Güncelle
+
+        </span>
+
+    </div>
+
+
+    <!-- PAGE INTRO -->
+
+    <div class="page-intro">
+
+        <h1>
+            Alt Banner Güncelle
+        </h1>
+
+        <p>
+            Ana sayfanın alt bölümünde kullanılan banner içeriğini güncelleyin.
+        </p>
+
+    </div>
+
+
+    <!-- ALT BANNER FORM -->
+
+    <div class="alt-banner-form-card">
+
+
+        <!-- FORM HEADER -->
+
+        <div class="form-header">
+
+            <h5>
+                Alt Banner Bilgileri
+            </h5>
+
+            <span>
+                Mevcut banner bilgilerini düzenleyebilirsiniz.
+            </span>
+
+        </div>
+
+
+        <!-- FORM BODY -->
+
+        <div class="form-body">
+
+            <form asp-area="Admin"
+                  asp-controller="AltBanner"
+                  asp-action="Update"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+
+                <!-- ID -->
+
+                <input asp-for="Id"
+                       type="hidden" />
+
+
+                <!-- VALIDATION SUMMARY -->
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-4">
+                </div>
+
+
+                <!-- INFO -->
+
+                <div class="info-box">
+
+                    <svg width="18"
+                         height="18"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="10" />
+
+                        <line x1="12"
+                              y1="16"
+                              x2="12"
+                              y2="12" />
+
+                        <line x1="12"
+                              y1="8"
+                              x2="12.01"
+                              y2="8" />
+
+                    </svg>
+
+                    <div>
+
+                        <div>
+                            Bu alan sistemdeki tek Alt Banner kaydını temsil eder.
+                        </div>
+
+                        <div class="record-id">
+                            ID: @Model.Id
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row g-4">
+
+
+                    <!-- IMAGE URL -->
+
+                    <div class="col-12">
+
+                        <label asp-for="ImageUrl"
+                               class="form-label">
+
+                            Görsel URL
+
+                        </label>
+
+                        <input asp-for="ImageUrl"
+                               class="form-control"
+                               placeholder="https://example.com/alt-banner.jpg" />
+
+                        <span asp-validation-for="ImageUrl"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- TOP TITLE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="TopTitle"
+                               class="form-label">
+
+                            Üst Başlık
+
+                        </label>
+
+                        <input asp-for="TopTitle"
+                               class="form-control"
+                               placeholder="Örn: Sıradaki durak sensin" />
+
+                        <span asp-validation-for="TopTitle"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- MAIN TITLE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="MainTitle"
+                               class="form-label">
+
+                            Ana Başlık
+
+                        </label>
+
+                        <input asp-for="MainTitle"
+                               class="form-control"
+                               placeholder="Örn: Bir Sonraki Maceran Bir Tık Uzağında" />
+
+                        <span asp-validation-for="MainTitle"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Description"
+                               class="form-label">
+
+                            Açıklama
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Banner altında gösterilecek açıklamayı yazın..."></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- BUTTON 1 -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Button1Text"
+                               class="form-label">
+
+                            1. Buton Metni
+
+                        </label>
+
+                        <input asp-for="Button1Text"
+                               class="form-control"
+                               placeholder="Örn: Turları Keşfet" />
+
+                        <span asp-validation-for="Button1Text"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- BUTTON 1 LINK -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Button1Link"
+                               class="form-label">
+
+                            1. Buton Linki
+
+                        </label>
+
+                        <input asp-for="Button1Link"
+                               class="form-control"
+                               placeholder="Örn: /Tour/Index" />
+
+                        <span asp-validation-for="Button1Link"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- BUTTON 2 -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Button2Text"
+                               class="form-label">
+
+                            2. Buton Metni
+
+                        </label>
+
+                        <input asp-for="Button2Text"
+                               class="form-control"
+                               placeholder="Örn: Bize Ulaş" />
+
+                        <span asp-validation-for="Button2Text"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- BUTTON 2 LINK -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Button2Link"
+                               class="form-label">
+
+                            2. Buton Linki
+
+                        </label>
+
+                        <input asp-for="Button2Link"
+                               class="form-control"
+                               placeholder="Örn: /Contact/Index" />
+
+                        <span asp-validation-for="Button2Link"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+
+                    <!-- CANCEL -->
+
+                    <a asp-area="Admin"
+                       asp-controller="AltBanner"
+                       asp-action="Index"
+                       class="btn-cancel">
+
+                        İptal
+
+                    </a>
+
+
+                    <!-- UPDATE -->
+
+                    <button type="submit"
+                            class="btn-teal">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <path d="M20 6L9 17l-5-5" />
+
+                        </svg>
+
+                        Değişiklikleri Kaydet
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+    
+
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
