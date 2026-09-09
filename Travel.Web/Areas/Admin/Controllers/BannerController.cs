@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Travel.Web.DTOs.BannerDtos;
 using Travel.Web.Services.BannerServices;
@@ -6,6 +7,7 @@ using Travel.Web.Services.BannerServices;
 namespace Travel.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class BannerController(IBannerService _bannerService,
                                   IMapper _mapper) : Controller
     {

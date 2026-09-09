@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Travel.Web.DTOs.QuestionDtos;
 using Travel.Web.Services.QuestionServices;
@@ -6,6 +7,7 @@ using Travel.Web.Services.QuestionServices;
 namespace Travel.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class QuestionController(IQuestionService _questionService) : Controller
     {
         

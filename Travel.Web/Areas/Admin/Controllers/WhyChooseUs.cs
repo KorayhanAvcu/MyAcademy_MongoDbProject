@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Travel.Web.DTOs.WhyChooseUsDtos;
 using Travel.Web.Services.WhyChooseUsServices;
 
 namespace Travel.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class WhyChooseUsController(
         IWhyChooseUsService _whyChooseUsService) : Controller
     {

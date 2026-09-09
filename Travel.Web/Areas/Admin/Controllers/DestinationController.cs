@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Travel.Web.DTOs.DestinationDtos;
 using Travel.Web.Services.DestinationServices;
@@ -6,6 +7,7 @@ using Travel.Web.Services.DestinationServices;
 namespace Travel.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class DestinationController(
         IDestinationService _destinationService,
         IMapper _mapper) : Controller

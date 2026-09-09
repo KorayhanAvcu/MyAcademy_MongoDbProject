@@ -123,12 +123,10 @@ builder.Services
 
         options.SignIn.RequireConfirmedAccount = false;
     })
-
     .AddMongoDbStores<AppUser, AppRole, string>(
         databaseSettings.ConnectionString,
         databaseSettings.DatabaseName
     )
-
     .AddDefaultTokenProviders();
 
 
@@ -227,13 +225,21 @@ app.UseAuthorization();
 
 
 // =====================================================
-// CREATE DEFAULT ROLES
+// DEFAULT ROLES + SEED USERS
 // =====================================================
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider
         .GetRequiredService<RoleManager<AppRole>>();
+
+    var userManager = scope.ServiceProvider
+        .GetRequiredService<UserManager<AppUser>>();
+
+
+    // =================================================
+    // CREATE DEFAULT ROLES
+    // =================================================
 
     string[] roles =
     {
@@ -245,11 +251,181 @@ using (var scope = app.Services.CreateScope())
     {
         if (!await roleManager.RoleExistsAsync(role))
         {
-            await roleManager.CreateAsync(
+            var roleResult = await roleManager.CreateAsync(
                 new AppRole
                 {
                     Name = role
                 }
+            );
+
+            if (!roleResult.Succeeded)
+            {
+                foreach (var error in roleResult.Errors)
+                {
+                    Console.WriteLine(
+                        $"Role oluşturulamadı: {error.Description}"
+                    );
+                }
+            }
+        }
+    }
+
+
+    // =================================================
+    // CREATE ADMIN USER
+    // =================================================
+
+    var adminUser = await userManager.FindByNameAsync("korayhan");
+
+    if (adminUser == null)
+    {
+        adminUser = new AppUser
+        {
+            UserName = "korayhan",
+            Email = "korayhan@travelio.com",
+
+            FirstName = "Korayhan",
+            LastName = "Avcu",
+
+            PhoneNumber = "+90 555 111 2233",
+
+            EmailConfirmed = true,
+            PhoneNumberConfirmed = true,
+
+            TermsAccepted = true,
+            TermsAcceptedAt = DateTime.UtcNow
+        };
+
+        var adminResult = await userManager.CreateAsync(
+            adminUser,
+            "Password12*"
+        );
+
+        if (adminResult.Succeeded)
+        {
+            var roleResult = await userManager.AddToRoleAsync(
+                adminUser,
+                "Admin"
+            );
+
+            if (roleResult.Succeeded)
+            {
+                Console.WriteLine(
+                    "Admin kullanıcısı başarıyla oluşturuldu."
+                );
+            }
+            else
+            {
+                foreach (var error in roleResult.Errors)
+                {
+                    Console.WriteLine(
+                        $"Admin rolü atanamadı: {error.Description}"
+                    );
+                }
+            }
+        }
+        else
+        {
+            foreach (var error in adminResult.Errors)
+            {
+                Console.WriteLine(
+                    $"Admin kullanıcısı oluşturulamadı: {error.Description}"
+                );
+            }
+        }
+    }
+    else
+    {
+        // Kullanıcı zaten varsa tekrar oluşturma.
+        // Ancak Admin rolü yoksa tamamla.
+
+        if (!await userManager.IsInRoleAsync(
+            adminUser,
+            "Admin"))
+        {
+            await userManager.AddToRoleAsync(
+                adminUser,
+                "Admin"
+            );
+        }
+    }
+
+
+    // =================================================
+    // CREATE NORMAL USER
+    // =================================================
+
+    var normalUser = await userManager.FindByNameAsync("aras");
+
+    if (normalUser == null)
+    {
+        normalUser = new AppUser
+        {
+            UserName = "aras",
+            Email = "aras@travelio.com",
+
+            FirstName = "Aras",
+            LastName = "Yılmaz",
+
+            PhoneNumber = "+90 555 222 3344",
+
+            EmailConfirmed = true,
+            PhoneNumberConfirmed = true,
+
+            TermsAccepted = true,
+            TermsAcceptedAt = DateTime.UtcNow
+        };
+
+        var userResult = await userManager.CreateAsync(
+            normalUser,
+            "Password12*"
+        );
+
+        if (userResult.Succeeded)
+        {
+            var roleResult = await userManager.AddToRoleAsync(
+                normalUser,
+                "User"
+            );
+
+            if (roleResult.Succeeded)
+            {
+                Console.WriteLine(
+                    "User kullanıcısı başarıyla oluşturuldu."
+                );
+            }
+            else
+            {
+                foreach (var error in roleResult.Errors)
+                {
+                    Console.WriteLine(
+                        $"User rolü atanamadı: {error.Description}"
+                    );
+                }
+            }
+        }
+        else
+        {
+            foreach (var error in userResult.Errors)
+            {
+                Console.WriteLine(
+                    $"User kullanıcısı oluşturulamadı: {error.Description}"
+                );
+            }
+        }
+    }
+    else
+    {
+        // Kullanıcı zaten varsa tekrar oluşturma.
+        // Ancak User rolü yoksa tamamla.
+
+        if (!await userManager.IsInRoleAsync(
+            normalUser,
+            "User"))
+        {
+            await userManager.AddToRoleAsync(
+                normalUser,
+                "User"
             );
         }
     }
