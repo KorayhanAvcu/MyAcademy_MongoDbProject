@@ -3,16 +3,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Travel.Web.DTOs.TourDtos;
 using Travel.Web.Entities.Tour;
+using Travel.Web.Services.CategoryServices;
+using Travel.Web.Services.DestinationServices;
 using Travel.Web.Services.TourServices;
 
 namespace Travel.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class TourController(ITourService _tourService,
-                                IMapper _mapper) : Controller
+    public class TourController(
+        ITourService _tourService,
+        ICategoryService _categoryService,
+        IDestinationService _destinationService,
+        IMapper _mapper) : Controller
     {
-        
         // GET: /Admin/Tour
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -24,14 +28,18 @@ namespace Travel.Web.Areas.Admin.Controllers
             return View(values);
         }
 
-
         // GET: /Admin/Tour/TourCreate
         [HttpGet]
-        public IActionResult TourCreate()
+        public async Task<IActionResult> TourCreate()
         {
+            var categories = await _categoryService.GetAllAsync();
+            var destinations = await _destinationService.GetAllAsync();
+
+            ViewBag.Categories = categories;
+            ViewBag.Destinations = destinations;
+
             return View();
         }
-
 
         // POST: /Admin/Tour/TourCreate
         [HttpPost]
@@ -40,6 +48,12 @@ namespace Travel.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var categories = await _categoryService.GetAllAsync();
+                var destinations = await _destinationService.GetAllAsync();
+
+                ViewBag.Categories = categories;
+                ViewBag.Destinations = destinations;
+
                 return View(model);
             }
 
@@ -49,7 +63,6 @@ namespace Travel.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
 
         // GET: /Admin/Tour/TourUpdate/{id}
         [HttpGet]
@@ -69,9 +82,14 @@ namespace Travel.Web.Areas.Admin.Controllers
 
             var model = _mapper.Map<TourUpdateDto>(tour);
 
+            var categories = await _categoryService.GetAllAsync();
+            var destinations = await _destinationService.GetAllAsync();
+
+            ViewBag.Categories = categories;
+            ViewBag.Destinations = destinations;
+
             return View(model);
         }
-
 
         // POST: /Admin/Tour/TourUpdate
         [HttpPost]
@@ -80,6 +98,12 @@ namespace Travel.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var categories = await _categoryService.GetAllAsync();
+                var destinations = await _destinationService.GetAllAsync();
+
+                ViewBag.Categories = categories;
+                ViewBag.Destinations = destinations;
+
                 return View(model);
             }
 
@@ -92,14 +116,12 @@ namespace Travel.Web.Areas.Admin.Controllers
 
             var tour = _mapper.Map<Tour>(model);
 
-            // Mevcut Id korunuyor.
             tour.Id = existingTour.Id;
 
             await _tourService.UpdateAsync(tour);
 
             return RedirectToAction(nameof(Index));
         }
-
 
         // POST: /Admin/Tour/Delete
         [HttpPost]
@@ -124,4 +146,3 @@ namespace Travel.Web.Areas.Admin.Controllers
         }
     }
 }
-

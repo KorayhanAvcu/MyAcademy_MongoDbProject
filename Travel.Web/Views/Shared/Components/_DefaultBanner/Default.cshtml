@@ -1,23 +1,59 @@
-﻿@using Travel.Web.DTOs.BannerDtos
+﻿
+@using Travel.Web.DTOs.BannerDtos
 @model List<ResultBannerDto>
+
 @{
     Layout = null;
+
+    var defaultHeroImage =
+        "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80";
 }
+
 @if (!Model.Any())
 {
     <!-- HERO -->
-    <header class="hero">
+    <header class="hero"
+            style="
+        background:
+        linear-gradient(
+        180deg,
+        rgba(14,42,59,.55) 0%,
+        rgba(14,42,59,.35) 40%,
+        rgba(14,42,59,.72) 100%
+        ),
+        url('@defaultHeroImage') center / cover;
+        ">
+
         <div class="container hero-content">
-            <div class="eyebrow mb-3">Travelio ile keşfet</div>
-            <h1>Dünyayı Keşfetmeye Hazır Mısın?</h1>
-            <p class="lead">Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun benzersiz rotalarına kadar unutulmaz deneyimler seni bekliyor.</p>
+
+            <div class="eyebrow mb-3">
+                Travelio ile keşfet
+            </div>
+
+            <h1>
+                Dünyayı Keşfetmeye Hazır Mısın?
+            </h1>
+
+            <p class="lead">
+                Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun
+                benzersiz rotalarına kadar unutulmaz deneyimler seni bekliyor.
+            </p>
+
 
             <!-- SEARCH -->
             <div class="search-box">
+
                 <div class="row g-0 align-items-center">
+
                     <div class="col-md-3 search-field">
+
                         <label>Destinasyon</label>
-                        <input class="control" list="dests" placeholder="Nereye gidelim?" value="Paris, Fransa" />
+
+                        <input class="control"
+                               list="dests"
+                               placeholder="Nereye gidelim?"
+                               value="Paris, Fransa" />
+
                         <datalist id="dests">
                             <option>Paris, Fransa</option>
                             <option>Roma, İtalya</option>
@@ -26,52 +62,126 @@
                             <option>Barselona, İspanya</option>
                             <option>Prag, Çekya</option>
                         </datalist>
+
                     </div>
+
+
                     <div class="col-md-3 search-field">
+
                         <label>Tarih</label>
-                        <input class="control" type="date" />
+
+                        <input class="control"
+                               type="date" />
+
                     </div>
+
+
                     <div class="col-md-3 search-field">
+
                         <label>Kişi Sayısı</label>
+
                         <select class="control">
+
                             <option>1 kişi</option>
-                            <option selected>2 kişi</option>
+
+                            <option selected>
+                                2 kişi
+                            </option>
+
                             <option>3 kişi</option>
+
                             <option>4 kişi</option>
+
                             <option>5+ kişi</option>
+
                         </select>
+
                     </div>
+
+
                     <div class="col-md-3 p-2">
-                        <button class="btn-teal">Turları Ara</button>
+
+                        <button class="btn-teal">
+                            Turları Ara
+                        </button>
+
                     </div>
+
                 </div>
+
             </div>
 
+
+            <!-- STATS -->
             <div class="stats-row">
-                <div class="stat"><b>48+</b><span>Destinasyon</span></div>
-                <div class="stat"><b>1.200+</b><span>Rehberli Tur</span></div>
-                <div class="stat"><b>92.000</b><span>Mutlu Gezgin</span></div>
+
+                <div class="stat">
+                    <b>48+</b>
+                    <span>Destinasyon</span>
+                </div>
+
+                <div class="stat">
+                    <b>1.200+</b>
+                    <span>Rehberli Tur</span>
+                </div>
+
+                <div class="stat">
+                    <b>92.000</b>
+                    <span>Mutlu Gezgin</span>
+                </div>
+
             </div>
+
         </div>
+
     </header>
 }
 else
 {
-    @foreach(var item in Model)
+    @foreach (var item in Model)
     {
         <!-- HERO -->
-        <header class="hero">
+        <header class="hero"
+                style="
+            background:
+            linear-gradient(
+            180deg,
+            rgba(14,42,59,.55) 0%,
+            rgba(14,42,59,.35) 40%,
+            rgba(14,42,59,.72) 100%
+            ),
+            url('@item.ImageUrl') center / cover;
+            ">
+
             <div class="container hero-content">
-                <div class="eyebrow mb-3">@item.TopTitle</div>
-                <h1>@item.Title</h1>
-                <p class="lead">@item.Description</p>
+
+                <div class="eyebrow mb-3">
+                    @item.TopTitle
+                </div>
+
+                <h1>
+                    @item.Title
+                </h1>
+
+                <p class="lead">
+                    @item.Description
+                </p>
+
 
                 <!-- SEARCH -->
                 <div class="search-box">
+
                     <div class="row g-0 align-items-center">
+
                         <div class="col-md-3 search-field">
+
                             <label>Destinasyon</label>
-                            <input class="control" list="dests" placeholder="Nereye gidelim?" value="Paris, Fransa" />
+
+                            <input class="control"
+                                   list="dests"
+                                   placeholder="Nereye gidelim?"
+                                   value="Paris, Fransa" />
+
                             <datalist id="dests">
                                 <option>Paris, Fransa</option>
                                 <option>Roma, İtalya</option>
@@ -80,33 +190,78 @@ else
                                 <option>Barselona, İspanya</option>
                                 <option>Prag, Çekya</option>
                             </datalist>
+
                         </div>
+
+
                         <div class="col-md-3 search-field">
+
                             <label>Tarih</label>
-                            <input class="control" type="date" />
+
+                            <input class="control"
+                                   type="date" />
+
                         </div>
+
+
                         <div class="col-md-3 search-field">
+
                             <label>Kişi Sayısı</label>
+
                             <select class="control">
+
                                 <option>1 kişi</option>
-                                <option selected>2 kişi</option>
+
+                                <option selected>
+                                    2 kişi
+                                </option>
+
                                 <option>3 kişi</option>
+
                                 <option>4 kişi</option>
+
                                 <option>5+ kişi</option>
+
                             </select>
+
                         </div>
+
+
                         <div class="col-md-3 p-2">
-                            <button class="btn-teal">Turları Ara</button>
+
+                            <button class="btn-teal">
+                                Turları Ara
+                            </button>
+
                         </div>
+
                     </div>
+
                 </div>
 
+
+                <!-- STATS -->
                 <div class="stats-row">
-                    <div class="stat"><b>48+</b><span>Destinasyon</span></div>
-                    <div class="stat"><b>1.200+</b><span>Rehberli Tur</span></div>
-                    <div class="stat"><b>92.000</b><span>Mutlu Gezgin</span></div>
+
+                    <div class="stat">
+                        <b>48+</b>
+                        <span>Destinasyon</span>
+                    </div>
+
+                    <div class="stat">
+                        <b>1.200+</b>
+                        <span>Rehberli Tur</span>
+                    </div>
+
+                    <div class="stat">
+                        <b>92.000</b>
+                        <span>Mutlu Gezgin</span>
+                    </div>
+
                 </div>
+
             </div>
+
         </header>
     }
 }
