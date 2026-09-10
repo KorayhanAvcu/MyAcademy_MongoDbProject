@@ -1,0 +1,2282 @@
+﻿@model Travel.Web.DTOs.TourDtos.TourUpdateDto
+
+@{
+    ViewData["Title"] = "Tur Düzenle";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    .tour-update-page {
+        padding: 10px 0 50px;
+    }
+
+    /* =========================================================
+           PAGE HEADER
+           ========================================================= */
+
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .page-header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid #dfe8e8;
+        background: #fff;
+        color: #0e2a3b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+        .back-btn:hover {
+            background: #0b7f80;
+            color: #fff;
+            border-color: #0b7f80;
+        }
+
+    .page-title h1 {
+        margin: 0;
+        font-family: "Sora", sans-serif;
+        font-size: 25px;
+        font-weight: 700;
+        color: #0e2a3b;
+    }
+
+    .page-title p {
+        margin: 5px 0 0;
+        color: #718096;
+        font-size: 14px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 13px;
+        background: #f0f8f8;
+        color: #0b7f80;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+    /* =========================================================
+           FORM CARD
+           ========================================================= */
+
+    .form-card {
+        background: #fff;
+        border: 1px solid #e5eeee;
+        border-radius: 18px;
+        margin-bottom: 22px;
+        overflow: hidden;
+    }
+
+    .form-card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #edf2f2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .form-card-header .icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(11,127,128,.10);
+            color: #0b7f80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .form-card-header h3 {
+            margin: 0;
+            font-family: "Sora", sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0e2a3b;
+        }
+
+        .form-card-header p {
+            margin: 3px 0 0;
+            color: #84929d;
+            font-size: 12px;
+        }
+
+    .form-card-body {
+        padding: 24px;
+    }
+
+
+    /* =========================================================
+           FORM ELEMENTS
+           ========================================================= */
+
+    .form-label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #34495e;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 45px;
+        border: 1px solid #dce6e7;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #243746;
+    }
+
+    textarea.form-control {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #0b7f80;
+        box-shadow: 0 0 0 3px rgba(11,127,128,.10);
+    }
+
+    .text-danger {
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .input-group-text {
+        background: #f8fbfb;
+        border-color: #dce6e7;
+        color: #53666f;
+        border-radius: 0 10px 10px 0;
+    }
+
+
+    /* =========================================================
+           DYNAMIC ITEMS
+           ========================================================= */
+
+    .dynamic-item {
+        background: #f8fbfb;
+        border: 1px solid #e1ebeb;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+
+    .dynamic-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
+
+    .dynamic-item-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0e2a3b;
+    }
+
+    .remove-btn {
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 9px;
+        background: #fff0f0;
+        color: #d64545;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .2s ease;
+    }
+
+        .remove-btn:hover {
+            background: #d64545;
+            color: #fff;
+        }
+
+    .add-btn {
+        border: 1px dashed #0b7f80;
+        color: #0b7f80;
+        background: rgba(11,127,128,.04);
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all .2s ease;
+    }
+
+        .add-btn:hover {
+            background: #0b7f80;
+            color: #fff;
+        }
+
+
+    /* =========================================================
+           CHECKBOX
+           ========================================================= */
+
+    .checkbox-card {
+        border: 1px solid #e1ebeb;
+        border-radius: 12px;
+        padding: 15px;
+        height: 100%;
+        background: #fbfdfd;
+    }
+
+        .checkbox-card .form-check {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-card .form-check-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+    .form-check-input {
+        width: 18px;
+        height: 18px;
+        margin-top: 0;
+        cursor: pointer;
+    }
+
+        .form-check-input:checked {
+            background-color: #0b7f80;
+            border-color: #0b7f80;
+        }
+
+
+    /* =========================================================
+           INFO BOX
+           ========================================================= */
+
+    .info-box {
+        padding: 13px 15px;
+        background: #f1f8f8;
+        border: 1px solid #dceeee;
+        border-radius: 10px;
+        color: #527070;
+        font-size: 12px;
+        margin-top: 15px;
+    }
+
+
+    /* =========================================================
+           ACTIONS
+           ========================================================= */
+
+    .form-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+        background: rgba(255,255,255,.96);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid #e5eeee;
+        padding: 16px 0;
+        margin-top: 5px;
+    }
+
+    .btn-cancel {
+        min-height: 44px;
+        padding: 0 20px;
+        border: 1px solid #dce6e7;
+        background: #fff;
+        color: #34495e;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+        .btn-cancel:hover {
+            background: #f5f8f8;
+            color: #34495e;
+        }
+
+    .btn-save {
+        min-height: 44px;
+        padding: 0 22px;
+        border: 0;
+        background: #0b7f80;
+        color: #fff;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all .2s ease;
+    }
+
+        .btn-save:hover {
+            background: #096a6b;
+            color: #fff;
+        }
+
+
+    /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+    @@media (max-width: 768px) {
+
+        .page-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .form-card-body {
+            padding: 18px;
+        }
+
+        .form-card-header {
+            padding: 17px 18px;
+        }
+
+        .form-actions {
+            padding: 12px 15px;
+        }
+    }
+
+</style>
+
+
+<div class="tour-update-page">
+
+    <!-- =========================================================
+         PAGE HEADER
+         ========================================================= -->
+
+    <div class="page-header">
+
+        <div class="page-header-left">
+
+            <a asp-area="Admin"
+               asp-controller="Tour"
+               asp-action="Index"
+               class="back-btn"
+               title="Tur listesine dön">
+
+                <i class="bi bi-arrow-left"></i>
+
+            </a>
+
+            <div class="page-title">
+
+                <h1>Tur Düzenle</h1>
+
+                <p>
+                    <strong>@Model.Name</strong> turunun bilgilerini güncelleyin.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="status-badge">
+
+            <i class="bi bi-pencil-square"></i>
+
+            Düzenleme Modu
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         FORM
+         ========================================================= -->
+
+    <form asp-area="Admin"
+          asp-controller="Tour"
+          asp-action="TourUpdate"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Id" type="hidden" />
+
+
+        <!-- =====================================================
+             VALIDATION
+             ===================================================== -->
+
+        <div asp-validation-summary="ModelOnly"
+             class="alert alert-danger validation-summary mb-4">
+        </div>
+
+
+        <!-- =====================================================
+             TEMEL BİLGİLER
+             ===================================================== -->
+
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="icon">
+                    <i class="bi bi-info-circle"></i>
+                </div>
+
+                <div>
+
+                    <h3>Temel Bilgiler</h3>
+
+                    <p>
+                        Turun temel bilgilerini düzenleyin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card-body">
+
+                <div class="row g-4">
+
+                    <!-- TUR ADI -->
+
+                    <div class="col-lg-8">
+
+                        <label asp-for="Name"
+                               class="form-label">
+                            Tur Adı
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Örn. Roma & Toskana Keşfi" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- TUR TİPİ -->
+
+                    <div class="col-lg-4">
+
+                        <label asp-for="TourType"
+                               class="form-label">
+                            Tur Tipi
+                        </label>
+
+                        <select asp-for="TourType"
+                                class="form-select">
+
+                            <option value="">
+                                Tur tipi seçin
+                            </option>
+
+                            <option value="Kültür">
+                                Kültür Turu
+                            </option>
+
+                            <option value="Yurtdışı">
+                                Yurtdışı Turu
+                            </option>
+
+                            <option value="Yurtiçi">
+                                Yurtiçi Turu
+                            </option>
+
+                            <option value="Doğa">
+                                Doğa Turu
+                            </option>
+
+                            <option value="Deniz">
+                                Deniz Turu
+                            </option>
+
+                            <option value="Macera">
+                                Macera Turu
+                            </option>
+
+                            <option value="Balayı">
+                                Balayı Turu
+                            </option>
+
+                            <option value="Gastronomi">
+                                Gastronomi Turu
+                            </option>
+
+                            <option value="Hafta Sonu">
+                                Hafta Sonu Turu
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- KATEGORİ -->
+
+                    <div class="col-lg-6">
+
+                        <label asp-for="CategoryId"
+                               class="form-label">
+                            Kategori
+                        </label>
+
+                        <select asp-for="CategoryId"
+                                class="form-select">
+
+                            <option value="">
+                                Kategori seçin
+                            </option>
+
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var category in ViewBag.Categories)
+                                {
+                                    <option value="@category.Id">
+                                        @category.Name
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="CategoryId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- DESTİNASYON -->
+
+                    <div class="col-lg-6">
+
+                        <label asp-for="DestinationId"
+                               class="form-label">
+                            Destinasyon
+                        </label>
+
+                        <select asp-for="DestinationId"
+                                class="form-select">
+
+                            <option value="">
+                                Destinasyon seçin
+                            </option>
+
+                            @if (ViewBag.Destinations != null)
+                            {
+                                foreach (var destination in ViewBag.Destinations)
+                                {
+                                    <option value="@destination.Id">
+                                        @destination.Country - @destination.City
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="DestinationId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- ROUTE ID -->
+
+                    <div class="col-lg-6">
+
+                        <label asp-for="RouteId"
+                               class="form-label">
+                            Rota ID
+                        </label>
+
+                        <input asp-for="RouteId"
+                               class="form-control"
+                               placeholder="Route ID" />
+
+                    </div>
+
+
+                    <!-- HAREKET ŞEHRİ -->
+
+                    <div class="col-lg-6">
+
+                        <label asp-for="DepartureCity"
+                               class="form-label">
+                            Hareket Şehri
+                        </label>
+
+                        <input asp-for="DepartureCity"
+                               class="form-control"
+                               placeholder="Örn. İstanbul" />
+
+                    </div>
+
+
+                    <!-- KISA AÇIKLAMA -->
+
+                    <div class="col-12">
+
+                        <label asp-for="ShortDescription"
+                               class="form-label">
+                            Kısa Açıklama
+                        </label>
+
+                        <textarea asp-for="ShortDescription"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Tur kartında gösterilecek kısa açıklama..."></textarea>
+
+                    </div>
+
+
+                    <!-- AÇIKLAMA -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Description"
+                               class="form-label">
+                            Detaylı Açıklama
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="7"
+                                  placeholder="Tur hakkında detaylı açıklama..."></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FİYAT / SÜRE / KONTENJAN
+             ===================================================== -->
+
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="icon">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+
+                <div>
+
+                    <h3>Fiyat, Süre ve Kontenjan</h3>
+
+                    <p>
+                        Turun satış ve kapasite bilgilerini düzenleyin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card-body">
+
+                <div class="row g-4">
+
+                    <!-- FİYAT -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="Price"
+                               class="form-label">
+                            Fiyat
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="Price"
+                                   class="form-control"
+                                   type="number"
+                                   step="0.01"
+                                   min="0" />
+
+                            <span class="input-group-text">
+                                ₺
+                            </span>
+
+                        </div>
+
+                        <span asp-validation-for="Price"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- GÜN -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="DurationDays"
+                               class="form-label">
+                            Gün
+                        </label>
+
+                        <input asp-for="DurationDays"
+                               class="form-control"
+                               type="number"
+                               min="1" />
+
+                        <span asp-validation-for="DurationDays"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- GECE -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="DurationNights"
+                               class="form-label">
+                            Gece
+                        </label>
+
+                        <input asp-for="DurationNights"
+                               class="form-control"
+                               type="number"
+                               min="0" />
+
+                        <span asp-validation-for="DurationNights"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- MAX KAPASİTE -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="MaxCapacity"
+                               class="form-label">
+                            Maksimum Kontenjan
+                        </label>
+
+                        <input asp-for="MaxCapacity"
+                               class="form-control"
+                               type="number"
+                               min="1" />
+
+                        <span asp-validation-for="MaxCapacity"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- MIN KATILIMCI -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="MinParticipants"
+                               class="form-label">
+                            Minimum Katılımcı
+                        </label>
+
+                        <input asp-for="MinParticipants"
+                               class="form-control"
+                               type="number"
+                               min="1" />
+
+                        <span asp-validation-for="MinParticipants"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- ULAŞIM -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="Transportation"
+                               class="form-label">
+                            Ulaşım
+                        </label>
+
+                        <input asp-for="Transportation"
+                               class="form-control"
+                               placeholder="Uçak / Otobüs..." />
+
+                    </div>
+
+
+                    <!-- KONAKLAMA -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="Accommodation"
+                               class="form-label">
+                            Konaklama
+                        </label>
+
+                        <input asp-for="Accommodation"
+                               class="form-control"
+                               placeholder="4★ Hotel..." />
+
+                    </div>
+
+
+                    <!-- REHBER DİLİ -->
+
+                    <div class="col-md-3">
+
+                        <label asp-for="GuideLanguage"
+                               class="form-label">
+                            Rehber Dili
+                        </label>
+
+                        <input asp-for="GuideLanguage"
+                               class="form-control"
+                               placeholder="Türkçe / İngilizce..." />
+
+                    </div>
+
+
+                    <!-- VİZE -->
+
+                    <div class="col-12">
+
+                        <label asp-for="VisaInfo"
+                               class="form-label">
+                            Vize Bilgisi
+                        </label>
+
+                        <textarea asp-for="VisaInfo"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Vize ile ilgili bilgiler..."></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             GÖRSELLER
+             ===================================================== -->
+
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="icon">
+                    <i class="bi bi-images"></i>
+                </div>
+
+                <div>
+
+                    <h3>Görseller</h3>
+
+                    <p>
+                        Kapak ve galeri görsellerini yönetin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card-body">
+
+                <!-- COVER IMAGE -->
+
+                <div class="mb-4">
+
+                    <label asp-for="CoverImageUrl"
+                           class="form-label">
+                        Kapak Görseli URL
+                    </label>
+
+                    <input asp-for="CoverImageUrl"
+                           class="form-control"
+                           placeholder="https://..." />
+
+                </div>
+
+
+                <!-- GALLERY -->
+
+                <div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <label class="form-label mb-0">
+                            Galeri Görselleri
+                        </label>
+
+                        <button type="button"
+                                class="add-btn"
+                                onclick="addGalleryImage()">
+
+                            <i class="bi bi-plus-lg me-1"></i>
+
+                            Görsel Ekle
+
+                        </button>
+
+                    </div>
+
+
+                    <div id="gallery-container">
+
+                        @if (Model.GalleryImages != null &&
+                                                Model.GalleryImages.Count > 0)
+                        {
+                            for (int i = 0;
+                            i < Model.GalleryImages.Count;
+                            i++)
+                            {
+                                <div class="dynamic-item gallery-item">
+
+                                    <div class="row g-2 align-items-center">
+
+                                        <div class="col">
+
+                                            <input type="text"
+                                                   name="GalleryImages"
+                                                   value="@Model.GalleryImages[i]"
+                                                   class="form-control"
+                                                   placeholder="https://..." />
+
+                                        </div>
+
+                                        <div class="col-auto">
+
+                                            <button type="button"
+                                                    class="remove-btn"
+                                                    onclick="removeItem(this)">
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TUR TARİHLERİ
+             ===================================================== -->
+
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="icon">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+
+                <div>
+
+                    <h3>Tur Tarihleri</h3>
+
+                    <p>
+                        Turun gerçekleşeceği tarihleri ve kontenjanları yönetin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card-body">
+
+                <div id="tour-dates-container">
+
+                    @if (Model.TourDates != null &&
+                                        Model.TourDates.Count > 0)
+                    {
+                        for (int i = 0;
+                        i < Model.TourDates.Count;
+                        i++)
+                        {
+                            <div class="dynamic-item tour-date-item">
+
+                                <div class="dynamic-item-header">
+
+                                    <div class="dynamic-item-title">
+
+                                        <i class="bi bi-calendar3 me-1"></i>
+
+                                        Tur Tarihi @(i + 1)
+
+                                    </div>
+
+
+                                    <button type="button"
+                                            class="remove-btn"
+                                            onclick="removeItem(this)">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </button>
+
+                                </div>
+
+
+                                <input type="hidden"
+                                       name="TourDates[@i].Id"
+                                       value="@Model.TourDates[i].Id" />
+
+
+                                <div class="row g-3">
+
+                                    <!-- BAŞLANGIÇ -->
+
+                                    <div class="col-md-4">
+
+                                        <label class="form-label">
+                                            Başlangıç Tarihi
+                                        </label>
+
+                                        <input type="date"
+                                               name="TourDates[@i].StartDate"
+                                               value="@Model.TourDates[i].StartDate.ToString("yyyy-MM-dd")"
+                                               class="form-control" />
+
+                                    </div>
+
+
+                                    <!-- BİTİŞ -->
+
+                                    <div class="col-md-4">
+
+                                        <label class="form-label">
+                                            Bitiş Tarihi
+                                        </label>
+
+                                        <input type="date"
+                                               name="TourDates[@i].EndDate"
+                                               value="@Model.TourDates[i].EndDate.ToString("yyyy-MM-dd")"
+                                               class="form-control" />
+
+                                    </div>
+
+
+                                    <!-- KONTENJAN -->
+
+                                    <div class="col-md-4">
+
+                                        <label class="form-label">
+                                            Kontenjan
+                                        </label>
+
+                                        <input type="number"
+                                               name="TourDates[@i].Capacity"
+                                               value="@Model.TourDates[i].Capacity"
+                                               class="form-control"
+                                               min="1" />
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+
+                </div>
+
+
+                <button type="button"
+                        class="add-btn"
+                        onclick="addTourDate()">
+
+                    <i class="bi bi-plus-lg me-1"></i>
+
+                    Tur Tarihi Ekle
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             GÜNLÜK PROGRAM
+             ===================================================== -->
+
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="icon">
+                    <i class="bi bi-map"></i>
+                </div>
+
+                <div>
+
+                    <h3>Günlük Program</h3>
+
+                    <p>
+                        Turun günlük programını oluşturun ve düzenleyin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card-body">
+
+                <div id="day-program-container">
+
+                    @if (Model.DayPrograms != null &&
+                                        Model.DayPrograms.Count > 0)
+                    {
+                        for (int i = 0;
+                        i < Model.DayPrograms.Count;
+                        i++)
+                        {
+                            <div class="dynamic-item day-program-item">
+
+                                <div class="dynamic-item-header">
+
+                                    <div class="dynamic-item-title">
+
+                                        <i class="bi bi-calendar-day me-1"></i>
+
+                                        Gün @(i + 1)
+
+                                    </div>
+
+
+                                    <button type="button"
+                                            class="remove-btn"
+                                            onclick="removeItem(this)">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </button>
+
+                                </div>
+
+
+                                <div class="row g-3">
+
+                                    <!-- GÜN NUMARASI -->
+
+                                    <div class="col-md-2">
+
+                                        <label class="form-label">
+                                            Gün
+                                        </label>
+
+                                        <input type="number"
+                                               name="DayPrograms[@i].DayNumber"
+                                               value="@Model.DayPrograms[i].DayNumber"
+                                               class="form-control"
+                                               min="1" />
+
+                                    </div>
+
+
+                                    <!-- BAŞLIK -->
+
+                                    <div class="col-md-10">
+
+                                        <label class="form-label">
+                                            Başlık
+                                        </label>
+
+                                        <input type="text"
+                                               name="DayPrograms[@i].Title"
+                                               value="@Model.DayPrograms[i].Title"
+                                               class="form-control"
+                                               placeholder="Örn. Roma'ya Varış" />
+
+                                    </div>
+
+
+                                    <!-- AÇIKLAMA -->
+
+                                    <div class="col-12">
+
+                                        <label class="form-label">
+                                            Açıklama
+                                        </label>
+
+                                        <textarea name="DayPrograms[@i].Description"
+                                          class="form-control"
+                                          rows="4"
+                                          placeholder="Günün programını açıklayın...">@Model.DayPrograms[i].Description</textarea>
+
+                                    </div>
+
+
+                                    <!-- ŞEHİR -->
+
+                                    <div class="col-md-3">
+
+                                        <label class="form-label">
+                                            Şehir
+                                        </label>
+
+                                        <input type="text"
+                                               name="DayPrograms[@i].City"
+                                               value="@Model.DayPrograms[i].City"
+                                               class="form-control"
+                                               placeholder="Roma" />
+
+                                    </div>
+
+
+                                    <!-- KONAKLAMA -->
+
+                                    <div class="col-md-3">
+
+                                        <label class="form-label">
+                                            Konaklama
+                                        </label>
+
+                                        <input type="text"
+                                               name="DayPrograms[@i].Accommodation"
+                                               value="@Model.DayPrograms[i].Accommodation"
+                                               class="form-control"
+                                               placeholder="Hotel" />
+
+                                    </div>
+
+
+                                    <!-- ULAŞIM -->
+
+                                    <div class="col-md-3">
+
+                                        <label class="form-label">
+                                            Ulaşım
+                                        </label>
+
+                                        <input type="text"
+                                               name="DayPrograms[@i].Transportation"
+                                               value="@Model.DayPrograms[i].Transportation"
+                                               class="form-control"
+                                               placeholder="Otobüs" />
+
+                                    </div>
+
+
+                                    <!-- ÖĞÜN -->
+
+                                    <div class="col-md-3">
+
+                                        <label class="form-label">
+                                            Öğün
+                                        </label>
+
+                                        <input type="text"
+                                               name="DayPrograms[@i].Meal"
+                                               value="@Model.DayPrograms[i].Meal"
+                                               class="form-control"
+                                               placeholder="Kahvaltı" />
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+
+                </div>
+
+
+                <button type="button"
+                        class="add-btn"
+                        onclick="addDayProgram()">
+
+                    <i class="bi bi-plus-lg me-1"></i>
+
+                    Gün Ekle
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TUR İÇERİĞİ
+             ===================================================== -->
+
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="icon">
+                    <i class="bi bi-list-check"></i>
+                </div>
+
+                <div>
+
+                    <h3>Tur İçeriği</h3>
+
+                    <p>
+                        Dahil olan, olmayan ve öne çıkan bilgileri yönetin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card-body">
+
+                <div class="row g-4">
+
+
+                    <!-- =================================================
+                         DAHİL OLANLAR
+                         ================================================= -->
+
+                    <div class="col-lg-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <label class="form-label mb-0">
+                                Dahil Olanlar
+                            </label>
+
+                            <button type="button"
+                                    class="add-btn"
+                                    onclick="addListItem('includes-container', 'Includes')">
+
+                                <i class="bi bi-plus"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <div id="includes-container">
+
+                            @if (Model.Includes != null)
+                            {
+                                for (int i = 0;
+                                i < Model.Includes.Count;
+                                i++)
+                                {
+                                    <div class="dynamic-item">
+
+                                        <div class="row g-2">
+
+                                            <div class="col">
+
+                                                <input type="text"
+                                                       name="Includes"
+                                                       value="@Model.Includes[i]"
+                                                       class="form-control"
+                                                       placeholder="Örn. Kahvaltı" />
+
+                                            </div>
+
+
+                                            <div class="col-auto">
+
+                                                <button type="button"
+                                                        class="remove-btn"
+                                                        onclick="removeItem(this)">
+
+                                                    <i class="bi bi-trash"></i>
+
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         DAHİL OLMAYANLAR
+                         ================================================= -->
+
+                    <div class="col-lg-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <label class="form-label mb-0">
+                                Dahil Olmayanlar
+                            </label>
+
+                            <button type="button"
+                                    class="add-btn"
+                                    onclick="addListItem('excludes-container', 'Excludes')">
+
+                                <i class="bi bi-plus"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <div id="excludes-container">
+
+                            @if (Model.Excludes != null)
+                            {
+                                for (int i = 0;
+                                i < Model.Excludes.Count;
+                                i++)
+                                {
+                                    <div class="dynamic-item">
+
+                                        <div class="row g-2">
+
+                                            <div class="col">
+
+                                                <input type="text"
+                                                       name="Excludes"
+                                                       value="@Model.Excludes[i]"
+                                                       class="form-control"
+                                                       placeholder="Örn. Kişisel harcamalar" />
+
+                                            </div>
+
+
+                                            <div class="col-auto">
+
+                                                <button type="button"
+                                                        class="remove-btn"
+                                                        onclick="removeItem(this)">
+
+                                                    <i class="bi bi-trash"></i>
+
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ÖNE ÇIKANLAR
+                         ================================================= -->
+
+                    <div class="col-lg-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <label class="form-label mb-0">
+                                Öne Çıkanlar
+                            </label>
+
+                            <button type="button"
+                                    class="add-btn"
+                                    onclick="addListItem('highlights-container', 'Highlights')">
+
+                                <i class="bi bi-plus"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <div id="highlights-container">
+
+                            @if (Model.Highlights != null)
+                            {
+                                for (int i = 0;
+                                i < Model.Highlights.Count;
+                                i++)
+                                {
+                                    <div class="dynamic-item">
+
+                                        <div class="row g-2">
+
+                                            <div class="col">
+
+                                                <input type="text"
+                                                       name="Highlights"
+                                                       value="@Model.Highlights[i]"
+                                                       class="form-control"
+                                                       placeholder="Örn. Kolezyum ziyareti" />
+
+                                            </div>
+
+
+                                            <div class="col-auto">
+
+                                                <button type="button"
+                                                        class="remove-btn"
+                                                        onclick="removeItem(this)">
+
+                                                    <i class="bi bi-trash"></i>
+
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             DURUM VE ÖZELLİKLER
+             ===================================================== -->
+
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="icon">
+                    <i class="bi bi-sliders"></i>
+                </div>
+
+                <div>
+
+                    <h3>Durum ve Özellikler</h3>
+
+                    <p>
+                        Turun yayın durumunu ve öne çıkarma seçeneklerini belirleyin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-card-body">
+
+                <div class="row g-3">
+
+
+                    <!-- DURUM -->
+
+                    <div class="col-md-4">
+
+                        <label asp-for="Status"
+                               class="form-label">
+                            Tur Durumu
+                        </label>
+
+                        <select asp-for="Status"
+                                class="form-select">
+
+                            <option value="Draft">
+                                Taslak
+                            </option>
+
+                            <option value="Active">
+                                Aktif
+                            </option>
+
+                            <option value="Passive">
+                                Pasif
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ÖZELLİKLER -->
+
+                    <div class="col-md-8">
+
+                        <div class="row g-3 h-100">
+
+
+                            <!-- FEATURED -->
+
+                            <div class="col-md-4">
+
+                                <div class="checkbox-card">
+
+                                    <div class="form-check">
+
+                                        <input asp-for="IsFeatured"
+                                               class="form-check-input" />
+
+                                        <label asp-for="IsFeatured"
+                                               class="form-check-label ms-2">
+
+                                            Öne Çıkan Tur
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- BEST SELLER -->
+
+                            <div class="col-md-4">
+
+                                <div class="checkbox-card">
+
+                                    <div class="form-check">
+
+                                        <input asp-for="IsBestSeller"
+                                               class="form-check-input" />
+
+                                        <label asp-for="IsBestSeller"
+                                               class="form-check-label ms-2">
+
+                                            Çok Satan
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- NEW -->
+
+                            <div class="col-md-4">
+
+                                <div class="checkbox-card">
+
+                                    <div class="form-check">
+
+                                        <input asp-for="IsNew"
+                                               class="form-check-input" />
+
+                                        <label asp-for="IsNew"
+                                               class="form-check-label ms-2">
+
+                                            Yeni Tur
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <i class="bi bi-info-circle me-1"></i>
+
+                    Ortalama puan, yorum sayısı ve rezervasyon sayısı
+                    bu sayfadan değiştirilmez. Bu bilgiler sistem tarafından
+                    yönetilir.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             ACTION BUTTONS
+             ===================================================== -->
+
+        <div class="form-actions">
+
+            <div class="d-flex justify-content-end gap-2">
+
+                <a asp-area="Admin"
+                   asp-controller="Tour"
+                   asp-action="Index"
+                   class="btn-cancel d-flex align-items-center text-decoration-none">
+
+                    <i class="bi bi-x-lg me-2"></i>
+
+                    İptal
+
+                </a>
+
+
+                <button type="submit"
+                        class="btn-save">
+
+                    <i class="bi bi-check-lg me-2"></i>
+
+                    Değişiklikleri Kaydet
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        /* =========================================================
+           GENERAL REMOVE
+           ========================================================= */
+
+        function removeItem(button) {
+
+            const item = button.closest(".dynamic-item");
+
+            if (item) {
+                item.remove();
+            }
+
+            reindexAll();
+        }
+
+
+        /* =========================================================
+           GALLERY IMAGE
+           ========================================================= */
+
+        function addGalleryImage() {
+
+            const container =
+                document.getElementById("gallery-container");
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "dynamic-item gallery-item";
+
+            item.innerHTML = `
+
+                <div class="row g-2 align-items-center">
+
+                    <div class="col">
+
+                        <input type="text"
+                               name="GalleryImages"
+                               class="form-control"
+                               placeholder="https://..." />
+
+                    </div>
+
+                    <div class="col-auto">
+
+                        <button type="button"
+                                class="remove-btn"
+                                onclick="removeItem(this)">
+
+                            <i class="bi bi-trash"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            container.appendChild(item);
+        }
+
+
+        /* =========================================================
+           TOUR DATE
+           ========================================================= */
+
+        function addTourDate() {
+
+            const container =
+                document.getElementById("tour-dates-container");
+
+            const index =
+                container.querySelectorAll(".tour-date-item").length;
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "dynamic-item tour-date-item";
+
+            item.innerHTML = `
+
+                <div class="dynamic-item-header">
+
+                    <div class="dynamic-item-title">
+
+                        <i class="bi bi-calendar3 me-1"></i>
+
+                        Tur Tarihi ${index + 1}
+
+                    </div>
+
+
+                    <button type="button"
+                            class="remove-btn"
+                            onclick="removeItem(this)">
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+                </div>
+
+
+                <input type="hidden"
+                       name="TourDates[${index}].Id"
+                       value="" />
+
+
+                <div class="row g-3">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Başlangıç Tarihi
+                        </label>
+
+                        <input type="date"
+                               name="TourDates[${index}].StartDate"
+                               class="form-control" />
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Bitiş Tarihi
+                        </label>
+
+                        <input type="date"
+                               name="TourDates[${index}].EndDate"
+                               class="form-control" />
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Kontenjan
+                        </label>
+
+                        <input type="number"
+                               name="TourDates[${index}].Capacity"
+                               class="form-control"
+                               min="1"
+                               value="1" />
+
+                    </div>
+
+                </div>
+
+            `;
+
+            container.appendChild(item);
+
+            reindexAll();
+        }
+
+
+        /* =========================================================
+           DAY PROGRAM
+           ========================================================= */
+
+        function addDayProgram() {
+
+            const container =
+                document.getElementById("day-program-container");
+
+            const index =
+                container.querySelectorAll(".day-program-item").length;
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "dynamic-item day-program-item";
+
+            item.innerHTML = `
+
+                <div class="dynamic-item-header">
+
+                    <div class="dynamic-item-title">
+
+                        <i class="bi bi-calendar-day me-1"></i>
+
+                        Gün ${index + 1}
+
+                    </div>
+
+
+                    <button type="button"
+                            class="remove-btn"
+                            onclick="removeItem(this)">
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="row g-3">
+
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Gün
+                        </label>
+
+                        <input type="number"
+                               name="DayPrograms[${index}].DayNumber"
+                               class="form-control"
+                               min="1"
+                               value="${index + 1}" />
+
+                    </div>
+
+
+                    <div class="col-md-10">
+
+                        <label class="form-label">
+                            Başlık
+                        </label>
+
+                        <input type="text"
+                               name="DayPrograms[${index}].Title"
+                               class="form-control"
+                               placeholder="Örn. Roma'ya Varış" />
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Açıklama
+                        </label>
+
+                        <textarea name="DayPrograms[${index}].Description"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Günün programını açıklayın..."></textarea>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Şehir
+                        </label>
+
+                        <input type="text"
+                               name="DayPrograms[${index}].City"
+                               class="form-control"
+                               placeholder="Roma" />
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Konaklama
+                        </label>
+
+                        <input type="text"
+                               name="DayPrograms[${index}].Accommodation"
+                               class="form-control"
+                               placeholder="Hotel" />
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Ulaşım
+                        </label>
+
+                        <input type="text"
+                               name="DayPrograms[${index}].Transportation"
+                               class="form-control"
+                               placeholder="Otobüs" />
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Öğün
+                        </label>
+
+                        <input type="text"
+                               name="DayPrograms[${index}].Meal"
+                               class="form-control"
+                               placeholder="Kahvaltı" />
+
+                    </div>
+
+                </div>
+
+            `;
+
+            container.appendChild(item);
+
+            reindexAll();
+        }
+
+
+        /* =========================================================
+           SIMPLE LIST
+           ========================================================= */
+
+        function addListItem(containerId, fieldName) {
+
+            const container =
+                document.getElementById(containerId);
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "dynamic-item";
+
+            item.innerHTML = `
+
+                <div class="row g-2">
+
+                    <div class="col">
+
+                        <input type="text"
+                               name="${fieldName}"
+                               class="form-control"
+                               placeholder="Yeni madde..." />
+
+                    </div>
+
+
+                    <div class="col-auto">
+
+                        <button type="button"
+                                class="remove-btn"
+                                onclick="removeItem(this)">
+
+                            <i class="bi bi-trash"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            container.appendChild(item);
+        }
+
+
+        /* =========================================================
+           REINDEX ALL
+           ========================================================= */
+
+        function reindexAll() {
+
+            reindexTourDates();
+
+            reindexDayPrograms();
+        }
+
+
+        /* =========================================================
+           REINDEX TOUR DATES
+           ========================================================= */
+
+        function reindexTourDates() {
+
+            const items =
+                document.querySelectorAll(
+                    "#tour-dates-container .tour-date-item"
+                );
+
+            items.forEach((item, index) => {
+
+                const inputs =
+                    item.querySelectorAll(
+                        "input, select"
+                    );
+
+                inputs.forEach(input => {
+
+                    const name =
+                        input.getAttribute("name");
+
+                    if (!name) {
+                        return;
+                    }
+
+                    input.setAttribute(
+                        "name",
+                        name.replace(
+                            /TourDates\[\d+\]/,
+                            `TourDates[${index}]`
+                        )
+                    );
+
+                });
+
+
+                const title =
+                    item.querySelector(
+                        ".dynamic-item-title"
+                    );
+
+                if (title) {
+
+                    title.innerHTML =
+                        `<i class="bi bi-calendar3 me-1"></i> Tur Tarihi ${index + 1}`;
+
+                }
+
+            });
+        }
+
+
+        /* =========================================================
+           REINDEX DAY PROGRAMS
+           ========================================================= */
+
+        function reindexDayPrograms() {
+
+            const items =
+                document.querySelectorAll(
+                    "#day-program-container .day-program-item"
+                );
+
+            items.forEach((item, index) => {
+
+                const inputs =
+                    item.querySelectorAll(
+                        "input, textarea, select"
+                    );
+
+                inputs.forEach(input => {
+
+                    const name =
+                        input.getAttribute("name");
+
+                    if (!name) {
+                        return;
+                    }
+
+                    input.setAttribute(
+                        "name",
+                        name.replace(
+                            /DayPrograms\[\d+\]/,
+                            `DayPrograms[${index}]`
+                        )
+                    );
+
+                });
+
+
+                const title =
+                    item.querySelector(
+                        ".dynamic-item-title"
+                    );
+
+                if (title) {
+
+                    title.innerHTML =
+                        `<i class="bi bi-calendar-day me-1"></i> Gün ${index + 1}`;
+
+                }
+
+            });
+        }
+
+    </script>
+}

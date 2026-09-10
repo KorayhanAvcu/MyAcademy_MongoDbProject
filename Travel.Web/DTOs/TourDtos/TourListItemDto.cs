@@ -6,11 +6,13 @@
 
         public string Name { get; set; } = string.Empty;
 
+        public string? ShortDescription { get; set; }
+
+        public string? CategoryName { get; set; }
+
+        public string? DestinationName { get; set; }
+
         public string? CoverImageUrl { get; set; }
-
-        public string CategoryName { get; set; } = string.Empty;
-
-        public string DestinationName { get; set; } = string.Empty;
 
         public decimal Price { get; set; }
 
@@ -18,24 +20,12 @@
 
         public int DurationNights { get; set; }
 
-        public DateTime? UpcomingDate { get; set; }
-
-        public int Capacity { get; set; }
-
-        public int RemainingCapacity { get; set; }
+        public int MaxCapacity { get; set; }
 
         public int ReservationCount { get; set; }
 
-        public double AverageRating { get; set; }
-
-        public int ReviewCount { get; set; }
+        public DateTime? UpcomingDate { get; set; }
 
         public string Status { get; set; } = "Draft";
-
-        public bool IsFeatured { get; set; }
-
-        public bool IsBestSeller { get; set; }
-
-        public bool IsNew { get; set; }
     }
 }

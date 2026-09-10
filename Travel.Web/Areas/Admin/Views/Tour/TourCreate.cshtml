@@ -1,5 +1,4 @@
-﻿
-@model Travel.Web.DTOs.TourDtos.TourCreateDto
+﻿@model Travel.Web.DTOs.TourDtos.TourCreateDto
 
 @{
     ViewData["Title"] = "Yeni Tur Oluştur";
@@ -92,10 +91,10 @@
         transition: .2s ease;
     }
 
-    .btn-ui:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-sm);
-    }
+        .btn-ui:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
 
     .btn-primary-ui {
         border-color: var(--teal);
@@ -103,11 +102,11 @@
         color: #fff;
     }
 
-    .btn-primary-ui:hover {
-        border-color: var(--teal-dark);
-        background: var(--teal-dark);
-        color: #fff;
-    }
+        .btn-primary-ui:hover {
+            border-color: var(--teal-dark);
+            background: var(--teal-dark);
+            color: #fff;
+        }
 
     .btn-secondary-ui {
         background: #fff;
@@ -188,10 +187,10 @@
         font-weight: 700;
     }
 
-    .form-label .required {
-        color: #d64545;
-        margin-left: 2px;
-    }
+        .form-label .required {
+            color: #d64545;
+            margin-left: 2px;
+        }
 
     .form-control,
     .form-select {
@@ -238,10 +237,10 @@
         align-items: stretch;
     }
 
-    .input-group-ui .form-control {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
+        .input-group-ui .form-control {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
 
     .input-suffix {
         min-width: 48px;
@@ -272,12 +271,12 @@
         justify-content: center;
     }
 
-    .cover-preview img {
-        display: block;
-        width: 100%;
-        max-height: 260px;
-        object-fit: cover;
-    }
+        .cover-preview img {
+            display: block;
+            width: 100%;
+            max-height: 260px;
+            object-fit: cover;
+        }
 
     .preview-placeholder {
         color: var(--muted);
@@ -293,9 +292,9 @@
         gap: 10px;
     }
 
-    .gallery-input-wrap .form-control {
-        flex: 1;
-    }
+        .gallery-input-wrap .form-control {
+            flex: 1;
+        }
 
     .gallery-items {
         display: grid;
@@ -313,12 +312,12 @@
         background: var(--cream);
     }
 
-    .gallery-item img {
-        width: 100%;
-        height: 150px;
-        display: block;
-        object-fit: cover;
-    }
+        .gallery-item img {
+            width: 100%;
+            height: 150px;
+            display: block;
+            object-fit: cover;
+        }
 
     .gallery-remove {
         position: absolute;
@@ -381,15 +380,42 @@
     }
 
     .remove-row {
+        min-width: 82px;
+        height: 40px;
+        padding: 0 13px;
         border: 1px solid #f1d5d5;
         background: var(--cancel-bg);
         color: var(--cancel-fg);
-        border-radius: 8px;
-        padding: 7px 10px;
-        font-size: 11px;
-        font-weight: 700;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1;
+        white-space: nowrap;
         cursor: pointer;
+        transition: .2s ease;
+        flex-shrink: 0;
     }
+
+        .remove-row i {
+            font-size: 12px;
+        }
+
+        .remove-row:hover {
+            background: #d64545;
+            border-color: #d64545;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(214,69,69,.16);
+        }
+
+        .remove-row:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(214,69,69,.12);
+        }
 
     /* ADD BUTTON */
 
@@ -407,10 +433,10 @@
         transition: .2s ease;
     }
 
-    .add-button:hover {
-        background: #edf8f6;
-        border-color: var(--teal);
-    }
+        .add-button:hover {
+            background: #edf8f6;
+            border-color: var(--teal);
+        }
 
     /* SIMPLE LIST */
 
@@ -422,25 +448,50 @@
 
     .simple-list-item {
         display: flex;
-        gap: 10px;
+        gap: 14px;
         align-items: center;
     }
 
-    .simple-list-item .form-control {
-        flex: 1;
-    }
+        .simple-list-item .form-control {
+            flex: 1;
+            min-width: 0;
+        }
 
     .list-remove {
-        flex: 0 0 38px;
-        width: 38px;
-        height: 38px;
+        flex: 0 0 82px;
+        width: 82px;
+        height: 42px;
         border: 1px solid #f1d5d5;
         border-radius: 9px;
         background: var(--cancel-bg);
         color: var(--cancel-fg);
         cursor: pointer;
+        font-size: 12px;
         font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        white-space: nowrap;
+        transition: .2s ease;
     }
+
+        .list-remove i {
+            font-size: 12px;
+        }
+
+        .list-remove:hover {
+            background: #d64545;
+            border-color: #d64545;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(214,69,69,.16);
+        }
+
+        .list-remove:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(214,69,69,.12);
+        }
 
     /* STATUS */
 
@@ -454,11 +505,11 @@
         position: relative;
     }
 
-    .status-option input {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
+        .status-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
 
     .status-label {
         display: block;
@@ -531,11 +582,11 @@
         flex-shrink: 0;
     }
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
     .slider {
         position: absolute;
@@ -546,26 +597,26 @@
         transition: .2s ease;
     }
 
-    .slider:before {
-        content: "";
-        position: absolute;
-        width: 18px;
-        height: 18px;
-        left: 3px;
-        top: 3px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 1px 4px rgba(0,0,0,.15);
-        transition: .2s ease;
-    }
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 3px;
+            top: 3px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,.15);
+            transition: .2s ease;
+        }
 
     .switch input:checked + .slider {
         background: var(--teal);
     }
 
-    .switch input:checked + .slider:before {
-        transform: translateX(18px);
-    }
+        .switch input:checked + .slider:before {
+            transform: translateX(18px);
+        }
 
     /* VALIDATION */
 
@@ -578,24 +629,24 @@
         background: var(--cancel-bg);
     }
 
-    .validation-box.show {
-        display: block;
-    }
+        .validation-box.show {
+            display: block;
+        }
 
-    .validation-box strong {
-        display: block;
-        margin-bottom: 8px;
-        color: #8b4b4b;
-        font-size: 13px;
-    }
+        .validation-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b4b4b;
+            font-size: 13px;
+        }
 
-    .validation-box ul {
-        margin: 0;
-        padding-left: 20px;
-        color: #8b4b4b;
-        font-size: 12px;
-        line-height: 1.7;
-    }
+        .validation-box ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #8b4b4b;
+            font-size: 12px;
+            line-height: 1.7;
+        }
 
     /* BOTTOM ACTIONS */
 
@@ -636,11 +687,11 @@
         transition: .25s ease;
     }
 
-    .toast-ui.show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
+        .toast-ui.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
 
     /* RESPONSIVE */
 
@@ -700,13 +751,33 @@
             width: 100%;
         }
 
-        .bottom-right .btn-ui,
-        .bottom-left .btn-ui {
-            flex: 1;
-        }
+            .bottom-right .btn-ui,
+            .bottom-left .btn-ui {
+                flex: 1;
+            }
     }
 
     @@media (max-width: 575px) {
+        .dynamic-row-head {
+            align-items: flex-start;
+        }
+
+        .remove-row {
+            min-width: 74px;
+            height: 38px;
+            padding: 0 10px;
+        }
+
+        .simple-list-item {
+            gap: 8px;
+        }
+
+        .list-remove {
+            flex: 0 0 74px;
+            width: 74px;
+            height: 40px;
+        }
+
         .content {
             padding: 16px 12px 25px;
         }
@@ -734,11 +805,11 @@
             flex-direction: column;
         }
 
-        .head-actions .btn-ui,
-        .bottom-left .btn-ui,
-        .bottom-right .btn-ui {
-            width: 100%;
-        }
+            .head-actions .btn-ui,
+            .bottom-left .btn-ui,
+            .bottom-right .btn-ui {
+                width: 100%;
+            }
     }
 </style>
 
@@ -891,15 +962,15 @@
                         </div>
 
                         <div class="form-group full">
-                            <label asp-for="Route" class="form-label">
+                            <label asp-for="RouteId" class="form-label">
                                 Rota
                             </label>
 
-                            <input asp-for="Route"
+                            <input asp-for="RouteId"
                                    class="form-control"
                                    placeholder="Örn. İstanbul → Ankara → Kapadokya → Konya → İstanbul" />
 
-                            <span asp-validation-for="Route"></span>
+                            <span asp-validation-for="RouteId"></span>
                         </div>
 
                     </div>
@@ -1424,8 +1495,10 @@
 
                         <button type="button"
                                 class="remove-row"
+                                title="Bu satırı sil"
                                 onclick="removeRow(this)">
-                            Sil
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Sil</span>
                         </button>
                     </div>
 
@@ -1498,10 +1571,16 @@
 
                         <button type="button"
                                 class="remove-row"
+                                title="Bu satırı sil"
                                 onclick="removeRow(this)">
-                            Sil
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Sil</span>
                         </button>
                     </div>
+
+                    <input type="hidden"
+                           class="day-program-day"
+                           data-field="DayNumber" />
 
                     <div class="section-grid">
 
@@ -1657,8 +1736,10 @@
 
                     <button type="button"
                             class="list-remove"
+                            title="Bu satırı sil"
                             onclick="removeListItem(this)">
-                        ×
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Sil</span>
                     </button>
 
                 </div>
@@ -1760,6 +1841,17 @@
                 const accommodation = row.querySelector(".day-accommodation");
                 const transportation = row.querySelector(".day-transportation");
                 const meal = row.querySelector(".day-meal");
+                const dayInput = row.querySelector(".day-program-day");
+                const dayNumber = row.querySelector(".row-number");
+
+                if (dayInput) {
+                    dayInput.name = `DayPrograms[${index}].DayNumber`;
+                    dayInput.value = index + 1;
+                }
+
+                if (dayNumber) {
+                    dayNumber.textContent = index + 1;
+                }
 
                 if (title) {
                     title.name = `DayPrograms[${index}].Title`;

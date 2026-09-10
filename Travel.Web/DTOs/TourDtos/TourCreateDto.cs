@@ -17,7 +17,7 @@ namespace Travel.Web.DTOs.TourDtos
         [Required(ErrorMessage = "Destinasyon seçilmelidir.")]
         public string DestinationId { get; set; } = string.Empty;
 
-        public string? Route { get; set; }
+        public string? RouteId { get; set; }
 
         public string? TourType { get; set; }
 

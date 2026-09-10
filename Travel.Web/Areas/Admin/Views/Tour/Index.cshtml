@@ -5,547 +5,599 @@
     ViewData["Title"] = "Tur Yönetimi";
     Layout = "~/Views/AdminLayout/Layout.cshtml";
 
+    var totalTours = Model.Count;
+    var activeTours = Model.Count(x => x.Status == "Active");
+    var passiveTours = Model.Count(x => x.Status == "Passive");
+    var draftTours = Model.Count(x => x.Status == "Draft");
 
-var totalTours = Model?.Count ?? 0;
-    var activeTours = Model?.Count(x => x.Status == "Active") ?? 0;
-    var passiveTours = Model?.Count(x => x.Status == "Passive") ?? 0;
-    var totalCapacity = Model?.Sum(x => x.Capacity) ?? 0;
-
-
+    var totalCapacity = Model.Sum(x => x.MaxCapacity);
+    var totalReservations = Model.Sum(x => x.ReservationCount);
 }
 
 <style>
-    /* ============ INDEX / TOUR LIST ============ */
+    :root {
+        --muted: #718096;
+        --teal-dark: #0b6f70;
+        --navy: #0e2a3b;
+        --teal: #0b7f80;
+        --line: #e7ecef;
+        --cream: #f7faf9;
+        --cancel-fg: #b42318;
+        --cancel-bg: #fff1f0;
+    }
 
-    /* PAGE */
+    .tour-page {
+        padding-bottom: 2rem;
+    }
+
+    /* =========================
+           BREADCRUMB
+        ========================= */
+
     .crumb {
-        font-size: .8rem;
+        display: flex;
+        align-items: center;
+        gap: .45rem;
+        margin-bottom: 1.25rem;
+        font-size: .86rem;
         color: var(--muted);
-        margin-bottom: .4rem;
     }
 
         .crumb a {
             color: var(--muted);
+            text-decoration: none;
+            transition: .2s ease;
         }
 
             .crumb a:hover {
-                color: var(--teal-dark);
+                color: var(--teal);
             }
 
-        .crumb .cur {
+    .crumb-current {
+        color: var(--navy);
+        font-weight: 700;
+    }
+
+    /* =========================
+           PAGE INTRO
+        ========================= */
+
+    .page-intro {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            margin: 0;
             color: var(--navy);
-            font-weight: 600;
+            font-family: "Sora", sans-serif;
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: -.02em;
         }
 
-    .page-intro h1 {
-        font-weight: 700;
-        font-size: 1.7rem;
-        color: var(--navy);
-        margin: .15rem 0 .3rem;
-    }
-
-    .page-intro p {
-        color: var(--muted);
-        margin: 0;
-        font-size: .94rem;
-        max-width: 60ch;
-    }
+        .page-intro p {
+            margin: .35rem 0 0;
+            color: var(--muted);
+            font-size: .92rem;
+        }
 
     .btn-teal {
-        background: var(--teal);
-        color: #fff;
-        border: none;
-        border-radius: 999px;
-        font-weight: 600;
-        padding: .7rem 1.3rem;
-        font-size: .9rem;
-        transition: .25s;
         display: inline-flex;
         align-items: center;
-        gap: .5rem;
+        justify-content: center;
+        gap: .45rem;
+        padding: .7rem 1.3rem;
+        border: 0;
+        border-radius: 999px;
+        background: var(--teal);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: .9rem;
         white-space: nowrap;
+        transition: .2s ease;
     }
 
         .btn-teal:hover {
             background: var(--teal-dark);
             color: #fff;
-            box-shadow: 0 12px 26px rgba(15,163,163,.3);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(11, 127, 128, .18);
         }
 
-    /* KPI MINI */
+    /* =========================
+           KPI
+        ========================= */
+
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
     .kpi {
         display: flex;
         align-items: center;
         gap: .85rem;
-    }
-
-        .kpi .ic {
-            width: 42px;
-            height: 42px;
-            border-radius: 11px;
-            display: grid;
-            place-items: center;
-            background: rgba(15,163,163,.1);
-            color: var(--teal-dark);
-            flex: none;
-        }
-
-            .kpi .ic.gray {
-                background: rgba(106,124,136,.12);
-                color: var(--muted);
-            }
-
-            .kpi .ic.warn {
-                background: rgba(169,116,26,.12);
-                color: #a9741a;
-            }
-
-        .kpi .num {
-            font-family: 'Sora';
-            font-weight: 800;
-            font-size: 1.4rem;
-            color: var(--navy);
-            line-height: 1;
-        }
-
-        .kpi .lab {
-            font-size: .82rem;
-            color: var(--muted);
-            margin-top: .15rem;
-        }
-
-    /* FILTER BAR */
-    .filter-bar {
-        padding: 1rem 1.1rem;
-    }
-
-    .f-search {
-        position: relative;
-    }
-
-        .f-search svg {
-            position: absolute;
-            left: .85rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--muted);
-        }
-
-        .f-search input {
-            width: 100%;
-            border: 1px solid var(--line);
-            background: var(--cream);
-            border-radius: 11px;
-            padding: .62rem .9rem .62rem 2.3rem;
-            font-size: .9rem;
-            outline: none;
-            color: var(--navy);
-        }
-
-            .f-search input:focus {
-                border-color: var(--teal);
-                background: #fff;
-                box-shadow: 0 0 0 3px rgba(15,163,163,.1);
-            }
-
-    .f-select {
-        width: 100%;
-        border: 1px solid var(--line);
+        padding: 1rem 1.05rem;
         background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+    }
+
+    .kpi-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        display: grid;
+        place-items: center;
         border-radius: 11px;
-        padding: .62rem 2rem .62rem .9rem;
-        font-size: .88rem;
-        font-weight: 500;
+        background: rgba(11, 127, 128, .10);
+        color: var(--teal);
+        font-size: 1.15rem;
+    }
+
+    .kpi-number {
         color: var(--navy);
-        outline: none;
-        cursor: pointer;
+        font-family: "Sora", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        line-height: 1.1;
     }
 
-        .f-select:focus {
-            border-color: var(--teal);
-        }
+    .kpi-label {
+        margin-top: .2rem;
+        color: var(--muted);
+        font-size: .78rem;
+    }
 
-    .btn-clear {
+    /* =========================
+           FILTER
+        ========================= */
+
+    .filter-card {
+        margin-bottom: 1rem;
+        padding: 1rem;
         background: #fff;
         border: 1px solid var(--line);
-        border-radius: 11px;
-        padding: .62rem 1rem;
+        border-radius: 14px;
+    }
+
+    .filter-label {
+        display: block;
+        margin-bottom: .4rem;
+        color: var(--navy);
+        font-size: .78rem;
+        font-weight: 700;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 42px;
+        border-color: var(--line);
+        border-radius: 10px;
+        color: var(--navy);
         font-size: .86rem;
+        box-shadow: none !important;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(11, 127, 128, .08) !important;
+        }
+
+    .btn-filter {
+        min-height: 42px;
+        padding: 0 1rem;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--navy);
+        font-size: .84rem;
         font-weight: 600;
-        color: var(--muted);
-        cursor: pointer;
-        transition: .2s;
-        white-space: nowrap;
-        width: 100%;
+        transition: .2s ease;
     }
 
-        .btn-clear:hover {
-            border-color: var(--cancel-fg);
-            color: var(--cancel-fg);
+        .btn-filter:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+            background: #fff;
         }
 
-    /* RESULT */
-    .result-line {
-        font-size: .86rem;
-        color: var(--muted);
-        margin: .2rem 0 1rem;
-        padding: 0 .2rem;
+    /* =========================
+           TOUR CARD
+        ========================= */
+
+    .tour-card {
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
     }
 
-        .result-line b {
-            color: var(--navy);
-            font-weight: 600;
-        }
-
-    /* BULK BAR */
-    .bulk-bar {
-        display: none;
+    .tour-card-header {
+        display: flex;
         align-items: center;
-        gap: .8rem;
-        background: var(--navy);
-        color: #fff;
-        border-radius: 12px;
-        padding: .6rem 1rem;
-        margin-bottom: 1rem;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--line);
     }
 
-        .bulk-bar.show {
-            display: flex;
+        .tour-card-header h2 {
+            margin: 0;
+            color: var(--navy);
+            font-family: "Sora", sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
         }
 
-        .bulk-bar b {
-            font-family: 'Sora';
-            font-size: .9rem;
-        }
-
-        .bulk-bar .bulk-btn {
-            margin-left: auto;
-            background: rgba(255,255,255,.12);
-            border: none;
-            color: #fff;
-            border-radius: 999px;
-            padding: .35rem .9rem;
-            font-size: .82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-            .bulk-bar .bulk-btn + .bulk-btn {
-                margin-left: .5rem;
-            }
-
-            .bulk-bar .bulk-btn:hover {
-                background: rgba(255,255,255,.22);
-            }
-
-            .bulk-bar .bulk-btn.danger:hover {
-                background: var(--cancel-fg);
-            }
-
-    /* TABLE */
-    table.tx {
-        min-width: 1020px;
+    .tour-count {
+        color: var(--muted);
+        font-size: .8rem;
     }
 
-        table.tx th.sortable {
-            cursor: pointer;
-            user-select: none;
-        }
+    /* =========================
+           TABLE
+        ========================= */
 
-            table.tx th.sortable:hover {
-                color: var(--teal-dark);
-            }
+    .tbl-wrap {
+        overflow-x: auto;
+    }
 
-        table.tx th .sar {
-            opacity: .4;
-            margin-left: .2rem;
-        }
+    .tour-table {
+        width: 100%;
+        min-width: 1200px;
+        border-collapse: collapse;
+    }
 
-        table.tx th.sorted .sar {
-            opacity: 1;
-            color: var(--teal-dark);
-        }
-
-        table.tx th {
+        .tour-table th {
+            padding: .8rem 1rem;
+            background: #fbfcfc;
+            border-bottom: 1px solid var(--line);
+            color: var(--muted);
+            font-size: .7rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+            text-transform: uppercase;
             white-space: nowrap;
         }
 
-        table.tx td {
+        .tour-table td {
+            padding: .9rem 1rem;
+            border-bottom: 1px solid var(--line);
+            color: var(--navy);
+            font-size: .84rem;
             vertical-align: middle;
         }
 
-    .chk {
-        width: 17px;
-        height: 17px;
-        accent-color: var(--teal-dark);
-        cursor: pointer;
-    }
+        .tour-table tbody tr {
+            transition: background .15s ease;
+        }
 
-    /* TOUR */
-    .tour-cell {
+            .tour-table tbody tr:hover {
+                background: #fbfdfd;
+            }
+
+            .tour-table tbody tr:last-child td {
+                border-bottom: 0;
+            }
+
+    /* =========================
+           TOUR
+        ========================= */
+
+    .tour-main {
         display: flex;
         align-items: center;
-        gap: .7rem;
-        min-width: 220px;
+        gap: .8rem;
+        min-width: 280px;
     }
 
-        .tour-cell img {
-            width: 52px;
-            height: 52px;
-            border-radius: 11px;
-            object-fit: cover;
-            flex: none;
-        }
-
-        .tour-cell b {
-            font-family: 'Sora';
-            font-weight: 600;
-            font-size: .9rem;
-            color: var(--navy);
-            display: block;
-            line-height: 1.25;
-        }
-
-        .tour-cell span {
-            font-size: .78rem;
-            color: var(--teal-dark);
-            font-weight: 500;
-        }
-
-    .cat-pill {
-        font-size: .76rem;
-        color: var(--navy);
-        background: var(--cream);
+    .tour-image {
+        width: 90px;
+        height: 62px;
+        flex-shrink: 0;
+        object-fit: cover;
+        border-radius: 10px;
         border: 1px solid var(--line);
-        padding: .22rem .6rem;
-        border-radius: 999px;
+        background: #f3f5f5;
+    }
+
+    .tour-image-placeholder {
+        width: 90px;
+        height: 62px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: #f3f5f5;
+        color: var(--muted);
+        font-size: 1.2rem;
+    }
+
+    .tour-title {
+        max-width: 230px;
+        margin-bottom: .2rem;
+        color: var(--navy);
+        font-family: "Sora", sans-serif;
+        font-size: .85rem;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .tour-description {
+        max-width: 240px;
+        overflow: hidden;
+        color: var(--muted);
+        font-size: .75rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    /* =========================
+           CATEGORY / DESTINATION
+        ========================= */
+
+    .category-text {
+        font-weight: 600;
         white-space: nowrap;
     }
 
-    .muted-cell {
+    .destination-text {
         color: var(--muted);
         white-space: nowrap;
     }
 
-    /* CAPACITY */
-    .cap {
-        min-width: 96px;
+    /* =========================
+           DURATION
+        ========================= */
+
+    .duration-box {
+        white-space: nowrap;
     }
 
-        .cap .cap-top {
-            font-size: .84rem;
-            font-weight: 600;
-            color: var(--navy);
-            margin-bottom: .28rem;
-        }
-
-            .cap .cap-top .full {
-                color: var(--cancel-fg);
-            }
-
-    .cap-track {
-        height: 5px;
-        background: var(--line-2);
-        border-radius: 999px;
-        overflow: hidden;
+    .duration-number {
+        font-weight: 700;
+        color: var(--navy);
     }
 
-    .cap-fill {
-        height: 100%;
-        border-radius: 999px;
-        background: var(--teal);
+    .duration-text {
+        color: var(--muted);
+        font-size: .75rem;
     }
 
-        .cap-fill.high {
-            background: #e0a83d;
-        }
+    /* =========================
+           PRICE
+        ========================= */
 
-        .cap-fill.full {
-            background: var(--cancel-fg);
-        }
+    .price {
+        color: var(--teal-dark);
+        font-family: "Sora", sans-serif;
+        font-size: .85rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
 
-    /* STATUS */
-    .badge-x {
+    /* =========================
+           DATE
+        ========================= */
+
+    .date-box {
+        white-space: nowrap;
+    }
+
+    .date-value {
+        font-weight: 600;
+    }
+
+    .date-empty {
+        color: var(--muted);
+        font-size: .78rem;
+    }
+
+    /* =========================
+           CAPACITY
+        ========================= */
+
+    .capacity-box {
+        min-width: 75px;
+    }
+
+    .capacity-number {
+        font-weight: 700;
+    }
+
+    .capacity-label {
+        color: var(--muted);
+        font-size: .72rem;
+    }
+
+    /* =========================
+           RESERVATION
+        ========================= */
+
+    .reservation-count {
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    /* =========================
+           STATUS
+        ========================= */
+
+    .status-badge {
         display: inline-flex;
         align-items: center;
         gap: .35rem;
+        padding: .38rem .65rem;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 700;
+        white-space: nowrap;
     }
 
-    .b-pasif {
-        background: var(--cancel-bg);
-        color: var(--cancel-fg);
-    }
-
-    .b-taslak {
-        background: var(--wait-bg);
-        color: var(--wait-fg);
-    }
-
-    /* ACTION DROPDOWN */
-    .act-btn {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        background: #fff;
-        border: 1px solid var(--line);
-        display: grid;
-        place-items: center;
-        color: var(--muted);
-        cursor: pointer;
-        transition: .2s;
-    }
-
-        .act-btn:hover {
-            border-color: var(--teal);
-            color: var(--teal-dark);
+        .status-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
         }
 
-    .dropdown-menu {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        box-shadow: var(--shadow-md);
-        padding: .4rem;
-        font-size: .88rem;
-        min-width: 180px;
+    .status-active {
+        color: #087443;
+        background: #ecfdf3;
     }
 
-    .dropdown-item {
-        border-radius: 8px;
-        padding: .5rem .7rem;
-        font-weight: 500;
-        color: var(--navy);
-        display: flex;
-        align-items: center;
-        gap: .6rem;
+    .status-passive {
+        color: #a15c00;
+        background: #fff7e6;
     }
 
-        .dropdown-item:hover {
-            background: var(--cream);
-            color: var(--teal-dark);
-        }
-
-        .dropdown-item svg {
-            color: var(--muted);
-        }
-
-        .dropdown-item:hover svg {
-            color: var(--teal-dark);
-        }
-
-        .dropdown-item.danger {
-            color: var(--cancel-fg);
-        }
-
-            .dropdown-item.danger svg {
-                color: var(--cancel-fg);
-            }
-
-            .dropdown-item.danger:hover {
-                background: var(--cancel-bg);
-            }
-
-    /* PAGINATION */
-    .pager-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-        padding: 1rem 1.1rem;
+    .status-draft {
+        color: #667085;
+        background: #f2f4f7;
     }
 
-    .pager {
-        display: flex;
-        gap: .35rem;
-    }
+    /* =========================
+           ACTIONS
+        ========================= */
 
-        .pager a {
-            min-width: 38px;
-            height: 38px;
-            display: grid;
-            place-items: center;
-            border-radius: 10px;
-            background: #fff;
-            border: 1px solid var(--line);
-            color: var(--navy);
-            font-weight: 600;
-            font-size: .88rem;
-            transition: .2s;
-            padding: 0 .3rem;
-        }
-
-            .pager a:hover {
-                border-color: var(--teal);
-                color: var(--teal-dark);
-            }
-
-            .pager a.active {
-                background: var(--navy);
-                color: #fff;
-                border-color: var(--navy);
-            }
-
-            .pager a.disabled {
-                opacity: .45;
-                pointer-events: none;
-            }
-
-    .per-page {
+    .actions {
         display: flex;
         align-items: center;
         gap: .5rem;
-        font-size: .85rem;
-        color: var(--muted);
+        white-space: nowrap;
     }
 
-        .per-page select {
-            border: 1px solid var(--line);
-            border-radius: 9px;
-            padding: .35rem 1.6rem .35rem .6rem;
-            font-size: .85rem;
-            font-weight: 600;
-            color: var(--navy);
-            outline: none;
-            cursor: pointer;
+    .action-btn {
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .4rem;
+        padding: 0 .75rem;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        text-decoration: none;
+        font-size: .76rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+        .action-btn i {
+            font-size: .9rem;
         }
 
-    /* EMPTY */
-    .empty {
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Düzenle */
+
+        .action-btn.edit {
+            color: var(--teal);
+        }
+
+            .action-btn.edit:hover {
+                border-color: var(--teal);
+                background: rgba(11, 127, 128, .07);
+                box-shadow: 0 4px 12px rgba(11, 127, 128, .10);
+            }
+
+        /* Sil */
+
+        .action-btn.delete {
+            color: var(--cancel-fg);
+        }
+
+            .action-btn.delete:hover {
+                border-color: #f0aaa5;
+                background: var(--cancel-bg);
+                box-shadow: 0 4px 12px rgba(180, 35, 24, .08);
+            }
+
+    /* =========================
+           EMPTY STATE
+        ========================= */
+
+    .empty-state {
+        padding: 4rem 1rem;
         text-align: center;
-        padding: 3.5rem 1rem;
     }
 
-        .empty .eic {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            background: rgba(15,163,163,.1);
-            color: var(--teal-dark);
-            display: grid;
-            place-items: center;
-            margin: 0 auto 1rem;
-        }
+    .empty-icon {
+        width: 60px;
+        height: 60px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 1rem;
+        border-radius: 16px;
+        background: rgba(11, 127, 128, .09);
+        color: var(--teal);
+        font-size: 1.5rem;
+    }
 
-        .empty h3 {
-            font-family: 'Sora';
-            font-weight: 700;
-            color: var(--navy);
-            font-size: 1.2rem;
-        }
+    .empty-state h3 {
+        margin-bottom: .4rem;
+        color: var(--navy);
+        font-family: "Sora", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+    }
 
-        .empty p {
-            color: var(--muted);
-            margin: .3rem 0 1.2rem;
-        }
+    .empty-state p {
+        margin-bottom: 1.1rem;
+        color: var(--muted);
+        font-size: .84rem;
+    }
 
-    /* RESPONSIVE */
+    /* =========================
+           FOOTER
+        ========================= */
+
+    .table-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: .9rem 1rem;
+        border-top: 1px solid var(--line);
+    }
+
+    .table-info {
+        color: var(--muted);
+        font-size: .78rem;
+    }
+
+    /* =========================
+           RESPONSIVE
+        ========================= */
+
+    @@media (max-width: 1200px) {
+
+        .kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
     @@media (max-width: 768px) {
 
         .page-intro {
+            align-items: flex-start;
             flex-direction: column;
-            align-items: flex-start !important;
-            gap: 1rem;
         }
 
             .page-intro .btn-teal {
@@ -553,49 +605,57 @@ var totalTours = Model?.Count ?? 0;
                 justify-content: center;
             }
 
-        .bulk-bar {
-            flex-wrap: wrap;
+        .kpi-grid {
+            grid-template-columns: 1fr;
         }
 
-            .bulk-bar .bulk-btn {
-                margin-left: 0;
-            }
+        .table-footer {
+            align-items: flex-start;
+            flex-direction: column;
+        }
 
-                .bulk-bar .bulk-btn + .bulk-btn {
-                    margin-left: 0;
-                }
+        .action-btn span {
+            display: none;
+        }
 
-        .pager-row {
-            justify-content: center;
+        .action-btn {
+            width: 36px;
+            padding: 0;
         }
     }
 </style>
 
-<div class="content">
 
-    
-    <!-- BREADCRUMB -->
+<div class="tour-page">
+
+    <!-- =========================
+         BREADCRUMB
+    ========================== -->
 
     <div class="crumb">
 
         <a asp-area="Admin"
            asp-controller="Dashboard"
            asp-action="Index">
+
             Dashboard
+
         </a>
 
-        /
+        <i class="bi bi-chevron-right"></i>
 
-        <span class="cur">
+        <span class="crumb-current">
             Turlar
         </span>
 
     </div>
 
 
-    <!-- INTRO -->
+    <!-- =========================
+         PAGE INTRO
+    ========================== -->
 
-    <div class="page-intro d-flex justify-content-between align-items-end mb-4">
+    <div class="page-intro">
 
         <div>
 
@@ -604,29 +664,19 @@ var totalTours = Model?.Count ?? 0;
             </h1>
 
             <p>
-                Travelio'daki tüm turları görüntüleyebilir, filtreleyebilir ve yönetebilirsiniz.
+                Travelio üzerindeki turlarınızı yönetin,
+                düzenleyin ve yeni turlar oluşturun.
             </p>
 
         </div>
+
 
         <a asp-area="Admin"
            asp-controller="Tour"
            asp-action="TourCreate"
            class="btn-teal">
 
-            <svg width="17"
-                 height="17"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2.2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-
-            </svg>
+            <i class="bi bi-plus-lg"></i>
 
             Yeni Tur Ekle
 
@@ -635,44 +685,28 @@ var totalTours = Model?.Count ?? 0;
     </div>
 
 
-    <!-- KPI -->
+    <!-- =========================
+         KPI
+    ========================== -->
 
-    <div class="row g-3 mb-4">
+    <div class="kpi-grid">
 
-        <!-- TOTAL -->
+        <!-- Total -->
 
-        <div class="col-6 col-lg-3">
+        <div class="kpi">
 
-            <div class="kpi">
+            <div class="kpi-icon">
+                <i class="bi bi-map"></i>
+            </div>
 
-                <div class="ic">
+            <div>
 
-                    <svg width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-
-                        <path d="M3 7h18v12H3z" />
-                        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-
-                    </svg>
-
+                <div class="kpi-number">
+                    @totalTours
                 </div>
 
-                <div>
-
-                    <div class="num">
-                        @totalTours
-                    </div>
-
-                    <div class="lab">
-                        Toplam Tur
-                    </div>
-
+                <div class="kpi-label">
+                    Toplam Tur
                 </div>
 
             </div>
@@ -680,39 +714,22 @@ var totalTours = Model?.Count ?? 0;
         </div>
 
 
-        <!-- ACTIVE -->
+        <!-- Active -->
 
-        <div class="col-6 col-lg-3">
+        <div class="kpi">
 
-            <div class="kpi">
+            <div class="kpi-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
 
-                <div class="ic">
+            <div>
 
-                    <svg width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-
-                        <polyline points="20 6 9 17 4 12" />
-
-                    </svg>
-
+                <div class="kpi-number">
+                    @activeTours
                 </div>
 
-                <div>
-
-                    <div class="num">
-                        @activeTours
-                    </div>
-
-                    <div class="lab">
-                        Aktif Tur
-                    </div>
-
+                <div class="kpi-label">
+                    Yayındaki Tur
                 </div>
 
             </div>
@@ -720,40 +737,24 @@ var totalTours = Model?.Count ?? 0;
         </div>
 
 
-        <!-- PASSIVE -->
+        <!-- Capacity -->
 
-        <div class="col-6 col-lg-3">
+        <div class="kpi">
 
-            <div class="kpi">
+            <div class="kpi-icon">
+                <i class="bi bi-calendar-check"></i>
+            </div>
 
-                <div class="ic gray">
+            <div>
 
-                    <svg width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="8" y1="12" x2="16" y2="12" />
-
-                    </svg>
-
+                <div class="kpi-number">
+                    @totalCapacity.ToString(
+                    "N0",
+                                        CultureInfo.GetCultureInfo("tr-TR"))
                 </div>
 
-                <div>
-
-                    <div class="num">
-                        @passiveTours
-                    </div>
-
-                    <div class="lab">
-                        Pasif Tur
-                    </div>
-
+                <div class="kpi-label">
+                    Toplam Kontenjan
                 </div>
 
             </div>
@@ -761,41 +762,24 @@ var totalTours = Model?.Count ?? 0;
         </div>
 
 
-        <!-- CAPACITY -->
+        <!-- Reservations -->
 
-        <div class="col-6 col-lg-3">
+        <div class="kpi">
 
-            <div class="kpi">
+            <div class="kpi-icon">
+                <i class="bi bi-people"></i>
+            </div>
 
-                <div class="ic">
+            <div>
 
-                    <svg width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-
-                    </svg>
-
+                <div class="kpi-number">
+                    @totalReservations.ToString(
+                                        "N0",
+                                        CultureInfo.GetCultureInfo("tr-TR"))
                 </div>
 
-                <div>
-
-                    <div class="num">
-                        @totalCapacity.ToString("N0")
-                    </div>
-
-                    <div class="lab">
-                        Toplam Kontenjan
-                    </div>
-
+                <div class="kpi-label">
+                    Toplam Rezervasyon
                 </div>
 
             </div>
@@ -805,74 +789,40 @@ var totalTours = Model?.Count ?? 0;
     </div>
 
 
-    <!-- FILTER BAR -->
+    <!-- =========================
+         FILTER
+    ========================== -->
 
-    <div class="card-x filter-bar mb-3">
+    <div class="filter-card">
 
-        <div class="row g-2 align-items-center">
+        <div class="row g-3 align-items-end">
 
-            <!-- SEARCH -->
+            <!-- Search -->
 
             <div class="col-lg-4 col-md-6">
 
-                <div class="f-search">
+                <label class="filter-label">
+                    Tur Ara
+                </label>
 
-                    <svg width="16"
-                         height="16"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-
-                    </svg>
-
-                    <input type="text"
-                           id="fSearch"
-                           placeholder="Tur adı veya destinasyon ara...">
-
-                </div>
+                <input type="text"
+                       id="tourSearch"
+                       class="form-control"
+                       placeholder="Tur adı veya açıklama..." />
 
             </div>
 
 
-            <!-- DESTINATION -->
+            <!-- Category -->
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-2 col-md-6">
 
-                <select class="f-select"
-                        id="fDest">
+                <label class="filter-label">
+                    Kategori
+                </label>
 
-                    <option value="">
-                        Tüm Destinasyonlar
-                    </option>
-
-                    @foreach (var destination in Model
-                                        .Where(x => !string.IsNullOrWhiteSpace(x.DestinationName))
-                                        .Select(x => x.DestinationName)
-                                        .Distinct()
-                                        .OrderBy(x => x))
-                    {
-                        <option value="@destination">
-                            @destination
-                        </option>
-                    }
-
-                </select>
-
-            </div>
-
-
-            <!-- CATEGORY -->
-
-            <div class="col-lg-2 col-md-4">
-
-                <select class="f-select"
-                        id="fCat">
+                <select id="categoryFilter"
+                        class="form-select">
 
                     <option value="">
                         Tüm Kategoriler
@@ -880,7 +830,7 @@ var totalTours = Model?.Count ?? 0;
 
                     @foreach (var category in Model
                                         .Where(x => !string.IsNullOrWhiteSpace(x.CategoryName))
-                                        .Select(x => x.CategoryName)
+                                        .Select(x => x.CategoryName!)
                                         .Distinct()
                                         .OrderBy(x => x))
                     {
@@ -894,12 +844,16 @@ var totalTours = Model?.Count ?? 0;
             </div>
 
 
-            <!-- STATUS -->
+            <!-- Status -->
 
-            <div class="col-lg-2 col-md-4">
+            <div class="col-lg-2 col-md-6">
 
-                <select class="f-select"
-                        id="fStatus">
+                <label class="filter-label">
+                    Durum
+                </label>
+
+                <select id="statusFilter"
+                        class="form-select">
 
                     <option value="">
                         Tüm Durumlar
@@ -922,13 +876,51 @@ var totalTours = Model?.Count ?? 0;
             </div>
 
 
-            <!-- CLEAR -->
+            <!-- Sort -->
 
-            <div class="col-lg-1 col-md-4">
+            <div class="col-lg-2 col-md-6">
 
-                <button class="btn-clear"
-                        type="button"
-                        onclick="clearFilters()">
+                <label class="filter-label">
+                    Sıralama
+                </label>
+
+                <select id="sortFilter"
+                        class="form-select">
+
+                    <option value="default">
+                        Varsayılan
+                    </option>
+
+                    <option value="priceAsc">
+                        Fiyat ↑
+                    </option>
+
+                    <option value="priceDesc">
+                        Fiyat ↓
+                    </option>
+
+                    <option value="nameAsc">
+                        İsim A-Z
+                    </option>
+
+                    <option value="nameDesc">
+                        İsim Z-A
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Clear -->
+
+            <div class="col-lg-2 col-md-12">
+
+                <button type="button"
+                        id="clearFilters"
+                        class="btn-filter w-100">
+
+                    <i class="bi bi-x-circle me-1"></i>
 
                     Temizle
 
@@ -941,238 +933,163 @@ var totalTours = Model?.Count ?? 0;
     </div>
 
 
-    <!-- RESULT -->
+    <!-- =========================
+         TOUR CARD
+    ========================== -->
 
-    <div class="result-line">
+    <div class="tour-card">
 
-        <b id="resultCount">
-            @totalTours
-        </b>
+        <div class="tour-card-header">
 
-        tur listeleniyor
+            <div>
 
-    </div>
+                <h2>
+                    Tur Listesi
+                </h2>
 
+            </div>
 
-    <!-- BULK BAR -->
+            <div class="tour-count">
 
-    <div class="bulk-bar"
-         id="bulkBar">
+                <span id="visibleCount">
+                    @Model.Count
+                </span>
 
-        <b id="bulkCount">
-            0 tur seçildi
-        </b>
+                tur
 
-        <button class="bulk-btn"
-                type="button"
-                onclick="bulkStatus('Active')">
+            </div>
 
-            Aktif Yap
-
-        </button>
-
-        <button class="bulk-btn"
-                type="button"
-                onclick="bulkStatus('Passive')">
-
-            Pasif Yap
-
-        </button>
-
-        <button class="bulk-btn danger"
-                type="button"
-                onclick="bulkDelete()">
-
-            Sil
-
-        </button>
-
-    </div>
+        </div>
 
 
-    <!-- TABLE -->
+        @if (Model.Any())
+        {
+            <div class="tbl-wrap">
 
-    <div class="card-x mb-3">
+                <table class="tour-table">
 
-        <div class="tbl-wrap">
+                    <thead>
 
-            <table class="tx">
+                        <tr>
 
-                <thead>
+                            <th>
+                                #
+                            </th>
 
-                    <tr>
+                            <th>
+                                Tur
+                            </th>
 
-                        <th style="width:36px">
+                            <th>
+                                Kategori
+                            </th>
 
-                            <input type="checkbox"
-                                   class="chk"
-                                   id="checkAll"
-                                   onchange="toggleAll(this)">
+                            <th>
+                                Destinasyon
+                            </th>
 
-                        </th>
+                            <th>
+                                Süre
+                            </th>
 
-                        <th class="sortable"
-                            data-sort="title">
+                            <th>
+                                Fiyat
+                            </th>
 
-                            Tur
+                            <th>
+                                Yaklaşan Tarih
+                            </th>
 
-                            <span class="sar">
-                                ↕
-                            </span>
+                            <th>
+                                Kontenjan
+                            </th>
 
-                        </th>
+                            <th>
+                                Rezervasyon
+                            </th>
 
-                        <th>
-                            Kategori
-                        </th>
+                            <th>
+                                Durum
+                            </th>
 
-                        <th>
-                            Süre
-                        </th>
+                            <th>
+                                İşlemler
+                            </th>
 
-                        <th class="sortable"
-                            data-sort="price">
+                        </tr>
 
-                            Fiyat
-
-                            <span class="sar">
-                                ↕
-                            </span>
-
-                        </th>
-
-                        <th class="sortable"
-                            data-sort="date">
-
-                            Yaklaşan Tarih
-
-                            <span class="sar">
-                                ↕
-                            </span>
-
-                        </th>
-
-                        <th>
-                            Kontenjan
-                        </th>
-
-                        <th class="sortable"
-                            data-sort="res">
-
-                            Rezervasyon
-
-                            <span class="sar">
-                                ↕
-                            </span>
-
-                        </th>
-
-                        <th>
-                            Durum
-                        </th>
-
-                        <th style="width:56px">
-                            İşlemler
-                        </th>
-
-                    </tr>
-
-                </thead>
+                    </thead>
 
 
-                <tbody id="tourRows">
+                    <tbody id="tourTableBody">
 
-                    @foreach (var tour in Model)
-                    {
-                        var capacity = tour.Capacity;
-                        var remaining = tour.RemainingCapacity;
-                        var reservationCount = tour.ReservationCount;
-
-                        var usedCapacity =
-                        Math.Max(
-                        0,
-                        capacity - remaining
-                        );
-
-                        var percentage =
-                        capacity > 0
-                        ? Math.Min(
-                        100,
-                        (int)Math.Round(
-                        (double)usedCapacity / capacity * 100
-                        )
-                        )
-                        : 0;
-
-                        var capacityClass =
-                        percentage >= 100
-                        ? "full"
-                        : percentage >= 85
-                        ? "high"
-                        : "";
-
-                        var statusText =
-                        tour.Status switch
+                        @for (var i = 0; i < Model.Count; i++)
                         {
-                            "Active" => "Aktif",
-                            "Passive" => "Pasif",
-                            "Draft" => "Taslak",
-                            _ => tour.Status
-                        };
+                            var tour = Model[i];
 
-                        var statusClass =
-                        tour.Status switch
-                        {
-                            "Active" => "b-ok",
-                            "Passive" => "b-pasif",
-                            "Draft" => "b-taslak",
-                            _ => ""
-                        };
+                            var statusClass =
+                            tour.Status == "Active"
+                            ? "status-active"
+                            : tour.Status == "Passive"
+                            ? "status-passive"
+                            : "status-draft";
 
-                        var imageUrl =
-                        string.IsNullOrWhiteSpace(tour.CoverImageUrl)
-                        ? "https://placehold.co/160x120?text=Tour"
-                        : tour.CoverImageUrl;
+                            var statusText =
+                            tour.Status == "Active"
+                            ? "Aktif"
+                            : tour.Status == "Passive"
+                            ? "Pasif"
+                            : "Taslak";
 
-                        <tr data-id="@tour.Id"
-                            data-title="@tour.Name"
-                            data-destination="@tour.DestinationName"
-                            data-category="@tour.CategoryName"
-                            data-status="@tour.Status"
-                            data-price="@tour.Price"
-                            data-date="@(tour.UpcomingDate?.ToString("yyyy-MM-dd") ?? "")"
-                            data-res="@tour.ReservationCount">
-
-                            <!-- CHECKBOX -->
-
-                            <td>
-
-                                <input type="checkbox"
-                                       class="chk row-chk"
-                                       value="@tour.Id"
-                                       onchange="updateBulk()">
-
-                            </td>
+                            <tr class="tour-row"
+                                data-name="@tour.Name"
+                                data-description="@tour.ShortDescription"
+                                data-category="@tour.CategoryName"
+                                data-status="@tour.Status"
+                                data-price="@tour.Price">
 
 
-                            <!-- TOUR -->
+                                <!-- # -->
 
-                            <td>
+                                <td>
+                                    @(i + 1)
+                                </td>
 
-                                <div class="tour-cell">
 
-                                    <img src="@imageUrl"
-                                         alt="@tour.Name">
+                                <!-- TUR -->
 
-                                    <div>
+                                <td>
 
-                                        <b>
-                                            @tour.Name
-                                        </b>
+                                    <div class="tour-main">
 
-                                        <span>
-                                            @tour.DestinationName
-                                        </span>
+                                        @if (!string.IsNullOrWhiteSpace(tour.CoverImageUrl))
+                                        {
+                                            <img src="@tour.CoverImageUrl"
+                                                 alt="@tour.Name"
+                                                 class="tour-image" />
+                                        }
+                                        else
+                                        {
+                                            <div class="tour-image-placeholder">
+
+                                                <i class="bi bi-image"></i>
+
+                                            </div>
+                                        }
+
+
+                                        <div>
+
+                                            <div class="tour-title">
+                                                @tour.Name
+                                            </div>
+
+                                            @if (!string.IsNullOrWhiteSpace(tour.ShortDescription))
+                                            {
+                                                <div class="tour-description">
+                                                    @tour.ShortDescription
+                                                </div>
+                                            }
 
                                     </div>
 
@@ -1181,273 +1098,219 @@ var totalTours = Model?.Count ?? 0;
                             </td>
 
 
-                            <!-- CATEGORY -->
+                            <!-- KATEGORİ -->
 
                             <td>
 
-                                <span class="cat-pill">
+                                <span class="category-text">
 
                                     @(string.IsNullOrWhiteSpace(tour.CategoryName)
                                                                     ? "-"
                                                                     : tour.CategoryName)
-
-                            </span>
-
-                            </td>
-
-
-                            <!-- DURATION -->
-
-                            <td class="muted-cell">
-
-                                @tour.DurationDays Gün
-                                /
-                                @tour.DurationNights Gece
-
-                            </td>
-
-
-                            <!-- PRICE -->
-
-                            <td>
-
-                                <span class="amount">
-
-                                    @tour.Price.ToString(
-                                                                "N0",
-                                                                new CultureInfo("tr-TR")
-                                                                ) TL
-
-                            </span>
-
-                        </td>
-
-
-                        <!-- DATE -->
-
-                        <td class="muted-cell">
-
-                            @if (tour.UpcomingDate.HasValue)
-                                {
-                                    @tour.UpcomingDate.Value.ToString(
-                                    "dd MMMM yyyy",
-                                                        new CultureInfo("tr-TR")
-                                                        )
-                                                        }
-                                else
-                                {
-                                    <span>-</span>
-                                }
-
-                            </td>
-
-
-                            <!-- CAPACITY -->
-
-                            <td>
-
-                                <div class="cap">
-
-                                    <div class="cap-top">
-
-                                        @usedCapacity / @capacity
-
-                                        @if (percentage >= 100)
-                                        {
-                                            <span class="full">
-                                                · Dolu
-                                            </span>
-                                        }
-
-                                    </div>
-
-                                    <div class="cap-track">
-
-                                        <div class="cap-fill @capacityClass"
-                                             style="width:@percentage%">
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- RESERVATION -->
-
-                            <td style="font-weight:600">
-
-                                @reservationCount
-
-                            </td>
-
-
-                            <!-- STATUS -->
-
-                            <td>
-
-                                <span class="badge-x @statusClass">
-
-                                    @statusText
 
                                 </span>
 
                             </td>
 
 
-                            <!-- ACTIONS -->
+                            <!-- DESTİNASYON -->
 
                             <td>
 
-                                <div class="dropdown">
+                                <span class="destination-text">
 
-                                    <button class="act-btn"
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-label="İşlemler">
+                                    @(string.IsNullOrWhiteSpace(tour.DestinationName)
+                                                                    ? "-"
+                                                                    : tour.DestinationName)
 
-                                        <svg width="18"
-                                             height="18"
-                                             viewBox="0 0 24 24"
-                                             fill="currentColor">
+                            </span>
 
-                                            <circle cx="12"
-                                                    cy="5"
-                                                    r="1.7" />
-
-                                            <circle cx="12"
-                                                    cy="12"
-                                                    r="1.7" />
-
-                                            <circle cx="12"
-                                                    cy="19"
-                                                    r="1.7" />
-
-                                        </svg>
-
-                                    </button>
+                                </td>
 
 
-                                    <ul class="dropdown-menu dropdown-menu-end">
+                                <!-- SÜRE -->
 
-                                        <!-- VIEW -->
+                                <td>
 
-                                        <li>
+                                    <div class="duration-box">
 
-                                            <a class="dropdown-item"
-                                               asp-area="Admin"
-                                               asp-controller="Tour"
-                                               asp-action="TourUpdate"
-                                               asp-route-id="@tour.Id">
+                                        <span class="duration-number">
+                                            @tour.DurationDays
+                                        </span>
 
-                                                <svg width="15"
-                                                     height="15"
-                                                     viewBox="0 0 24 24"
-                                                     fill="none"
-                                                     stroke="currentColor"
-                                                     stroke-width="2"
-                                                     stroke-linecap="round"
-                                                     stroke-linejoin="round">
-
-                                                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
-
-                                                    <circle cx="12"
-                                                            cy="12"
-                                                            r="3" />
-
-                                                </svg>
-
-                                                Görüntüle
-
-                                            </a>
-
-                                        </li>
+                                        <span class="duration-text">
+                                            gün
+                                        </span>
 
 
-                                        <!-- EDIT -->
+                                @if (tour.DurationNights > 0)
+                                        {
+                                            <div>
 
-                                        <li>
+                                                <span class="duration-number">
+                                                    @tour.DurationNights
+                                                </span>
 
-                                            <a class="dropdown-item"
-                                               asp-area="Admin"
-                                               asp-controller="Tour"
-                                               asp-action="TourUpdate"
-                                               asp-route-id="@tour.Id">
+                                                <span class="duration-text">
+                                                    gece
+                                                </span>
 
-                                                <svg width="15"
-                                                     height="15"
-                                                     viewBox="0 0 24 24"
-                                                     fill="none"
-                                                     stroke="currentColor"
-                                                     stroke-width="2"
-                                                     stroke-linecap="round"
-                                                     stroke-linejoin="round">
+                                            </div>
+                                        }
 
-                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                    </div>
 
-                                                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z" />
-
-                                                </svg>
-
-                                                Düzenle
-
-                                            </a>
-
-                                        </li>
+                                </td>
 
 
-                                        <!-- DELETE -->
+                                <!-- FİYAT -->
 
-                                        <li>
+                                <td>
 
-                                            <form asp-area="Admin"
-                                                  asp-controller="Tour"
-                                                  asp-action="Delete"
-                                                  method="post">
+                                    <div class="price">
 
-                                                @Html.AntiForgeryToken()
+                                        @tour.Price.ToString(
+                                        "N2",
+                                                                CultureInfo.GetCultureInfo("tr-TR")) ₺
 
-                                                <input type="hidden"
-                                                       name="id"
-                                                       value="@tour.Id" />
+                            </div>
 
-                                                <button type="submit"
-                                                        class="dropdown-item danger"
-                                                        style="width:100%;border:none;background:transparent;"
-                                                        onclick="return confirm('Bu turu silmek istediğinize emin misiniz?');">
+                        </td>
 
-                                                    <svg width="15"
-                                                         height="15"
-                                                         viewBox="0 0 24 24"
-                                                         fill="none"
-                                                         stroke="currentColor"
-                                                         stroke-width="2"
-                                                         stroke-linecap="round"
-                                                         stroke-linejoin="round">
 
-                                                        <polyline points="3 6 5 6 21 6" />
+                        <!-- YAKLAŞAN TARİH -->
 
-                                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <td>
 
-                                                    </svg>
+                            <div class="date-box">
 
-                                                    Sil
+                                @if (tour.UpcomingDate.HasValue)
+                                    {
+                                        <span class="date-value">
 
-                                                </button>
+                                            @tour.UpcomingDate.Value.ToString(
+                                            "dd.MM.yyyy",
+                                                                        CultureInfo.GetCultureInfo("tr-TR"))
 
-                                            </form>
-
-                                        </li>
-
-                                    </ul>
+                                </span>
+                                                                }
+                                    else
+                                    {
+                                        <span class="date-empty">
+                                            Tarih yok
+                                        </span>
+                                    }
 
                                 </div>
 
                             </td>
 
-                        </tr>
-                    }
+
+                            <!-- KONTENJAN -->
+
+                            <td>
+
+                                <div class="capacity-box">
+
+                                    <div class="capacity-number">
+
+                                        @tour.MaxCapacity.ToString(
+                                        "N0",
+                                                                        CultureInfo.GetCultureInfo("tr-TR"))
+
+                                </div>
+
+                                <div class="capacity-label">
+                                    kişi
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- REZERVASYON -->
+
+                        <td>
+
+                            <span class="reservation-count">
+
+                                @tour.ReservationCount
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- DURUM -->
+
+                        <td>
+
+                            <span class="status-badge @statusClass">
+
+                                @statusText
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- İŞLEMLER -->
+
+                        <td>
+
+                            <div class="actions">
+
+                                <!-- DÜZENLE -->
+
+                                <a asp-area="Admin"
+                                   asp-controller="Tour"
+                                   asp-action="TourUpdate"
+                                   asp-route-id="@tour.Id"
+                                   class="action-btn edit"
+                                   title="Tur Düzenle">
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                    <span>
+                                        Düzenle
+                                    </span>
+
+                                </a>
+
+
+                                <!-- SİL -->
+
+                                <form asp-area="Admin"
+                                      asp-controller="Tour"
+                                      asp-action="Delete"
+                                      asp-route-id="@tour.Id"
+                                      method="post"
+                                      style="display:inline;"
+                                      onsubmit="return confirm('Bu turu silmek istediğinize emin misiniz?');">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="action-btn delete"
+                                            title="Tur Sil">
+
+                                        <i class="bi bi-trash3"></i>
+
+                                        <span>
+                                            Sil
+                                        </span>
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                                        }
 
                 </tbody>
 
@@ -1456,658 +1319,321 @@ var totalTours = Model?.Count ?? 0;
         </div>
 
 
-        <!-- EMPTY -->
+        <!-- TABLE FOOTER -->
 
-        <div id="emptyState"
-             style="display:none">
+        <div class="table-footer">
 
-            <div class="empty">
+            <div class="table-info">
 
-                <div class="eic">
+                Toplam
 
-                    <svg width="26"
-                         height="26"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
+                <strong id="footerCount">
+                    @Model.Count
+                </strong>
 
-                        <circle cx="11"
-                                cy="11"
-                                r="8" />
+                tur gösteriliyor.
 
-                        <line x1="21"
-                              y1="21"
-                              x2="16.65"
-                              y2="16.65" />
+            </div>
 
-                    </svg>
+        </div>
+                }
+                else
+        {
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+
+                    <i class="bi bi-map"></i>
 
                 </div>
 
                 <h3>
-                    Tur bulunamadı
+                    Henüz tur bulunmuyor
                 </h3>
 
                 <p>
-                    Arama veya filtre kriterlerinizi değiştirerek tekrar deneyebilirsiniz.
+                    Travelio için ilk turunuzu oluşturarak başlayabilirsiniz.
                 </p>
 
-                <button class="btn-teal"
-                        style="margin:0 auto"
-                        type="button"
-                        onclick="clearFilters()">
+                <a asp-area="Admin"
+                   asp-controller="Tour"
+                   asp-action="TourCreate"
+                   class="btn-teal">
 
-                    Filtreleri Temizle
+                    <i class="bi bi-plus-lg"></i>
 
-                </button>
+                    Yeni Tur Ekle
 
-            </div>
-
-        </div>
-
-
-        <!-- PAGINATION -->
-
-        <div class="pager-row"
-             id="pagerRow">
-
-            <div class="per-page">
-
-                Sayfa başına
-
-                <select id="perPage">
-
-                    <option value="10">
-                        10
-                    </option>
-
-                    <option value="25">
-                        25
-                    </option>
-
-                    <option value="50">
-                        50
-                    </option>
-
-                </select>
-
-            </div>
-
-            <div class="pager">
-
-                <a href="#"
-                   class="disabled">
-                    Önceki
-                </a>
-
-                <a href="#"
-                   class="active">
-                    1
-                </a>
-
-                <a href="#">
-                    2
-                </a>
-
-                <a href="#">
-                    3
-                </a>
-
-                <a href="#">
-                    4
-                </a>
-
-                <a href="#">
-                    Sonraki
                 </a>
 
             </div>
-
-        </div>
+        }
 
     </div>
-    
 
 </div>
 
-<!-- DELETE MODAL -->
-
-<div class="modal fade"
-     id="delModal"
-     tabindex="-1">
-
-    
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-body text-center p-4">
-
-                <div style="width:56px;height:56px;border-radius:16px;background:var(--cancel-bg);color:var(--cancel-fg);display:grid;place-items:center;margin:0 auto 1rem">
-
-                    <svg width="26"
-                         height="26"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-
-                        <polyline points="3 6 5 6 21 6" />
-
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-
-                        <path d="M10 11v6M14 11v6" />
-
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-
-                    </svg>
-
-                </div>
-
-                <h5 style="font-family:'Sora';font-weight:700;color:var(--navy)">
-                    Turu Sil
-                </h5>
-
-                <p style="color:var(--muted);font-size:.92rem;margin-bottom:.2rem"
-                   id="delMsg">
-                </p>
-
-                <p style="color:var(--muted);font-size:.82rem">
-                    Bu işlem geri alınamaz.
-                </p>
-
-                <div class="d-flex gap-2 justify-content-center mt-3">
-
-                    <button class="btn-clear"
-                            style="width:auto;padding:.6rem 1.3rem"
-                            data-bs-dismiss="modal">
-
-                        Vazgeç
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-    
-
-</div>
 
 <script>
 
-    /* ==========================================
-       FILTER
-    ========================================== */
+    document.addEventListener("DOMContentLoaded", function () {
 
-    function filterTours() {
+        const searchInput =
+            document.getElementById("tourSearch");
 
-        const search =
-            document
-                .getElementById("fSearch")
-                .value
-                .trim()
-                .toLowerCase();
+        const categoryFilter =
+            document.getElementById("categoryFilter");
 
-        const destination =
-            document
-                .getElementById("fDest")
-                .value
-                .toLowerCase();
+        const statusFilter =
+            document.getElementById("statusFilter");
 
-        const category =
-            document
-                .getElementById("fCat")
-                .value
-                .toLowerCase();
+        const sortFilter =
+            document.getElementById("sortFilter");
 
-        const status =
-            document
-                .getElementById("fStatus")
-                .value
-                .toLowerCase();
+        const clearFilters =
+            document.getElementById("clearFilters");
 
-        const rows =
-            document.querySelectorAll("#tourRows tr");
+        const tableBody =
+            document.getElementById("tourTableBody");
 
-        let visibleCount = 0;
+        const visibleCount =
+            document.getElementById("visibleCount");
 
-        rows.forEach(row => {
-
-            const title =
-                (row.dataset.title || "")
-                    .toLowerCase();
-
-            const rowDestination =
-                (row.dataset.destination || "")
-                    .toLowerCase();
-
-            const rowCategory =
-                (row.dataset.category || "")
-                    .toLowerCase();
-
-            const rowStatus =
-                (row.dataset.status || "")
-                    .toLowerCase();
-
-            const searchMatch =
-                !search ||
-                title.includes(search) ||
-                rowDestination.includes(search);
-
-            const destinationMatch =
-                !destination ||
-                rowDestination === destination;
-
-            const categoryMatch =
-                !category ||
-                rowCategory === category;
-
-            const statusMatch =
-                !status ||
-                rowStatus === status;
-
-            const visible =
-                searchMatch &&
-                destinationMatch &&
-                categoryMatch &&
-                statusMatch;
-
-            row.style.display =
-                visible ? "" : "none";
-
-            if (visible) {
-                visibleCount++;
-            }
-
-        });
-
-        document
-            .getElementById("resultCount")
-            .textContent = visibleCount;
-
-        updateEmptyState(visibleCount);
-
-    }
+        const footerCount =
+            document.getElementById("footerCount");
 
 
-    /* ==========================================
-       EMPTY STATE
-    ========================================== */
-
-    function updateEmptyState(count) {
-
-        const empty =
-            document.getElementById("emptyState");
-
-        const table =
-            document.querySelector(".tbl-wrap");
-
-        const pager =
-            document.getElementById("pagerRow");
-
-        if (count === 0) {
-
-            table.style.display = "none";
-            empty.style.display = "block";
-            pager.style.display = "none";
-
-        }
-        else {
-
-            table.style.display = "block";
-            empty.style.display = "none";
-            pager.style.display = "flex";
-
+        if (!tableBody) {
+            return;
         }
 
-    }
+
+        /* =========================
+           FILTER
+        ========================== */
+
+        function applyFilters() {
+
+            const search =
+                searchInput.value
+                    .toLowerCase()
+                    .trim();
+
+            const category =
+                categoryFilter.value
+                    .toLowerCase()
+                    .trim();
+
+            const status =
+                statusFilter.value
+                    .toLowerCase()
+                    .trim();
 
 
-    /* ==========================================
-       CLEAR FILTERS
-    ========================================== */
-
-    function clearFilters() {
-
-        document.getElementById("fSearch").value = "";
-        document.getElementById("fDest").value = "";
-        document.getElementById("fCat").value = "";
-        document.getElementById("fStatus").value = "";
-
-        filterTours();
-
-    }
+            const rows =
+                Array.from(
+                    tableBody.querySelectorAll(".tour-row")
+                );
 
 
-    /* ==========================================
-       BULK SELECTION
-    ========================================== */
-
-    function toggleAll(checkbox) {
-
-        const rows =
-            document.querySelectorAll("#tourRows tr");
-
-        rows.forEach(row => {
-
-            if (row.style.display === "none") {
-                return;
-            }
-
-            const rowCheckbox =
-                row.querySelector(".row-chk");
-
-            if (rowCheckbox) {
-                rowCheckbox.checked = checkbox.checked;
-            }
-
-        });
-
-        updateBulk();
-
-    }
+            let visibleRows = [];
 
 
-    function selectedIds() {
+            rows.forEach(function (row) {
 
-        return [
-            ...document.querySelectorAll(".row-chk:checked")
-        ].map(x => x.value);
+                const name =
+                    (row.dataset.name || "")
+                        .toLowerCase();
 
-    }
+                const description =
+                    (row.dataset.description || "")
+                        .toLowerCase();
 
+                const rowCategory =
+                    (row.dataset.category || "")
+                        .toLowerCase();
 
-    function updateBulk() {
-
-        const ids =
-            selectedIds();
-
-        const bar =
-            document.getElementById("bulkBar");
-
-        bar.classList.toggle(
-            "show",
-            ids.length > 0
-        );
-
-        document.getElementById(
-            "bulkCount"
-        ).textContent =
-            ids.length + " tur seçildi";
-
-        updateCheckAllState();
-
-    }
+                const rowStatus =
+                    (row.dataset.status || "")
+                        .toLowerCase();
 
 
-    function updateCheckAllState() {
+                const matchesSearch =
+                    !search ||
+                    name.includes(search) ||
+                    description.includes(search);
 
-        const checkAll =
-            document.getElementById("checkAll");
 
-        const visibleRows =
-            [
-                ...document.querySelectorAll("#tourRows tr")
-            ].filter(row =>
-                row.style.display !== "none"
-            );
+                const matchesCategory =
+                    !category ||
+                    rowCategory === category;
 
-        const checkedRows =
-            visibleRows.filter(row => {
 
-                const checkbox =
-                    row.querySelector(".row-chk");
+                const matchesStatus =
+                    !status ||
+                    rowStatus === status;
 
-                return checkbox && checkbox.checked;
+
+                const isVisible =
+                    matchesSearch &&
+                    matchesCategory &&
+                    matchesStatus;
+
+
+                row.style.display =
+                    isVisible ? "" : "none";
+
+
+                if (isVisible) {
+
+                    visibleRows.push(row);
+
+                }
 
             });
 
-        if (visibleRows.length === 0) {
 
-            checkAll.checked = false;
-            checkAll.indeterminate = false;
-            return;
+            applySort(visibleRows);
+
+
+            if (visibleCount) {
+
+                visibleCount.textContent =
+                    visibleRows.length;
+
+            }
+
+
+            if (footerCount) {
+
+                footerCount.textContent =
+                    visibleRows.length;
+
+            }
 
         }
 
-        checkAll.checked =
-            checkedRows.length === visibleRows.length;
 
-        checkAll.indeterminate =
-            checkedRows.length > 0 &&
-            checkedRows.length < visibleRows.length;
+        /* =========================
+           SORT
+        ========================== */
 
-    }
+        function applySort(rows) {
 
-
-    /* ==========================================
-       BULK STATUS
-    ========================================== */
-
-    function bulkStatus(status) {
-
-        alert(
-            "Toplu durum güncelleme işlemi için controller endpoint'i eklenmelidir."
-        );
-
-    }
+            const sort =
+                sortFilter.value;
 
 
-    /* ==========================================
-       BULK DELETE
-    ========================================== */
-
-    function bulkDelete() {
-
-        alert(
-            "Toplu silme işlemi için controller endpoint'i eklenmelidir."
-        );
-
-    }
+            if (sort === "default") {
+                return;
+            }
 
 
-    /* ==========================================
-       FILTER EVENTS
-    ========================================== */
+            rows.sort(function (a, b) {
 
-    document
-        .getElementById("fSearch")
-        .addEventListener(
-            "input",
-            filterTours
-        );
+                if (sort === "priceAsc") {
 
-    document
-        .getElementById("fDest")
-        .addEventListener(
-            "change",
-            filterTours
-        );
-
-    document
-        .getElementById("fCat")
-        .addEventListener(
-            "change",
-            filterTours
-        );
-
-    document
-        .getElementById("fStatus")
-        .addEventListener(
-            "change",
-            filterTours
-        );
-
-
-    /* ==========================================
-       SORT
-    ========================================== */
-
-    let currentSort = null;
-    let currentDirection = 1;
-
-    document
-        .querySelectorAll("th.sortable")
-        .forEach(th => {
-
-            th.addEventListener(
-                "click",
-                function () {
-
-                    const key =
-                        this.dataset.sort;
-
-                    if (currentSort === key) {
-
-                        currentDirection *= -1;
-
-                    }
-                    else {
-
-                        currentSort = key;
-                        currentDirection = 1;
-
-                    }
-
-                    document
-                        .querySelectorAll("th.sortable")
-                        .forEach(item =>
-                            item.classList.remove("sorted")
-                        );
-
-                    this.classList.add("sorted");
-
-                    sortRows(
-                        key,
-                        currentDirection
-                    );
-
-                    updateCheckAllState();
+                    return Number(a.dataset.price || 0)
+                         - Number(b.dataset.price || 0);
 
                 }
-            );
-
-        });
 
 
-    function sortRows(key, direction) {
+                if (sort === "priceDesc") {
 
-        const tbody =
-            document.getElementById("tourRows");
+                    return Number(b.dataset.price || 0)
+                         - Number(a.dataset.price || 0);
 
-        const rows =
-            [...tbody.querySelectorAll("tr")];
+                }
 
-        rows.sort(
-            (a, b) => {
 
-                let aValue;
-                let bValue;
+                if (sort === "nameAsc") {
 
-                if (key === "title") {
-
-                    aValue =
-                        a.dataset.title || "";
-
-                    bValue =
-                        b.dataset.title || "";
-
-                    return (
-                        aValue.localeCompare(
-                            bValue,
+                    return (a.dataset.name || "")
+                        .localeCompare(
+                            b.dataset.name || "",
                             "tr"
-                        ) * direction
-                    );
-
-                }
-
-                if (key === "price") {
-
-                    aValue =
-                        parseFloat(
-                            a.dataset.price || "0"
-                        );
-
-                    bValue =
-                        parseFloat(
-                            b.dataset.price || "0"
                         );
 
                 }
 
-                if (key === "res") {
 
-                    aValue =
-                        parseInt(
-                            a.dataset.res || "0"
-                        );
+                if (sort === "nameDesc") {
 
-                    bValue =
-                        parseInt(
-                            b.dataset.res || "0"
+                    return (b.dataset.name || "")
+                        .localeCompare(
+                            a.dataset.name || "",
+                            "tr"
                         );
 
                 }
 
-                if (key === "date") {
 
-                    aValue =
-                        a.dataset.date || "";
+                return 0;
 
-                    bValue =
-                        b.dataset.date || "";
+            });
 
-                    return (
-                        aValue.localeCompare(
-                            bValue
-                        ) * direction
-                    );
 
-                }
+            rows.forEach(function (row) {
 
-                return (
-                    (aValue - bValue) * direction
-                );
+                tableBody.appendChild(row);
+
+            });
+
+        }
+
+
+        /* =========================
+           EVENTS
+        ========================== */
+
+        searchInput.addEventListener(
+            "input",
+            applyFilters
+        );
+
+
+        categoryFilter.addEventListener(
+            "change",
+            applyFilters
+        );
+
+
+        statusFilter.addEventListener(
+            "change",
+            applyFilters
+        );
+
+
+        sortFilter.addEventListener(
+            "change",
+            applyFilters
+        );
+
+
+        /* =========================
+           CLEAR
+        ========================== */
+
+        clearFilters.addEventListener(
+            "click",
+            function () {
+
+                searchInput.value = "";
+
+                categoryFilter.value = "";
+
+                statusFilter.value = "";
+
+                sortFilter.value = "default";
+
+                applyFilters();
 
             }
         );
 
-        rows.forEach(row =>
-            tbody.appendChild(row)
-        );
-
-    }
-
-
-    /* ==========================================
-       ROW CHECKBOX EVENTS
-    ========================================== */
-
-    document
-        .querySelectorAll(".row-chk")
-        .forEach(checkbox => {
-
-            checkbox.addEventListener(
-                "change",
-                updateBulk
-            );
-
-        });
-
-
-    /* ==========================================
-       INITIAL
-    ========================================== */
-
-    filterTours();
+    });
 
 </script>

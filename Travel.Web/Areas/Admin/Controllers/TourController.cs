@@ -12,59 +12,90 @@ namespace Travel.Web.Areas.Admin.Controllers
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class TourController(
-        ITourService _tourService,
-        ICategoryService _categoryService,
-        IDestinationService _destinationService,
-        IMapper _mapper) : Controller
+        ITourService tourService,
+        ICategoryService categoryService,
+        IDestinationService destinationService,
+        IMapper mapper) : Controller
     {
-        // GET: /Admin/Tour
+        // =========================================================
+        // INDEX
+        // =========================================================
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var tours = await _tourService.GetAllAsync();
+            var tours = await tourService.GetAllAsync();
 
-            var values = _mapper.Map<List<TourListItemDto>>(tours);
+            var values = mapper.Map<List<TourListItemDto>>(tours);
+
+            foreach (var dto in values)
+            {
+                var tour = tours.FirstOrDefault(x => x.Id == dto.Id);
+
+                if (tour == null)
+                {
+                    continue;
+                }
+
+                dto.UpcomingDate = tour.TourDates
+                    .Where(x => x.StartDate >= DateTime.Today)
+                    .OrderBy(x => x.StartDate)
+                    .Select(x => (DateTime?)x.StartDate)
+                    .FirstOrDefault();
+            }
 
             return View(values);
         }
 
-        // GET: /Admin/Tour/TourCreate
+
+        // =========================================================
+        // CREATE - GET
+        // =========================================================
+
         [HttpGet]
         public async Task<IActionResult> TourCreate()
         {
-            var categories = await _categoryService.GetAllAsync();
-            var destinations = await _destinationService.GetAllAsync();
+            await LoadViewDataAsync();
 
-            ViewBag.Categories = categories;
-            ViewBag.Destinations = destinations;
+            var model = new TourCreateDto
+            {
+                Status = "Draft"
+            };
 
-            return View();
+            return View(model);
         }
 
-        // POST: /Admin/Tour/TourCreate
+
+        // =========================================================
+        // CREATE - POST
+        // =========================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TourCreate(TourCreateDto model)
         {
             if (!ModelState.IsValid)
             {
-                var categories = await _categoryService.GetAllAsync();
-                var destinations = await _destinationService.GetAllAsync();
-
-                ViewBag.Categories = categories;
-                ViewBag.Destinations = destinations;
+                await LoadViewDataAsync();
 
                 return View(model);
             }
 
-            var tour = _mapper.Map<Tour>(model);
+            var tour = mapper.Map<Tour>(model);
 
-            await _tourService.CreateAsync(tour);
+            await tourService.CreateAsync(tour);
+
+            TempData["SuccessMessage"] =
+                "Tur başarıyla oluşturuldu.";
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Admin/Tour/TourUpdate/{id}
+
+        // =========================================================
+        // UPDATE - GET
+        // =========================================================
+
         [HttpGet]
         public async Task<IActionResult> TourUpdate(string id)
         {
@@ -73,57 +104,62 @@ namespace Travel.Web.Areas.Admin.Controllers
                 return BadRequest();
             }
 
-            var tour = await _tourService.GetByIdAsync(id);
+            var tour = await tourService.GetByIdAsync(id);
 
             if (tour == null)
             {
                 return NotFound();
             }
 
-            var model = _mapper.Map<TourUpdateDto>(tour);
+            var model = mapper.Map<TourUpdateDto>(tour);
 
-            var categories = await _categoryService.GetAllAsync();
-            var destinations = await _destinationService.GetAllAsync();
-
-            ViewBag.Categories = categories;
-            ViewBag.Destinations = destinations;
+            await LoadViewDataAsync();
 
             return View(model);
         }
 
-        // POST: /Admin/Tour/TourUpdate
+
+        // =========================================================
+        // UPDATE - POST
+        // =========================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TourUpdate(TourUpdateDto model)
         {
             if (!ModelState.IsValid)
             {
-                var categories = await _categoryService.GetAllAsync();
-                var destinations = await _destinationService.GetAllAsync();
-
-                ViewBag.Categories = categories;
-                ViewBag.Destinations = destinations;
+                await LoadViewDataAsync();
 
                 return View(model);
             }
 
-            var existingTour = await _tourService.GetByIdAsync(model.Id);
+            var existingTour =
+                await tourService.GetByIdAsync(model.Id);
 
             if (existingTour == null)
             {
                 return NotFound();
             }
 
-            var tour = _mapper.Map<Tour>(model);
+            var tour = mapper.Map<Tour>(model);
 
+            // MongoDB'deki mevcut Id korunuyor.
             tour.Id = existingTour.Id;
 
-            await _tourService.UpdateAsync(tour);
+            await tourService.UpdateAsync(tour);
+
+            TempData["SuccessMessage"] =
+                "Tur başarıyla güncellendi.";
 
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: /Admin/Tour/Delete
+
+        // =========================================================
+        // DELETE
+        // =========================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
@@ -133,16 +169,36 @@ namespace Travel.Web.Areas.Admin.Controllers
                 return BadRequest();
             }
 
-            var tour = await _tourService.GetByIdAsync(id);
+            var tour = await tourService.GetByIdAsync(id);
 
             if (tour == null)
             {
                 return NotFound();
             }
 
-            await _tourService.DeleteAsync(id);
+            await tourService.DeleteAsync(id);
+
+            TempData["SuccessMessage"] =
+                "Tur başarıyla silindi.";
 
             return RedirectToAction(nameof(Index));
+        }
+
+
+        // =========================================================
+        // VIEW DATA
+        // =========================================================
+
+        private async Task LoadViewDataAsync()
+        {
+            var categories =
+                await categoryService.GetAllAsync();
+
+            var destinations =
+                await destinationService.GetAllAsync();
+
+            ViewBag.Categories = categories;
+            ViewBag.Destinations = destinations;
         }
     }
 }
