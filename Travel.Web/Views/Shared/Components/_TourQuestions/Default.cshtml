@@ -1,0 +1,37 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!-- Q&A -->
+<div class="content-block">
+    <h2>Tur Hakkında Sorular</h2>
+    <div class="qa-item">
+        <div class="qa-q">
+            <span class="qa-avatar">AD</span>
+            <div><div class="who">Ayşe Demir</div><div class="txt">Vatikan giriş bileti tur ücretine dahil mi?</div></div>
+        </div>
+        <div class="qa-a"><span class="brand-mini">Travelio</span><span class="txt">Vatikan müzeleri giriş ücretleri tur paketine dahil değildir. Güncel giriş ücretleri tur öncesinde misafirlerimizle paylaşılır.</span></div>
+    </div>
+    <div class="qa-item">
+        <div class="qa-q">
+            <span class="qa-avatar">MK</span>
+            <div><div class="who">Mehmet Kaya</div><div class="txt">Tur sırasında serbest zamanımız olacak mı?</div></div>
+        </div>
+        <div class="qa-a"><span class="brand-mini">Travelio</span><span class="txt">Evet. Roma ve Floransa programlarında misafirlerimizin bireysel keşif yapabilmesi için serbest zaman bulunmaktadır.</span></div>
+    </div>
+    <div class="qa-item">
+        <div class="qa-q">
+            <span class="qa-avatar">SA</span>
+            <div><div class="who">Selin Arslan</div><div class="txt">Schengen vizem yok, vize hizmeti veriyor musunuz?</div></div>
+        </div>
+        <div class="qa-a"><span class="brand-mini">Travelio</span><span class="txt">Tur paketine vize ücreti dahil değildir ancak gerekli evrak süreci konusunda danışmanlık sağlanmaktadır.</span></div>
+    </div>
+
+    <div class="ask-box">
+        <div class="book-label" style="margin-top:0">Bu tur hakkında merak ettiğin bir şey mi var?</div>
+        <textarea id="askInput" placeholder="Sorunu yaz..."></textarea>
+        <button class="btn-teal mt-3" onclick="sendQuestion()">Soru Gönder</button>
+        <div id="askOk" style="display:none;color:var(--teal-dark);font-weight:600;font-size:.9rem;margin-top:.8rem">Sorun alındı! Ekibimiz en kısa sürede yanıtlayacak.</div>
+    </div>
+</div>

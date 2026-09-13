@@ -1,0 +1,109 @@
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
+
+<div class="container">
+
+    @await Component.InvokeAsync(
+    "_TourDetailHeader",
+        new
+        {
+            tour = Model
+        })
+
+    @await Component.InvokeAsync(
+        "_TourGallery",
+        new
+        {
+            tour = Model
+        })
+
+</div>
+
+
+<div class="container body-section">
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            @await Component.InvokeAsync(
+                        "_TourAbout",
+                        new
+                        {
+                            tour = Model
+                        })
+
+            @await Component.InvokeAsync(
+                        "_TourHighlights",
+                        new
+                        {
+                            tour = Model
+                        })
+
+            @await Component.InvokeAsync(
+                        "_TourItinerary",
+                        new
+                        {
+                            tour = Model
+                        })
+
+            @await Component.InvokeAsync(
+                        "_TourIncludes",
+                        new
+                        {
+                            tour = Model
+                        })
+
+            @await Component.InvokeAsync(
+                        "_TourInfo",
+                        new
+                        {
+                            tour = Model
+                        })
+
+            @await Component.InvokeAsync("_TourComments")
+
+            @await Component.InvokeAsync("_TourQuestions")
+
+        </div>
+
+        <div class="col-lg-4">
+
+            @await Component.InvokeAsync(
+                        "_TourBooking",
+                        new
+                        {
+                            tourId = Model.Id,
+                            price = Model.Price,
+                            tourName = Model.Name
+                        })
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    function sharePage() {
+
+        if (navigator.share) {
+
+            navigator.share({
+                title: '@Model.Name',
+                text: '@Model.ShortDescription',
+                url: window.location.href
+            });
+
+        }
+        else {
+
+            navigator.clipboard.writeText(window.location.href);
+
+            alert("Tur bağlantısı kopyalandı.");
+
+        }
+
+    }
+
+</script>

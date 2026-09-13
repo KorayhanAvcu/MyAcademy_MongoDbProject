@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!-- RIGHT: BOOKING -->
+<div class="col-lg-4">
+    <div class="book-sticky">
+        <div class="book-card">
+            <div class="price-top">
+                <small>Kişi başı</small>
+                <div class="big" id="unitPrice">42.500 <span>TL</span></div>
+                <div class="price-note">Vergiler ve belirtilen hizmetler dahildir.</div>
+            </div>
+
+            <div class="book-label">Tur Tarihi</div>
+            <div id="dateOptions">
+                <label class="date-opt sel"><span class="d">12 - 17 Ekim 2026</span><input type="radio" name="tourDate" checked><span class="left">Son 4 Kontenjan</span></label>
+                <label class="date-opt"><span class="d">9 - 14 Kasım 2026</span><input type="radio" name="tourDate"></label>
+                <label class="date-opt"><span class="d">7 - 12 Aralık 2026</span><input type="radio" name="tourDate"><span class="left">Son 6 Kontenjan</span></label>
+                <label class="date-opt"><span class="d">14 - 19 Mart 2027</span><input type="radio" name="tourDate"></label>
+            </div>
+
+            <div class="book-label">Kişi Sayısı</div>
+            <div class="counter-row">
+                <div class="cl"><b>Yetişkin</b><span>12 yaş ve üzeri</span></div>
+                <div class="counter">
+                    <button onclick="changeCount('adult',-1)" id="adultMinus">−</button>
+                    <span class="val" id="adultVal">2</span>
+                    <button onclick="changeCount('adult',1)">+</button>
+                </div>
+            </div>
+            <div class="counter-row">
+                <div class="cl"><b>Çocuk</b><span>2 - 11 yaş</span></div>
+                <div class="counter">
+                    <button onclick="changeCount('child',-1)" id="childMinus">−</button>
+                    <span class="val" id="childVal">0</span>
+                    <button onclick="changeCount('child',1)">+</button>
+                </div>
+            </div>
+
+            <div class="summary">
+                <div class="row-line"><span id="adultLine">2 Yetişkin</span><b id="adultSum">85.000 TL</b></div>
+                <div class="row-line" id="childRow" style="display:none"><span id="childLine">0 Çocuk</span><b id="childSum">0 TL</b></div>
+                <div class="row-line"><span>Ara Toplam</span><b id="subtotal">85.000 TL</b></div>
+                <div class="total"><span>Toplam</span><b id="grandTotal">85.000 TL</b></div>
+            </div>
+
+            <button class="btn-teal" onclick="reserve()">Rezervasyon Yap</button>
+            <div class="trust">
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg> Güvenli rezervasyon</span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Ücretsiz ön rezervasyon</span>
+            </div>
+        </div>
+    </div>
+</div>

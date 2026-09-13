@@ -36,14 +36,23 @@ namespace Travel.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult TourDetail(string id)
+        public async Task<IActionResult> TourDetail(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 return BadRequest();
             }
 
-            return View();
+            var tour = await tourService.GetByIdAsync(id);
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+
+            var value = mapper.Map<TourDetailDto>(tour);
+
+            return View(value);
         }
     }
 }
