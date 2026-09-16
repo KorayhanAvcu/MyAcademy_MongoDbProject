@@ -1,6 +1,6 @@
-﻿
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
 @{
-    ViewData["Title"] = "TourDetail";
+    ViewData["Title"] = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -1016,7 +1016,7 @@
     }
 </style>
 
-@await Component.InvokeAsync("_TourDetail")
+@await Component.InvokeAsync("_TourDetail", Model)
 <!-- REVIEW MODAL -->
 <div class="modal fade" id="reviewModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
