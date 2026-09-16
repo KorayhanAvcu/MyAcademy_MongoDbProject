@@ -1,45 +1,46 @@
-﻿@{
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
+
+@{
     Layout = null;
 }
 
 <div class="container">
 
-    @await Component.InvokeAsync("_TourBreadcrumb")
+    @await Component.InvokeAsync("_TourBreadcrumb", Model)
 
-    @await Component.InvokeAsync("_TourDetailHeader")
+    @await Component.InvokeAsync("_TourDetailHeader", Model)
 
-    @await Component.InvokeAsync("_TourGallery")
-    
+    @await Component.InvokeAsync("_TourGallery", Model)
+
 </div>
 
-
-<!-- BODY -->
 <div class="container body-section">
 
     <div class="row g-4">
 
-        <!-- LEFT -->
         <div class="col-lg-8">
-            @await Component.InvokeAsync("_TourAbout")
 
-            @await Component.InvokeAsync("_TourHighlights")
-            
-            @await Component.InvokeAsync("_TourItinerary")
+            @await Component.InvokeAsync("_TourAbout", Model)
 
-            @await Component.InvokeAsync("_TourIncludes")
+            @await Component.InvokeAsync("_TourHighlights", Model)
 
-            @await Component.InvokeAsync("_TourInfo")
-            
-            <!-- COMMENTS -->
-            @await Component.InvokeAsync("_TourComments")
+            @await Component.InvokeAsync("_TourItinerary", Model)
 
-            <!-- QUESTIONS -->
-            @await Component.InvokeAsync("_TourQuestions")
+            @await Component.InvokeAsync("_TourIncludes", Model)
+
+            @await Component.InvokeAsync("_TourInfo", Model)
+
+            @await Component.InvokeAsync("_TourComments", Model)
+
+            @await Component.InvokeAsync("_TourQuestions", Model)
 
         </div>
 
-        <!-- BOOKING -->
-        @await Component.InvokeAsync("_TourBooking")
+        <div class="col-lg-4">
+
+            @await Component.InvokeAsync("_TourBooking", Model)
+
+        </div>
 
     </div>
 

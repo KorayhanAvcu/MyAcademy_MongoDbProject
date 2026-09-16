@@ -1,25 +1,25 @@
-﻿
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
+
 @{
     Layout = null;
 }
 
-<!-- BREADCRUMB -->
 <div class="crumb">
 
-    <a href="index.html">
+    <a href="/">
         Ana Sayfa
     </a>
 
     /
 
-    <a href="tours.html">
+    <a href="/Tour">
         Turlar
     </a>
 
     /
 
     <span class="cur">
-        Roma & Toskana Keşfi
+        @Model.Name
     </span>
 
 </div>
