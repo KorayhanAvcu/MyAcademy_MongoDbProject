@@ -17,6 +17,12 @@ namespace Travel.Web.DTOs.TourDtos
 
         public string? RouteId { get; set; }
 
+        public string? CategoryName { get; set; }
+
+        public string? DestinationName { get; set; }
+
+        public string? RouteName { get; set; }
+
         public string? TourType { get; set; }
 
         public decimal Price { get; set; }
