@@ -1,14 +1,34 @@
-﻿
+﻿@model Travel.Web.DTOs.AboutPageHeadDtos.AboutPageHeadResultDto
+
 @{
     Layout = null;
 }
 
 <!-- PAGE HEAD -->
-<header class="page-head">
+<header class="page-head"
+        style="background-image: url('@Model.BackgroundImage');">
+
     <div class="container">
-        <div class="breadcrumbz mb-3"><a href="index.html">Ana Sayfa</a> · Hakkımızda</div>
-        <div class="eyebrow">Biz Kimiz?</div>
-        <h1>Seyahati Yeniden Tanımlıyoruz</h1>
-        <p>Travelio, sıradan turistik geziler yerine; yerel ruhu hisseden, konforlu ve unutulmaz dünya rotaları sunmak için kuruldu.</p>
+
+        <!-- BREADCRUMB -->
+        <div class="breadcrumbz mb-3">
+            <a href="/">Ana Sayfa</a> · @Model.Breadcrumb
+        </div>
+
+        <!-- EYEBROW -->
+        <div class="eyebrow">
+            @Model.Eyebrow
+        </div>
+
+        <!-- TITLE -->
+        <h1>
+            @Model.Title
+        </h1>
+
+        <!-- DESCRIPTION -->
+        <p>
+            @Model.Description
+        </p>
+
     </div>
 </header>

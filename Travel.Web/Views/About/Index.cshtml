@@ -160,41 +160,55 @@
         position: relative;
         overflow: hidden;
         color: #fff;
-        background: linear-gradient(120deg,rgba(14,42,59,.92) 0%,rgba(18,56,76,.85) 55%,rgba(11,127,128,.78) 100%), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=2000&q=80') center/cover;
         padding: 4.5rem 0 5rem;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
     }
 
+        .page-head::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient( 120deg, rgba(14,42,59,.92) 0%, rgba(18,56,76,.85) 55%, rgba(11,127,128,.78) 100% );
+            z-index: 0;
+        }
+
+        .page-head .container {
+            position: relative;
+            z-index: 1;
+        }
+
         .page-head .eyebrow {
-            color: #7fe3e3
+            color: #7fe3e3;
         }
 
         .page-head h1 {
             font-weight: 800;
             font-size: clamp(2rem,4vw,3.1rem);
             letter-spacing: -.5px;
-            margin-top: .5rem
+            margin-top: .5rem;
         }
 
         .page-head p {
             color: rgba(255,255,255,.9);
             max-width: 58ch;
             margin-top: .7rem;
-            font-size: 1.05rem
+            font-size: 1.05rem;
         }
 
     .breadcrumbz {
         font-size: .85rem;
-        color: rgba(255,255,255,.7)
+        color: rgba(255,255,255,.7);
     }
 
         .breadcrumbz a {
-            color: rgba(255,255,255,.7)
+            color: rgba(255,255,255,.7);
         }
 
             .breadcrumbz a:hover {
-                color: #fff
+                color: #fff;
             }
-
     /* STORY SECTION */
     .story-card {
         background: #fff;
