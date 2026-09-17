@@ -471,169 +471,24 @@
 
     }
 </style>
-<!-- PAGE HEAD -->
-<header class="page-head">
-    <div class="container">
-        <div class="breadcrumbz mb-3"><a href="index.html">Ana Sayfa</a> · İletişim</div>
-        <div class="eyebrow">Bizimle İletişime Geçin</div>
-        <h1>Sorularınız İçin Yanınızdayız</h1>
-        <p>Tur programları, vize süreçleri veya özel grup talepleriniz için seyahat danışmanlarımızla 7/24 iletişime geçebilirsiniz.</p>
-    </div>
-</header>
+
+@await Component.InvokeAsync("_ContactPageHead")
+
 
 <main class="container">
-    <!-- CONTACT CARDS ROW -->
-    <div class="contact-cards-row">
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="c-box">
-                    <div class="c-ico">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-                    </div>
-                    <h4>Telefonla Destek</h4>
-                    <p>Hafta içi ve hafta sonu 09:00 - 20:00 arası canlı destek.</p>
-                    <a href="tel:+908503004050" class="c-link">0850 300 40 50 →</a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="c-box">
-                    <div class="c-ico">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                    </div>
-                    <h4>E-posta</h4>
-                    <p>Tüm soru, teklif ve iş birliği talepleriniz için bize yazın.</p>
-                    <a href="mailto:info@travelio.com" class="c-link">info@travelio.com →</a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="c-box">
-                    <div class="c-ico">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
-                    </div>
-                    <h4>WhatsApp Hattı</h4>
-                    <p>Hızlı bilgi alma ve evrak danışmanlığı için anında mesajlaşın.</p>
-                    <a href="#" class="c-link">+90 532 100 20 30 →</a>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="c-box">
-                    <div class="c-ico">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                    </div>
-                    <h4>Merkez Ofis</h4>
-                    <p>Büyükdere Cad. No:142 Levent, Beşiktaş / İstanbul</p>
-                    <a href="#mapSection" class="c-link">Haritada Gör →</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    @await Component.InvokeAsync("_ContactCards")
+    
 
     <!-- FORM + MAP -->
     <div class="main-form-card" id="mapSection">
         <div class="row g-4">
-            <div class="col-lg-7">
-                <div class="eyebrow">Mesaj Gönderin</div>
-                <h2 style="font-family:'Sora';font-weight:700;font-size:1.8rem;color:var(--navy);margin:.3rem 0 1.2rem">Seyahat Planınızı Birlikte Yapalım</h2>
-
-                <form id="contactForm" onsubmit="handleSend(event)">
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="field-label">Adınız Soyadınız *</label>
-                            <input type="text" class="form-control-custom" required placeholder="Örn. Zeynep Kaya">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="field-label">E-posta Adresiniz *</label>
-                            <input type="email" class="form-control-custom" required placeholder="ornek@email.com">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="field-label">Telefon Numaranız</label>
-                            <input type="tel" class="form-control-custom" placeholder="+90 5XX XXX XX XX">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="field-label">İlgilendiğiniz Tur / Konu</label>
-                            <select class="form-control-custom">
-                                <option selected>Genel Bilgi & Rezervasyon</option>
-                                <option>Roma & Toskana Keşfi</option>
-                                <option>Paris & Disneyland</option>
-                                <option>İsviçre Alpleri</option>
-                                <option>Kuzey Işıkları Norveç</option>
-                                <option>Tokyo & Kyoto</option>
-                                <option>Özel Grup / Kurumsal Tur Talebi</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="field-label">Mesajınız *</label>
-                            <textarea class="form-control-custom" required placeholder="Merak ettiğiniz tarih, kişi sayısı ve diğer detayları belirtebilirsiniz..."></textarea>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-teal">
-                        <span>Mesajı Gönder</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
-                    </button>
-                </form>
-            </div>
-
-            <div class="col-lg-5">
-                <div class="map-box">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3007.8228308425257!2d29.00984857647248!3d41.07289567134185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab65d447d216f%3A0xe9bb6c4db67f7ffb!2sLevent%2C%20B%C3%BCy%C3%BCkdere%20Cd.%2C%20Be%C5%9Fikta%C5%9F%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1710000000000!5m2!1str!2str" loading="lazy"></iframe>
-                    <div class="map-overlay-info">
-                        <b>Travelio Genel Merkez</b>
-                        <span>Levent, Büyükdere Cd. No:142 Beşiktaş / İstanbul · Ziyaret için randevu alabilirsiniz.</span>
-                    </div>
-                </div>
-            </div>
+            @await Component.InvokeAsync("_ContactForm")
+            @await Component.InvokeAsync("_ContactMap")
+           
         </div>
     </div>
-
-    <!-- SSS / FAQ -->
-    <div class="faq-wrap">
-        <div class="text-center max-w-600 mx-auto mb-4">
-            <div class="eyebrow">Sıkça Sorulan Sorular</div>
-            <h2 style="font-family:'Sora';font-weight:700;font-size:1.8rem;color:var(--navy);margin-top:.4rem">Aklınıza Takılanlar</h2>
-            <p style="color:var(--muted);font-size:.95rem">Rezervasyon ve vize süreçleri ile ilgili en sık sorulan soruların yanıtları.</p>
-        </div>
-
-        <div class="accordion" id="faqAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
-                        Ön rezervasyon yaptıktan sonra ödeme nasıl gerçekleşiyor?
-                    </button>
-                </h2>
-                <div id="f1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                        Web sitemiz üzerinden yaptığınız ön rezervasyon sonrasında kontenjanınız 48 saat boyunca adınıza bloke edilir. Seyahat danışmanımız sizi arayarak tur sözleşmesi ve kredi kartı / havale ödeme seçeneklerini güvenle tamamlamanıza yardımcı olur.
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
-                        Schengen vizesi alımında danışmanlık hizmeti veriyor musunuz?
-                    </button>
-                </h2>
-                <div id="f2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                        Evet, tur rezervasyonu yapan misafirlerimize konsolosluk onaylı otel/uçak rezervasyon belgeleri ve eksiksiz vize başvuru evrak dosyası hazırlanması konusunda ücretsiz rehberlik sunuyoruz.
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f3">
-                        Tur iptal ve iade koşulları nelerdir?
-                    </button>
-                </h2>
-                <div id="f3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                        Tur kalkış tarihine 30 gün kalana kadar yapılan iptallerde uçak bileti kuralları haricindeki tüm tur ücreti kesintisiz iade edilir. İsteğe bağlı seyahat iptal sigortası ile vize reddi durumunda tam iade güvencesi de sunulmaktadır.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @await Component.InvokeAsync("_ContactFAQ")
+    
 </main>
 
 <!-- TOAST NOTIFICATION -->

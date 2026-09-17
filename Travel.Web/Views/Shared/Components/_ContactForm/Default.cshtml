@@ -1,0 +1,47 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!-- FORM -->
+<div class="col-lg-7">
+    <div class="eyebrow">Mesaj Gönderin</div>
+    <h2 style="font-family:'Sora';font-weight:700;font-size:1.8rem;color:var(--navy);margin:.3rem 0 1.2rem">Seyahat Planınızı Birlikte Yapalım</h2>
+
+    <form id="contactForm" onsubmit="handleSend(event)">
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="field-label">Adınız Soyadınız *</label>
+                <input type="text" class="form-control-custom" required placeholder="Örn. Zeynep Kaya">
+            </div>
+            <div class="col-md-6">
+                <label class="field-label">E-posta Adresiniz *</label>
+                <input type="email" class="form-control-custom" required placeholder="ornek@email.com">
+            </div>
+            <div class="col-md-6">
+                <label class="field-label">Telefon Numaranız</label>
+                <input type="tel" class="form-control-custom" placeholder="+90 5XX XXX XX XX">
+            </div>
+            <div class="col-md-6">
+                <label class="field-label">İlgilendiğiniz Tur / Konu</label>
+                <select class="form-control-custom">
+                    <option selected>Genel Bilgi & Rezervasyon</option>
+                    <option>Roma & Toskana Keşfi</option>
+                    <option>Paris & Disneyland</option>
+                    <option>İsviçre Alpleri</option>
+                    <option>Kuzey Işıkları Norveç</option>
+                    <option>Tokyo & Kyoto</option>
+                    <option>Özel Grup / Kurumsal Tur Talebi</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="field-label">Mesajınız *</label>
+                <textarea class="form-control-custom" required placeholder="Merak ettiğiniz tarih, kişi sayısı ve diğer detayları belirtebilirsiniz..."></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn-teal">
+            <span>Mesajı Gönder</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+        </button>
+    </form>
+</div>

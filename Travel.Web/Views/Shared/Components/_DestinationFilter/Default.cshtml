@@ -1,0 +1,302 @@
+﻿
+@{
+    Layout = null;
+}
+<!-- SMART MULTI-TIER FILTERING SYSTEM -->
+
+<section class="filter-wrapper">
+    <div class="container">
+
+        <div class="smart-filter-bar">
+
+            <div class="row g-2 align-items-center">
+
+                <!-- Search Keyword -->
+
+                <div class="col-lg-4">
+                    <div class="filter-input-group">
+
+                        <div class="filter-icon-box">
+                            <svg fill="none"
+                                 height="18"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 width="18">
+                                <circle cx="11"
+                                        cy="11"
+                                        r="8">
+                                </circle>
+
+                                <line x1="21"
+                                      x2="16.65"
+                                      y1="21"
+                                      y2="16.65">
+                                </line>
+                            </svg>
+                        </div>
+
+                        <div class="w-100">
+
+                            <label class="filter-label">
+                                Şehir veya Bölge
+                            </label>
+
+                            <input class="filter-search-input"
+                                   id="searchInput"
+                                   oninput="applyAllFilters()"
+                                   placeholder="Örn: Roma, Kapadokya, Kyoto..."
+                                   type="text" />
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Country / Region -->
+
+                <div class="col-lg-3">
+                    <div class="filter-input-group">
+
+                        <div class="filter-icon-box">
+                            <svg fill="none"
+                                 height="18"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 width="18">
+                                <circle cx="12"
+                                        cy="12"
+                                        r="10">
+                                </circle>
+
+                                <line x1="2"
+                                      x2="22"
+                                      y1="12"
+                                      y2="12">
+                                </line>
+
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10
+                                    15.3 15.3 0 0 1-4 10
+                                    15.3 15.3 0 0 1-4-10
+                                    15.3 15.3 0 0 1 4-10z">
+                                </path>
+                            </svg>
+                        </div>
+
+                        <div class="w-100">
+
+                            <label class="filter-label">
+                                Ülke &amp; Kıta
+                            </label>
+
+                            <select class="filter-select"
+                                    id="countrySelect"
+                                    onchange="applyAllFilters()">
+
+                                <option value="all">
+                                    Tüm Ülkeler &amp; Kıtalar
+                                </option>
+
+                                <optgroup label="Avrupa">
+                                    <option value="italya">İtalya</option>
+                                    <option value="fransa">Fransa</option>
+                                    <option value="norvec">Norveç</option>
+                                    <option value="isvicre">İsviçre</option>
+                                </optgroup>
+
+                                <optgroup label="Asya &amp; Uzak Doğu">
+                                    <option value="japonya">Japonya</option>
+                                    <option value="endonezya">
+                                        Endonezya (Bali)
+                                    </option>
+                                    <option value="tayland">Tayland</option>
+                                </optgroup>
+
+                                <optgroup label="Türkiye &amp; Akdeniz">
+                                    <option value="turkiye">Türkiye</option>
+                                    <option value="yunanistan">Yunanistan</option>
+                                </optgroup>
+
+                                <optgroup label="Afrika &amp; Orta Doğu">
+                                    <option value="misir">Mısır</option>
+                                    <option value="bae">Dubai (BAE)</option>
+                                </optgroup>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Travel Style / Theme -->
+
+                <div class="col-lg-3">
+                    <div class="filter-input-group">
+
+                        <div class="filter-icon-box">
+                            <svg fill="none"
+                                 height="18"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 width="18">
+                                <polygon points="12 2 15.09 8.26 22 9.27
+                                    17 14.14 18.18 21.02
+                                    12 17.77 5.82 21.02 7 14.14
+                                    2 9.27 8.91 8.26 12 2">
+                                </polygon>
+                            </svg>
+                        </div>
+
+                        <div class="w-100">
+
+                            <label class="filter-label">
+                                Seyahat Tarzı
+                            </label>
+
+                            <select class="filter-select"
+                                    id="themeSelect"
+                                    onchange="applyAllFilters">
+
+                                <option value="all">
+                                    Tüm Tarzlar
+                                </option>
+
+                                <option value="kultur">
+                                    Tarih &amp; Kültür
+                                </option>
+
+                                <option value="doga">
+                                    Doğa &amp; Macera
+                                </option>
+
+                                <option value="deniz">
+                                    Plaj &amp; Tropik
+                                </option>
+
+                                <option value="kis">
+                                    Kış &amp; Kayak
+                                </option>
+
+                                <option value="gastronomi">
+                                    Gastronomi &amp; Şehir
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+
+                <div class="col-lg-2 text-end">
+
+                    <button class="btn-teal w-100 justify-content-center"
+                            onclick="resetFilters()">
+
+                        <svg fill="none"
+                             height="16"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             viewBox="0 0 24 24"
+                             width="16">
+
+                            <path d="M3 12a9 9 0 0 1 9-9
+                                9.75 9.75 0 0 1 6.74 2.74L21 8">
+                            </path>
+
+                            <path d="M21 3v5h-5"></path>
+
+                            <path d="M21 12a9 9 0 0 1-9 9
+                                9.75 9.75 0 0 1-6.74-2.74L3 16">
+                            </path>
+
+                            <path d="M3 21v-5h5"></path>
+
+                        </svg>
+
+                        Sıfırla
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- SECOND TIER: SEASON FAST TABS -->
+
+            <div class="season-chips-container mt-2 pt-3 border-top">
+
+                <span class="filter-label me-2 mb-0 align-self-center">
+                    En İyi Sezon:
+                </span>
+
+                <button class="season-chip active"
+                        data-season="all"
+                        onclick="selectSeason('all', this)">
+                    <span>Tüm Sezonlar</span>
+                </button>
+
+                <button class="season-chip"
+                        data-season="ilkbahar"
+                        onclick="selectSeason('ilkbahar', this)">
+                    <span class="chip-icon">🌸</span>
+                    <span>
+                        İlkbahar (Çiçeklenme &amp; Ilıman)
+                    </span>
+                </button>
+
+                <button class="season-chip"
+                        data-season="yaz"
+                        onclick="selectSeason('yaz', this)">
+                    <span class="chip-icon">☀️</span>
+                    <span>
+                        Yaz (Güneş, Deniz &amp; Festivaller)
+                    </span>
+                </button>
+
+                <button class="season-chip"
+                        data-season="sonbahar"
+                        onclick="selectSeason('sonbahar', this)">
+                    <span class="chip-icon">🍂</span>
+                    <span>
+                        Sonbahar (Romantik &amp; Keşif)
+                    </span>
+                </button>
+
+                <button class="season-chip"
+                        data-season="kis"
+                        onclick="selectSeason('kis', this)">
+                    <span class="chip-icon">❄️</span>
+                    <span>
+                        Kış (Kuzey Işıkları &amp; Kayak)
+                    </span>
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- ACTIVE TAGS / RESULTS BAR -->
+
+        <div class="results-meta-bar">
+
+            <div class="results-counter">
+                Toplam
+                <strong id="matchCount">6</strong>
+                destinasyon gösteriliyor
+            </div>
+
+            <div class="d-flex align-items-center gap-2 flex-wrap"
+                 id="activeBadgesRow">
+                <!-- Dynamically filled badges -->
+            </div>
+
+        </div>
+
+    </div>
+</section>
