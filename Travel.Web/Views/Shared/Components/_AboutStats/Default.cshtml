@@ -1,24 +1,27 @@
-﻿
+﻿@model List<Travel.Web.DTOs.AboutStatDtos.AboutStatResultDto>
+
 @{
     Layout = null;
 }
 
-<!-- STATS -->
-<div class="stats-grid">
-    <div class="stat-box">
-        <div class="num">92.000+</div>
-        <div class="desc">Mutlu Gezgin</div>
+@if (Model != null && Model.Any())
+{
+    <div class="stats-grid">
+
+        @foreach (var item in Model)
+        {
+            <div class="stat-box">
+
+                <div class="num">
+                    @item.Number
+                </div>
+
+                <div class="desc">
+                    @item.Description
+                </div>
+
+            </div>
+        }
+
     </div>
-    <div class="stat-box">
-        <div class="num">48+</div>
-        <div class="desc">Dünya Destinasyonu</div>
-    </div>
-    <div class="stat-box">
-        <div class="num">1.200+</div>
-        <div class="desc">Başarılı Tur Seferi</div>
-    </div>
-    <div class="stat-box">
-        <div class="num">%98.4</div>
-        <div class="desc">Misafir Memnuniyeti</div>
-    </div>
-</div>
+}

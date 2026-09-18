@@ -1,0 +1,507 @@
+﻿
+@model Travel.Web.DTOs.AboutStorySectionDtos.AboutStorySectionCreateDto
+
+@{
+    ViewData["Title"] = "Yeni Hakkımızda Hikaye Bölümü";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    .page-intro {
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+        }
+
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+    .about-story-form-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .form-header {
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .form-header h5 {
+            margin: 0;
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: .95rem;
+        }
+
+        .form-header span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+    .form-body {
+        padding: 1.4rem;
+    }
+
+    .form-label {
+        color: var(--navy);
+        font-size: .84rem;
+        font-weight: 600;
+        margin-bottom: .45rem;
+    }
+
+    .form-control {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .72rem .85rem;
+        font-size: .88rem;
+        color: var(--navy);
+    }
+
+        .form-control:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 .2rem rgba(15,163,163,.1);
+        }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+    .btn-teal {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        transition: .25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(15,163,163,.3);
+        }
+
+    .btn-cancel {
+        background: #fff;
+        color: var(--navy);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        text-decoration: none;
+        transition: .2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-cancel:hover {
+            background: #fafbfb;
+            color: var(--navy);
+            border-color: var(--teal);
+        }
+
+    .info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding: .9rem 1rem;
+        border-radius: 10px;
+        background: rgba(15,163,163,.06);
+        border: 1px solid rgba(15,163,163,.15);
+        color: var(--muted);
+        font-size: .82rem;
+        line-height: 1.5;
+        margin-bottom: 1.4rem;
+    }
+
+        .info-box svg {
+            flex: none;
+            color: var(--teal-dark);
+            margin-top: 2px;
+        }
+
+</style>
+
+
+<div class="content">
+
+    <!-- BREADCRUMB -->
+
+    <div class="crumb">
+
+        <a asp-area="Admin"
+               asp-controller="Dashboard"
+               asp-action="Index">
+            Dashboard
+        </a>
+
+        /
+
+        <a asp-area="Admin"
+               asp-controller="AboutStorySection"
+               asp-action="Index">
+            Hakkımızda Hikaye Bölümü
+        </a>
+
+        /
+
+        <span class="cur">
+            Yeni İçerik
+        </span>
+
+    </div>
+
+
+    <!-- PAGE INTRO -->
+
+    <div class="page-intro">
+
+        <h1>
+            Yeni Hakkımızda Hikaye Bölümü
+        </h1>
+
+        <p>
+            Hakkımızda sayfasında gösterilecek hikaye bölümü içeriklerini oluşturun.
+        </p>
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <div class="about-story-form-card">
+
+        <div class="form-header">
+
+            <h5>
+                Hakkımızda Hikaye Bölümü Bilgileri
+            </h5>
+
+            <span>
+                Metin, görsel ve buton bilgilerini eksiksiz doldurun.
+            </span>
+
+        </div>
+
+
+        <div class="form-body">
+
+            <form asp-area="Admin"
+                  asp-controller="AboutStorySection"
+                  asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-4">
+                </div>
+
+
+                <div class="info-box">
+
+                    <svg width="18"
+                         height="18"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="10" />
+
+                        <line x1="12"
+                              y1="16"
+                              x2="12"
+                              y2="12" />
+
+                        <line x1="12"
+                              y1="8"
+                              x2="12.01"
+                              y2="8" />
+
+                    </svg>
+
+                    <span>
+                        Hakkımızda sayfasında kullanılacak hikaye bölümünü
+                        oluşturmak için aşağıdaki alanları doldurun.
+                    </span>
+
+                </div>
+
+
+                <div class="row g-4">
+
+
+                    <!-- BADGE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Badge"
+                               class="form-label">
+                            Rozet / Üst Başlık
+                        </label>
+
+                        <input asp-for="Badge"
+                               class="form-control"
+                               placeholder="Örn: Hikayemiz" />
+
+                        <span asp-validation-for="Badge"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- TITLE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Title"
+                               class="form-label">
+                            Ana Başlık
+                        </label>
+
+                        <input asp-for="Title"
+                               class="form-control"
+                               placeholder="Örn: Yolculuğumuz Böyle Başladı" />
+
+                        <span asp-validation-for="Title"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Description"
+                               class="form-label">
+                            Açıklama
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Hikaye bölümünde gösterilecek açıklamayı yazın..."></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION 2 -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Description2"
+                               class="form-label">
+                            İkinci Açıklama
+                        </label>
+
+                        <textarea asp-for="Description2"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Hikaye bölümünde gösterilecek ikinci açıklamayı yazın..."></textarea>
+
+                        <span asp-validation-for="Description2"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- IMAGE -->
+
+                    <div class="col-12">
+
+                        <label asp-for="ImageUrl"
+                               class="form-label">
+                            Görsel URL
+                        </label>
+
+                        <input asp-for="ImageUrl"
+                               class="form-control"
+                               placeholder="https://example.com/about-story.jpg" />
+
+                        <span asp-validation-for="ImageUrl"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PRIMARY BUTTON -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="PrimaryButtonText"
+                               class="form-label">
+                            Birincil Buton Metni
+                        </label>
+
+                        <input asp-for="PrimaryButtonText"
+                               class="form-control"
+                               placeholder="Örn: Bizi Tanıyın" />
+
+                        <span asp-validation-for="PrimaryButtonText"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PRIMARY URL -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="PrimaryButtonUrl"
+                               class="form-label">
+                            Birincil Buton URL
+                        </label>
+
+                        <input asp-for="PrimaryButtonUrl"
+                               class="form-control"
+                               placeholder="Örn: /About/Index" />
+
+                        <span asp-validation-for="PrimaryButtonUrl"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- SECONDARY BUTTON -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="SecondaryButtonText"
+                               class="form-label">
+                            İkincil Buton Metni
+                        </label>
+
+                        <input asp-for="SecondaryButtonText"
+                               class="form-control"
+                               placeholder="Örn: Turlarımızı Keşfedin" />
+
+                        <span asp-validation-for="SecondaryButtonText"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- SECONDARY URL -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="SecondaryButtonUrl"
+                               class="form-label">
+                            İkincil Buton URL
+                        </label>
+
+                        <input asp-for="SecondaryButtonUrl"
+                               class="form-control"
+                               placeholder="Örn: /Tour/Index" />
+
+                        <span asp-validation-for="SecondaryButtonUrl"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a asp-area="Admin"
+                           asp-controller="AboutStorySection"
+                           asp-action="Index"
+                           class="btn-cancel">
+                        İptal
+                    </a>
+
+
+                    <button type="submit"
+                            class="btn-teal">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <polyline points="20 6 9 17 4 12" />
+
+                        </svg>
+
+                        İçeriği Oluştur
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

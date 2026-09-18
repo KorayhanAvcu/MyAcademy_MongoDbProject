@@ -1,0 +1,197 @@
+﻿@model Travel.Web.DTOs.AboutStatDtos.AboutStatCreateDto
+
+@{
+    ViewData["Title"] = "Yeni İstatistik";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --muted: #6b7a86;
+        --line: #e7ecef;
+        --white: #ffffff;
+    }
+
+    .breadcrumb-area {
+        margin-bottom: 22px;
+        color: var(--muted);
+        font-size: .88rem;
+    }
+
+        .breadcrumb-area span {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+    .form-card {
+        max-width: 850px;
+        margin: 0 auto;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 8px 30px rgba(14, 42, 59, .05);
+        overflow: hidden;
+    }
+
+    .form-header {
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .form-header h1 {
+            margin: 0;
+            color: var(--navy);
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .form-header p {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+    .form-body {
+        padding: 28px;
+    }
+
+    .form-label {
+        margin-bottom: 8px;
+        color: var(--navy);
+        font-size: .88rem;
+        font-weight: 700;
+    }
+
+    .form-control {
+        min-height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .7rem .9rem;
+        color: var(--navy);
+        font-size: .9rem;
+        box-shadow: none;
+    }
+
+        .form-control:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(15, 163, 163, .1);
+        }
+
+    .text-danger {
+        margin-top: 6px;
+        font-size: .8rem;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 28px;
+        padding-top: 22px;
+        border-top: 1px solid var(--line);
+    }
+
+    .btn-cancel {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: .75rem 1.2rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--navy);
+        text-decoration: none;
+        font-size: .88rem;
+        font-weight: 700;
+    }
+
+    .btn-save {
+        border: 0;
+        padding: .75rem 1.35rem;
+        border-radius: 999px;
+        background: var(--teal);
+        color: #fff;
+        font-size: .88rem;
+        font-weight: 700;
+        transition: .2s ease;
+    }
+
+        .btn-save:hover {
+            background: var(--teal-dark);
+        }
+</style>
+
+<div class="breadcrumb-area">
+    Dashboard / Hakkımızda / <span>Yeni İstatistik</span>
+</div>
+
+<div class="form-card">
+
+    <div class="form-header">
+        <h1>Yeni İstatistik</h1>
+        <p>Hakkımızda sayfasına yeni bir istatistik ekleyin.</p>
+    </div>
+
+    <div class="form-body">
+
+        <form asp-area="Admin"
+              asp-controller="AboutStat"
+              asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Number" class="form-label">
+                    Değer
+                </label>
+
+                <input asp-for="Number"
+                       class="form-control"
+                       placeholder="Örn: 92.000+" />
+
+                <span asp-validation-for="Number"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Description" class="form-label">
+                    Açıklama
+                </label>
+
+                <input asp-for="Description"
+                       class="form-control"
+                       placeholder="Örn: Mutlu Gezgin" />
+
+                <span asp-validation-for="Description"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="form-actions">
+                <a asp-area="Admin"
+                       asp-controller="AboutStat"
+                       asp-action="Index"
+                       class="btn-cancel">
+                    Vazgeç
+                </a>
+
+                <button type="submit" class="btn-save">
+                    Kaydet
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+

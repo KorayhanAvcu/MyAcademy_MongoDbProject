@@ -5,6 +5,11 @@ using Microsoft.Extensions.Options;
 using System.Reflection;
 using Travel.Web.Entities;
 using Travel.Web.Services.AboutPageHeadServices;
+using Travel.Web.Services.AboutStatServices;
+using Travel.Web.Services.AboutStorySectionServices;
+using Travel.Web.Services.AboutTeamMemberServices;
+using Travel.Web.Services.AboutTimelineServices;
+using Travel.Web.Services.AboutValueServices;
 using Travel.Web.Services.AltBannerServices;
 using Travel.Web.Services.BannerServices;
 using Travel.Web.Services.CategoryServices;
@@ -77,6 +82,11 @@ builder.Services.AddScoped<IAltBannerService, AltBannerService>();
 
 builder.Services.AddScoped<IAboutPageHeadService, AboutPageHeadService>();
 
+builder.Services.AddScoped<IAboutStorySectionService,AboutStorySectionService>();
+builder.Services.AddScoped<IAboutStatService, AboutStatService>();
+builder.Services.AddScoped<IAboutValueService, AboutValueService>();
+builder.Services.AddScoped<IAboutTimelineService, AboutTimelineService>();
+builder.Services.AddScoped<IAboutTeamMemberService, AboutTeamMemberService>();
 // =====================================================
 // DATABASE SETTINGS OBJECT
 // =====================================================

@@ -1,0 +1,283 @@
+﻿@model List<Travel.Web.DTOs.AboutStatDtos.AboutStatResultDto>
+
+@{
+    ViewData["Title"] = "Hakkımızda İstatistikleri";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --navy-2: #12384c;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --muted: #6b7a86;
+        --line: #e7ecef;
+        --white: #ffffff;
+        --cream: #f7f5f0;
+    }
+
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        margin: 0;
+        color: var(--navy);
+        font-family: 'Sora', sans-serif;
+        font-size: 1.7rem;
+        font-weight: 800;
+    }
+
+    .page-subtitle {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: .92rem;
+    }
+
+    .breadcrumb-area {
+        margin-bottom: 22px;
+        color: var(--muted);
+        font-size: .88rem;
+    }
+
+        .breadcrumb-area span {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+    .content-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(14, 42, 59, .05);
+    }
+
+    .card-header-custom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .card-header-custom h5 {
+            margin: 0;
+            color: var(--navy);
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+    .btn-create {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: .72rem 1.15rem;
+        border-radius: 999px;
+        background: var(--teal);
+        color: #fff;
+        text-decoration: none;
+        font-size: .88rem;
+        font-weight: 700;
+        transition: .2s ease;
+    }
+
+        .btn-create:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .custom-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .custom-table thead th {
+            padding: 15px 20px;
+            background: #fafcfc;
+            border-bottom: 1px solid var(--line);
+            color: var(--muted);
+            font-size: .78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            white-space: nowrap;
+        }
+
+        .custom-table tbody td {
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--line);
+            color: #334854;
+            font-size: .9rem;
+            vertical-align: middle;
+        }
+
+        .custom-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .custom-table tbody tr:hover {
+            background: #fbfdfd;
+        }
+
+    .stat-number {
+        display: inline-flex;
+        align-items: center;
+        padding: .5rem .85rem;
+        border-radius: 10px;
+        background: #eaf8f8;
+        color: var(--teal-dark);
+        font-family: 'Sora', sans-serif;
+        font-size: .95rem;
+        font-weight: 800;
+    }
+
+    .stat-description {
+        font-weight: 600;
+        color: var(--navy);
+    }
+
+    .date-text {
+        color: var(--muted);
+        font-size: .82rem;
+    }
+
+    .btn-update {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: .55rem .9rem;
+        border: 1px solid #d9e5e8;
+        border-radius: 9px;
+        background: #fff;
+        color: var(--navy);
+        text-decoration: none;
+        font-size: .82rem;
+        font-weight: 700;
+        transition: .2s ease;
+    }
+
+        .btn-update:hover {
+            border-color: var(--teal);
+            color: var(--teal-dark);
+            background: #f4fbfb;
+        }
+
+    .empty-state {
+        padding: 55px 20px;
+        text-align: center;
+    }
+
+        .empty-state h5 {
+            margin-bottom: 8px;
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+            color: var(--muted);
+        }
+</style>
+
+<div class="breadcrumb-area">
+    Dashboard / <span>Hakkımızda İstatistikleri</span>
+</div>
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Hakkımızda İstatistikleri</h1>
+        <p class="page-subtitle">
+            Hakkımızda sayfasında gösterilecek istatistikleri yönetin.
+        </p>
+    </div>
+</div>
+
+<div class="content-card">
+
+    <div class="card-header-custom">
+        <h5>İstatistik Listesi</h5>
+
+        <a asp-area="Admin"
+               asp-controller="AboutStat"
+               asp-action="Create"
+               class="btn-create">
+            <span>+</span>
+            Yeni İstatistik
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-wrapper">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Değer</th>
+                        <th>Açıklama</th>
+                        
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="stat-number">
+                                    @item.Number
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="stat-description">
+                                    @item.Description
+                                </span>
+                            </td>
+
+                            
+
+                            <td>
+                                <a asp-area="Admin"
+                                       asp-controller="AboutStat"
+                                       asp-action="Update"
+                                       asp-route-id="@item.Id"
+                                       class="btn-update">
+                                    Düzenle
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h5>Henüz istatistik bulunmuyor.</h5>
+            <p>Hakkımızda sayfasına göstermek istediğiniz ilk istatistiği ekleyebilirsiniz.</p>
+
+            <a asp-area="Admin"
+                   asp-controller="AboutStat"
+                   asp-action="Create"
+                   class="btn-create">
+                + Yeni İstatistik
+            </a>
+        </div>
+    }
+
+</div>

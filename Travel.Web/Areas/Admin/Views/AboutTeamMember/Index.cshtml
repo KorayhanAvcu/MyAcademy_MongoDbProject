@@ -1,0 +1,310 @@
+﻿@model List<Travel.Web.DTOs.AboutTeamMemberDtos.AboutTeamMemberResultDto>
+
+@{
+    ViewData["Title"] = "Ekip";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --navy-2: #12384c;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --white: #ffffff;
+        --muted: #64748b;
+        --line: #e5e7eb;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .breadcrumb-custom {
+        color: var(--muted);
+        font-size: .88rem;
+        margin-bottom: .45rem;
+    }
+
+        .breadcrumb-custom span {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+    .page-title {
+        color: var(--navy);
+        font-family: 'Sora', sans-serif;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .page-description {
+        color: var(--muted);
+        margin-top: .5rem;
+    }
+
+    .content-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .content-card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+        .content-card-header h5 {
+            color: var(--navy);
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .content-card-header p {
+            color: var(--muted);
+            font-size: .85rem;
+            margin: .25rem 0 0;
+        }
+
+    .btn-create {
+        background: var(--teal);
+        color: var(--white);
+        border: none;
+        border-radius: 999px;
+        padding: .7rem 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+        .btn-create:hover {
+            background: var(--teal-dark);
+            color: var(--white);
+        }
+
+    .table {
+        margin: 0;
+    }
+
+        .table thead th {
+            background: #f8fafc;
+            color: var(--navy);
+            font-size: .78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        .table tbody td {
+            padding: 1rem 1.25rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--line);
+            color: #334155;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .member-image {
+        width: 58px;
+        height: 58px;
+        border-radius: 14px;
+        object-fit: cover;
+        display: block;
+        border: 1px solid var(--line);
+    }
+
+    .member-name {
+        color: var(--navy);
+        font-weight: 700;
+        margin-bottom: .2rem;
+    }
+
+    .member-role {
+        color: var(--teal-dark);
+        font-size: .84rem;
+        font-weight: 600;
+    }
+
+    .member-description {
+        color: var(--muted);
+        font-size: .85rem;
+        line-height: 1.5;
+        max-width: 500px;
+    }
+
+    .btn-edit {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: #eef7f7;
+        color: var(--teal-dark);
+        border: 1px solid #d5eeee;
+        border-radius: 999px;
+        padding: .5rem .9rem;
+        font-size: .82rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .btn-edit:hover {
+            background: var(--teal);
+            color: var(--white);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 1rem;
+        color: var(--muted);
+    }
+
+        .empty-state h5 {
+            color: var(--navy);
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+        }
+</style>
+
+<div class="container-fluid">
+
+    <div class="page-header">
+
+        <div class="breadcrumb-custom">
+            Dashboard / Hakkımızda /
+            <span>Ekip</span>
+        </div>
+
+        <h1 class="page-title">
+            Ekip
+        </h1>
+
+        <p class="page-description">
+            Hakkımızda sayfasında gösterilecek ekip üyelerini yönetin.
+        </p>
+
+    </div>
+
+    <div class="content-card">
+
+        <div class="content-card-header">
+
+            <div>
+                <h5>Ekip Üyeleri</h5>
+
+                <p>
+                    Toplam @(Model?.Count ?? 0) ekip üyesi bulunmaktadır.
+                </p>
+            </div>
+
+            <a asp-area="Admin"
+                   asp-controller="AboutTeamMember"
+                   asp-action="Create"
+                   class="btn-create">
+                + Yeni Ekip Üyesi
+            </a>
+
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th>Fotoğraf</th>
+                            <th>Ekip Üyesi</th>
+                            <th>Açıklama</th>
+                            <th class="text-end">İşlem</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <img src="@item.ImageUrl"
+                                         alt="@item.Name"
+                                         class="member-image" />
+                                </td>
+
+                                <td>
+
+                                    <div class="member-name">
+                                        @item.Name
+                                    </div>
+
+                                    <div class="member-role">
+                                        @item.Role
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="member-description">
+                                        @item.MemberDescription
+                                    </div>
+
+                                </td>
+
+                                <td class="text-end">
+
+                                    <a asp-area="Admin"
+                                           asp-controller="AboutTeamMember"
+                                           asp-action="Update"
+                                           asp-route-id="@item.Id"
+                                           class="btn-edit">
+                                        Düzenle
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+
+                <h5>
+                    Henüz ekip üyesi eklenmemiş
+                </h5>
+
+                <p>
+                    Hakkımızda sayfasına göstermek istediğiniz ilk ekip üyesini ekleyebilirsiniz.
+                </p>
+
+                <a asp-area="Admin"
+                       asp-controller="AboutTeamMember"
+                       asp-action="Create"
+                       class="btn-create">
+                    + İlk Ekip Üyesini Ekle
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</div>

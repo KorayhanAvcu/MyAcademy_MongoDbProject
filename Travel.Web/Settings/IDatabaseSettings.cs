@@ -25,5 +25,12 @@
         public string AltBannerCollectionName { get; set; }
 
         public string AboutPageHeadCollectionName { get; set; }
+
+        public string AboutStorySectionCollectionName { get; set; }
+
+        public string AboutStatCollectionName { get; set; }
+        public string AboutValueCollectionName { get; set; }
+        public string AboutTimelineCollectionName { get; set; }
+        public string AboutTeamMemberCollectionName { get; set; }
     }
 }

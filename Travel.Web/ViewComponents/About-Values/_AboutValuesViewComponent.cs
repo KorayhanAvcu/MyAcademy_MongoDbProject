@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Travel.Web.Services.AboutValueServices;
 
 namespace Travel.Web.ViewComponents.About_Values
 {
-    public class _AboutValuesViewComponent : ViewComponent
+    public class _AboutValuesViewComponent(
+        IAboutValueService aboutValueService) : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            var values = await aboutValueService.GetAllAsync();
+
+            return View(values);
         }
     }
 }
