@@ -1,0 +1,380 @@
+﻿@model List<Travel.Web.DTOs.ContactFormDtos.ResultContactFormDto>
+
+@{
+    ViewData["Title"] = "İletişim Formu";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+
+    var totalForms = Model?.Count ?? 0;
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --navy-2: #12384c;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --muted: #6b7b86;
+        --line: #e5e9ec;
+        --white: #ffffff;
+        --bg: #f7f9fa;
+    }
+
+    .page-wrapper {
+        padding: 30px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .page-header h1 {
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            margin: 6px 0 0;
+        }
+
+    .btn-create {
+        background: var(--teal);
+        color: white;
+        border: none;
+        padding: 11px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+        .btn-create:hover {
+            background: var(--teal-dark);
+            color: white;
+        }
+
+    .stat-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .stat-title {
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .stat-value {
+        color: var(--navy);
+        font-size: 28px;
+        font-weight: 700;
+        margin-top: 5px;
+    }
+
+    .table-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table thead th {
+            background: var(--bg);
+            color: var(--navy);
+            font-weight: 600;
+            border-bottom: 1px solid var(--line);
+            padding: 15px;
+            white-space: nowrap;
+        }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: var(--line);
+        }
+
+    .form-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: #e9f8f8;
+        color: var(--teal-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .form-title {
+        color: var(--navy);
+        font-weight: 600;
+    }
+
+    .form-description {
+        color: var(--muted);
+        max-width: 350px;
+    }
+
+    .field-info {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .button-preview {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 7px;
+        background: #e9f8f8;
+        color: var(--teal-dark);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .action-btn {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-right: 5px;
+        transition: 0.2s ease;
+    }
+
+    .btn-update {
+        background: #e9f8f8;
+        color: var(--teal-dark);
+    }
+
+        .btn-update:hover {
+            background: #d8f1f1;
+            color: var(--teal-dark);
+        }
+
+    .btn-delete {
+        background: #fff0f0;
+        color: #c0392b;
+        border: none;
+    }
+
+        .btn-delete:hover {
+            background: #ffe2e2;
+            color: #a93226;
+        }
+
+    .empty-state {
+        padding: 50px 20px;
+        text-align: center;
+        color: var(--muted);
+    }
+
+        .empty-state h5 {
+            color: var(--navy);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="page-header">
+
+        <div>
+            <h1>İletişim Formu</h1>
+
+            <p>
+                İletişim sayfasında gösterilen form içeriğini yönetin.
+            </p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="ContactForm"
+           asp-action="Create"
+           class="btn-create">
+            + Yeni Form İçeriği
+        </a>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-title">
+            Toplam İletişim Formu
+        </div>
+
+        <div class="stat-value">
+            @totalForms
+        </div>
+
+    </div>
+
+    <div class="table-card">
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Form</th>
+                            <th>Eyebrow</th>
+                            <th>Başlık</th>
+                            <th>Alanlar</th>
+                            <th>Buton</th>
+                            <th>İşlemler</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="form-badge">
+                                        ✉
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="form-title">
+                                        @item.Eyebrow
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="form-title">
+                                        @item.Title
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="field-info">
+
+                                        <div>
+                                            <strong>Ad:</strong>
+                                            @item.NameLabel
+                                        </div>
+
+                                        <div>
+                                            <strong>E-posta:</strong>
+                                            @item.EmailLabel
+                                        </div>
+
+                                        <div>
+                                            <strong>Telefon:</strong>
+                                            @item.PhoneLabel
+                                        </div>
+
+                                        <div>
+                                            <strong>Konu:</strong>
+                                            @item.SubjectLabel
+                                        </div>
+
+                                        <div>
+                                            <strong>Mesaj:</strong>
+                                            @item.MessageLabel
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="button-preview">
+                                        @item.ButtonText
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-area="Admin"
+                                       asp-controller="ContactForm"
+                                       asp-action="Update"
+                                       asp-route-id="@item.Id"
+                                       class="action-btn btn-update">
+                                        Düzenle
+                                    </a>
+
+                                    <form asp-area="Admin"
+                                          asp-controller="ContactForm"
+                                          asp-action="Delete"
+                                          asp-route-id="@item.Id"
+                                          method="post"
+                                          style="display:inline;"
+                                          onsubmit="return confirm('Bu iletişim formu içeriğini silmek istediğinize emin misiniz?');">
+
+                                        <button type="submit"
+                                                class="action-btn btn-delete">
+                                            Sil
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+
+                <h5>
+                    Henüz iletişim formu içeriği bulunmuyor.
+                </h5>
+
+                <p>
+                    İletişim sayfasında kullanılacak form içeriğini oluşturabilirsiniz.
+                </p>
+
+                <a asp-area="Admin"
+                   asp-controller="ContactForm"
+                   asp-action="Create"
+                   class="btn-create">
+                    İlk Form İçeriğini Oluştur
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</div>

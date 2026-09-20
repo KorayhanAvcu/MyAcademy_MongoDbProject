@@ -1,0 +1,327 @@
+﻿@model Travel.Web.DTOs.ContactFAQDtos.UpdateContactFAQDto
+
+@{
+    ViewData["Title"] = "SSS Güncelle";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --navy-2: #12384c;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --muted: #6b7b86;
+        --line: #e5e9ec;
+        --white: #ffffff;
+        --bg: #f7f9fa;
+    }
+
+    .content {
+        padding: 28px 32px;
+    }
+
+    .crumb {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 8px;
+    }
+
+        .crumb a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+    .page-intro {
+        margin-bottom: 24px;
+    }
+
+        .page-intro h1 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .page-intro p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+    .contact-faq-form-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(14, 42, 59, .05);
+    }
+
+    .form-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+        background: #fbfcfd;
+    }
+
+        .form-header h3 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .form-header p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+    .form-body {
+        padding: 24px;
+    }
+
+    .form-label {
+        color: var(--navy);
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+    .form-control {
+        border: 1px solid #d8e0e4;
+        border-radius: 8px;
+        padding: 11px 13px;
+        font-size: 14px;
+        color: var(--navy);
+        box-shadow: none;
+    }
+
+        .form-control:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(15, 163, 163, .10);
+        }
+
+    textarea.form-control {
+        min-height: 180px;
+        resize: vertical;
+    }
+
+    .btn-teal {
+        background: var(--teal);
+        border: 1px solid var(--teal);
+        color: var(--white);
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        transition: .2s ease;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            border-color: var(--teal-dark);
+            color: var(--white);
+        }
+
+    .btn-cancel {
+        background: var(--white);
+        border: 1px solid #d8e0e4;
+        color: var(--muted);
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: .2s ease;
+    }
+
+        .btn-cancel:hover {
+            background: #f5f7f8;
+            color: var(--navy);
+        }
+
+    .info-box {
+        margin-top: 20px;
+        padding: 14px 16px;
+        background: #f1fafa;
+        border: 1px solid #cce8e8;
+        border-radius: 9px;
+        color: #365b63;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .text-danger {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-top: 22px;
+        margin-top: 24px;
+        border-top: 1px solid var(--line);
+    }
+
+    .id-info {
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+        .id-info strong {
+            color: var(--navy);
+            margin-left: 5px;
+        }
+
+    @@media (max-width: 768px) {
+        .content
+
+    {
+        padding: 22px 18px;
+    }
+
+    .form-body {
+        padding: 20px;
+    }
+
+    .form-footer {
+        flex-direction: column-reverse;
+    }
+
+    .id-info {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .form-footer .btn-teal,
+    .form-footer .btn-cancel {
+        width: 100%;
+        text-align: center;
+    }
+
+    }
+</style>
+
+<div class="content">
+
+    <div class="crumb">
+        <a asp-area="Admin"
+           asp-controller="ContactFAQ"
+           asp-action="Index">
+            İletişim SSS
+        </a>
+        <span> / SSS Güncelle</span>
+    </div>
+
+    <div class="page-intro">
+
+        <h1>SSS Güncelle</h1>
+
+        <p>
+            Mevcut sıkça sorulan soru ve cevap içeriğini düzenleyin.
+        </p>
+
+    </div>
+
+    <div class="contact-faq-form-card">
+
+        <div class="form-header">
+
+            <h3>SSS Bilgileri</h3>
+
+            <p>
+                İletişim sayfasında gösterilecek soru ve cevap bilgilerini güncelleyiniz.
+            </p>
+
+        </div>
+
+        <div class="form-body">
+
+            <form asp-area="Admin"
+                  asp-controller="ContactFAQ"
+                  asp-action="Update"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input asp-for="Id"
+                       type="hidden" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="mb-4">
+
+                    <label asp-for="Question"
+                           class="form-label">
+                        Soru
+                    </label>
+
+                    <input asp-for="Question"
+                           class="form-control"
+                           placeholder="Örn. Rezervasyon nasıl yapabilirim?" />
+
+                    <span asp-validation-for="Question"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label asp-for="Answer"
+                           class="form-label">
+                        Cevap
+                    </label>
+
+                    <textarea asp-for="Answer"
+                              class="form-control"
+                              placeholder="Sorunun cevabını giriniz..."></textarea>
+
+                    <span asp-validation-for="Answer"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="info-box">
+                    <strong>Bilgi:</strong>
+                    Yaptığınız değişiklikler iletişim sayfasındaki
+                    <strong>Sıkça Sorulan Sorular</strong> bölümüne yansıyacaktır.
+                </div>
+
+                <div class="form-footer">
+
+                    <div class="id-info">
+                        Kayıt ID:
+                        <strong>@Model.Id</strong>
+                    </div>
+
+                    <a asp-area="Admin"
+                       asp-controller="ContactFAQ"
+                       asp-action="Index"
+                       class="btn-cancel">
+                        Vazgeç
+                    </a>
+
+                    <button type="submit"
+                            class="btn-teal">
+                        Değişiklikleri Kaydet
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

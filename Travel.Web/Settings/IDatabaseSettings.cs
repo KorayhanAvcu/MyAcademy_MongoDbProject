@@ -29,8 +29,20 @@
         public string AboutStorySectionCollectionName { get; set; }
 
         public string AboutStatCollectionName { get; set; }
+
         public string AboutValueCollectionName { get; set; }
+
         public string AboutTimelineCollectionName { get; set; }
+
         public string AboutTeamMemberCollectionName { get; set; }
+
+        public string ContactPageHeadCollectionName { get; set; }
+
+        public string ContactCardCollectionName { get; set; }
+
+        public string ContactFormCollectionName { get; set; }
+        public string ContactMapCollectionName { get; set; }
+        public string ContactFAQCollectionName { get; set; }
+        public string ContactMessageCollectionName { get; set; }
     }
 }

@@ -1,0 +1,279 @@
+﻿@model List<Travel.Web.DTOs.ContactCardDtos.ResultContactCardDto>
+
+@{
+    ViewData["Title"] = "İletişim Kartları";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+
+    var totalCards = Model?.Count ?? 0;
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --navy-2: #12384c;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --muted: #6b7b86;
+        --line: #e5e9ec;
+        --white: #ffffff;
+        --bg: #f7f9fa;
+    }
+
+    .page-wrapper {
+        padding: 30px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+        .page-header h1 {
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            margin: 6px 0 0;
+        }
+
+    .btn-create {
+        background: var(--teal);
+        color: white;
+        border: none;
+        padding: 11px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .btn-create:hover {
+            background: var(--teal-dark);
+            color: white;
+        }
+
+    .stat-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .stat-title {
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .stat-value {
+        color: var(--navy);
+        font-size: 28px;
+        font-weight: 700;
+        margin-top: 5px;
+    }
+
+    .table-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table thead th {
+            background: var(--bg);
+            color: var(--navy);
+            font-weight: 600;
+            border-bottom: 1px solid var(--line);
+            padding: 15px;
+        }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: var(--line);
+        }
+
+    .icon-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: #e9f8f8;
+        color: var(--teal-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+
+    .card-title {
+        color: var(--navy);
+        font-weight: 600;
+    }
+
+    .card-description {
+        color: var(--muted);
+        max-width: 350px;
+    }
+
+    .action-btn {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-right: 5px;
+    }
+
+    .btn-update {
+        background: #e9f8f8;
+        color: var(--teal-dark);
+    }
+
+    .btn-delete {
+        background: #fff0f0;
+        color: #c0392b;
+        border: none;
+    }
+
+    .empty-state {
+        padding: 50px 20px;
+        text-align: center;
+        color: var(--muted);
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="page-header">
+        <div>
+            <h1>İletişim Kartları</h1>
+            <p>İletişim sayfasında gösterilen iletişim kartlarını yönetin.</p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="ContactCard"
+           asp-action="Create"
+           class="btn-create">
+            + Yeni Kart
+        </a>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-title">Toplam İletişim Kartı</div>
+        <div class="stat-value">@totalCards</div>
+    </div>
+
+    <div class="table-card">
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th>İkon</th>
+                            <th>Başlık</th>
+                            <th>Açıklama</th>
+                            <th>Link</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <div class="icon-badge">
+                                        @item.Icon
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="card-title">
+                                        @item.Title
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="card-description">
+                                        @item.Description
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <strong>@item.LinkText</strong>
+                                    <br />
+                                    <small class="text-muted">
+                                        @item.LinkUrl
+                                    </small>
+                                </td>
+
+                                <td>
+
+                                    <a asp-area="Admin"
+                                       asp-controller="ContactCard"
+                                       asp-action="Update"
+                                       asp-route-id="@item.Id"
+                                       class="action-btn btn-update">
+                                        Düzenle
+                                    </a>
+
+                                    <form asp-area="Admin"
+                                          asp-controller="ContactCard"
+                                          asp-action="Delete"
+                                          asp-route-id="@item.Id"
+                                          method="post"
+                                          style="display:inline;"
+                                          onsubmit="return confirm('Bu iletişim kartını silmek istediğinize emin misiniz?');">
+
+                                        <button type="submit"
+                                                class="action-btn btn-delete">
+                                            Sil
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <h5>Henüz iletişim kartı bulunmuyor.</h5>
+                <p>Yeni bir iletişim kartı oluşturabilirsiniz.</p>
+
+                <a asp-area="Admin"
+                   asp-controller="ContactCard"
+                   asp-action="Create"
+                   class="btn-create">
+                    İlk Kartı Oluştur
+                </a>
+            </div>
+        }
+
+    </div>
+
+</div>

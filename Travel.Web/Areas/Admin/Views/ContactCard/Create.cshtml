@@ -1,0 +1,204 @@
+﻿@model Travel.Web.DTOs.ContactCardDtos.CreateContactCardDto
+
+@{
+    ViewData["Title"] = "İletişim Kartı Ekle";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --muted: #6b7b86;
+        --line: #e5e9ec;
+        --white: #ffffff;
+    }
+
+    .form-wrapper {
+        padding: 30px;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .form-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 30px;
+    }
+
+    .form-title {
+        color: var(--navy);
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .form-description {
+        color: var(--muted);
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        color: var(--navy);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 11px 13px;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 0.2rem rgba(15, 163, 163, .12);
+        }
+
+    .btn-save {
+        background: var(--teal);
+        color: white;
+        border: none;
+        padding: 11px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+        .btn-save:hover {
+            background: var(--teal-dark);
+            color: white;
+        }
+
+    .btn-cancel {
+        background: #eef1f3;
+        color: var(--navy);
+        padding: 11px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+</style>
+
+<div class="form-wrapper">
+
+    <div class="form-card">
+
+        <h1 class="form-title">Yeni İletişim Kartı</h1>
+
+        <p class="form-description">
+            İletişim sayfasına yeni bir iletişim kartı ekleyin.
+        </p>
+
+        <form asp-area="Admin"
+              asp-controller="ContactCard"
+              asp-action="Create"
+              method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Icon" class="form-label">
+                    İkon
+                </label>
+
+                <select asp-for="Icon"
+                        class="form-select">
+
+                    <option value="">İkon seçiniz</option>
+                    <option value="phone">Telefon</option>
+                    <option value="email">E-posta</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="location">Konum</option>
+
+                </select>
+
+                <span asp-validation-for="Icon"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">
+                    Başlık
+                </label>
+
+                <input asp-for="Title"
+                       class="form-control"
+                       placeholder="Örn: Telefonla Destek" />
+
+                <span asp-validation-for="Title"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">
+                    Açıklama
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Kart açıklamasını giriniz"></textarea>
+
+                <span asp-validation-for="Description"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LinkText" class="form-label">
+                    Link Metni
+                </label>
+
+                <input asp-for="LinkText"
+                       class="form-control"
+                       placeholder="Örn: 0850 300 40 50 →" />
+
+                <span asp-validation-for="LinkText"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="LinkUrl" class="form-label">
+                    Link URL
+                </label>
+
+                <input asp-for="LinkUrl"
+                       class="form-control"
+                       placeholder="Örn: tel:+908503004050" />
+
+                <span asp-validation-for="LinkUrl"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <button type="submit"
+                        class="btn-save">
+                    Kaydet
+                </button>
+
+                <a asp-area="Admin"
+                   asp-controller="ContactCard"
+                   asp-action="Index"
+                   class="btn-cancel">
+                    İptal
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+

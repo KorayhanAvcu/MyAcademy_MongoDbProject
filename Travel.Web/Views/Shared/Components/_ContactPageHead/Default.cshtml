@@ -1,14 +1,51 @@
-﻿
+﻿@model Travel.Web.DTOs.ContactPageHeadDtos.ResultContactPageHeadDto
+
 @{
     Layout = null;
 }
 
-<!-- PAGE HEAD -->
-<header class="page-head">
-    <div class="container">
-        <div class="breadcrumbz mb-3"><a href="index.html">Ana Sayfa</a> · İletişim</div>
-        <div class="eyebrow">Bizimle İletişime Geçin</div>
-        <h1>Sorularınız İçin Yanınızdayız</h1>
-        <p>Tur programları, vize süreçleri veya özel grup talepleriniz için seyahat danışmanlarımızla 7/24 iletişime geçebilirsiniz.</p>
-    </div>
-</header>
+@if (Model != null)
+{
+    <!-- PAGE HEAD -->
+
+    <header class="page-head">
+
+        <div class="container">
+
+            <!-- BREADCRUMB -->
+
+            <div class="breadcrumbz mb-3">
+
+                <a href="/">
+                    Ana Sayfa
+                </a>
+
+                · @Model.Breadcrumb
+
+            </div>
+
+
+            <!-- EYEBROW -->
+
+            <div class="eyebrow">
+                @Model.Eyebrow
+            </div>
+
+
+            <!-- TITLE -->
+
+            <h1>
+                @Model.Title
+            </h1>
+
+
+            <!-- DESCRIPTION -->
+
+            <p>
+                @Model.Description
+            </p>
+
+        </div>
+
+    </header>
+}

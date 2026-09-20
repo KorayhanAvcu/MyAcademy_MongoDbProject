@@ -1,0 +1,375 @@
+﻿@model Travel.Web.DTOs.ContactFormDtos.CreateContactFormDto
+
+@{
+    ViewData["Title"] = "İletişim Formu Ekle";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+    :root {
+        --navy: #0e2a3b;
+        --teal: #0fa3a3;
+        --teal-dark: #0b7f80;
+        --muted: #6b7b86;
+        --line: #e5e9ec;
+        --white: #ffffff;
+    }
+
+    .form-wrapper {
+        padding: 30px;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .form-card {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 30px;
+    }
+
+    .form-title {
+        color: var(--navy);
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .form-description {
+        color: var(--muted);
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        color: var(--navy);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 11px 13px;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 0.2rem rgba(15, 163, 163, .12);
+        }
+
+    .btn-save {
+        background: var(--teal);
+        color: white;
+        border: none;
+        padding: 11px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+        .btn-save:hover {
+            background: var(--teal-dark);
+            color: white;
+        }
+
+    .btn-cancel {
+        background: #eef1f3;
+        color: var(--navy);
+        padding: 11px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .btn-cancel:hover {
+            background: #e2e7ea;
+            color: var(--navy);
+        }
+
+    .section-title {
+        color: var(--navy);
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 25px;
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--line);
+    }
+</style>
+
+<div class="form-wrapper">
+
+    <div class="form-card">
+
+        <h1 class="form-title">
+            Yeni İletişim Formu
+        </h1>
+
+        <p class="form-description">
+            İletişim sayfasında gösterilecek form metinlerini oluşturun.
+        </p>
+
+        <form asp-area="Admin"
+              asp-controller="ContactForm"
+              asp-action="Create"
+              method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="section-title">
+                Form Başlığı
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="Eyebrow"
+                       class="form-label">
+                    Eyebrow
+                </label>
+
+                <input asp-for="Eyebrow"
+                       class="form-control"
+                       placeholder="Örn: Mesaj Gönderin" />
+
+                <span asp-validation-for="Eyebrow"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="Title"
+                       class="form-label">
+                    Başlık
+                </label>
+
+                <input asp-for="Title"
+                       class="form-control"
+                       placeholder="Örn: Seyahat Planınızı Birlikte Yapalım" />
+
+                <span asp-validation-for="Title"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="section-title">
+                Ad Soyad Alanı
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="NameLabel"
+                       class="form-label">
+                    Label
+                </label>
+
+                <input asp-for="NameLabel"
+                       class="form-control"
+                       placeholder="Örn: Adınız Soyadınız *" />
+
+                <span asp-validation-for="NameLabel"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="NamePlaceholder"
+                       class="form-label">
+                    Placeholder
+                </label>
+
+                <input asp-for="NamePlaceholder"
+                       class="form-control"
+                       placeholder="Örn. Zeynep Kaya" />
+
+                <span asp-validation-for="NamePlaceholder"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="section-title">
+                E-posta Alanı
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="EmailLabel"
+                       class="form-label">
+                    Label
+                </label>
+
+                <input asp-for="EmailLabel"
+                       class="form-control"
+                       placeholder="Örn: E-posta Adresiniz *" />
+
+                <span asp-validation-for="EmailLabel"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="EmailPlaceholder"
+                       class="form-label">
+                    Placeholder
+                </label>
+
+                <input asp-for="EmailPlaceholder"
+                       class="form-control"
+                       placeholder="Örn: ornek@email.com" />
+
+                <span asp-validation-for="EmailPlaceholder"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="section-title">
+                Telefon Alanı
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="PhoneLabel"
+                       class="form-label">
+                    Label
+                </label>
+
+                <input asp-for="PhoneLabel"
+                       class="form-control"
+                       placeholder="Örn: Telefon Numaranız" />
+
+                <span asp-validation-for="PhoneLabel"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="PhonePlaceholder"
+                       class="form-label">
+                    Placeholder
+                </label>
+
+                <input asp-for="PhonePlaceholder"
+                       class="form-control"
+                       placeholder="Örn: +90 5XX XXX XX XX" />
+
+                <span asp-validation-for="PhonePlaceholder"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="section-title">
+                Konu Alanı
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="SubjectLabel"
+                       class="form-label">
+                    Label
+                </label>
+
+                <input asp-for="SubjectLabel"
+                       class="form-control"
+                       placeholder="Örn: İlgilendiğiniz Tur / Konu" />
+
+                <span asp-validation-for="SubjectLabel"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="section-title">
+                Mesaj Alanı
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="MessageLabel"
+                       class="form-label">
+                    Label
+                </label>
+
+                <input asp-for="MessageLabel"
+                       class="form-control"
+                       placeholder="Örn: Mesajınız *" />
+
+                <span asp-validation-for="MessageLabel"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="MessagePlaceholder"
+                       class="form-label">
+                    Placeholder
+                </label>
+
+                <textarea asp-for="MessagePlaceholder"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Merak ettiğiniz tarih, kişi sayısı ve diğer detayları belirtebilirsiniz..."></textarea>
+
+                <span asp-validation-for="MessagePlaceholder"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="section-title">
+                Gönder Butonu
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="ButtonText"
+                       class="form-label">
+                    Buton Metni
+                </label>
+
+                <input asp-for="ButtonText"
+                       class="form-control"
+                       placeholder="Örn: Mesajı Gönder" />
+
+                <span asp-validation-for="ButtonText"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <button type="submit"
+                        class="btn-save">
+                    Kaydet
+                </button>
+
+                <a asp-area="Admin"
+                   asp-controller="ContactForm"
+                   asp-action="Index"
+                   class="btn-cancel">
+                    İptal
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

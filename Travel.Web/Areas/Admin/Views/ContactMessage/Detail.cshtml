@@ -1,0 +1,624 @@
+﻿@model Travel.Web.DTOs.ContactMessageDtos.ResultContactMessageDto
+
+@{
+    ViewData["Title"] = "İletişim Mesajı Detayı";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<style>
+
+    /* =========================================
+               PAGE INTRO
+               ========================================= */
+
+    .page-intro {
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+        }
+
+
+    /* =========================================
+               BREADCRUMB
+               ========================================= */
+
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+
+    /* =========================================
+               SECTION CARD
+               ========================================= */
+
+    .contact-message-detail-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .form-header {
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+        .form-header h5 {
+            margin: 0;
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: .95rem;
+        }
+
+        .form-header span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+    .form-body {
+        padding: 1.4rem;
+    }
+
+
+    /* =========================================
+               FORM LABEL
+               ========================================= */
+
+    .form-label {
+        color: var(--navy);
+        font-size: .84rem;
+        font-weight: 600;
+        margin-bottom: .45rem;
+    }
+
+    .detail-value {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .72rem .85rem;
+        font-size: .88rem;
+        color: var(--navy);
+        background: #fafbfb;
+        min-height: 42px;
+        word-break: break-word;
+    }
+
+    .detail-message {
+        min-height: 180px;
+        white-space: pre-wrap;
+        line-height: 1.6;
+    }
+
+
+    /* =========================================
+               STATUS
+               ========================================= */
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        border-radius: 999px;
+        padding: .38rem .7rem;
+        font-size: .74rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .status-read {
+        color: #13795b;
+        background: rgba(25, 135, 84, .1);
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+
+    /* =========================================
+               INFO BOX
+               ========================================= */
+
+    .info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding: .9rem 1rem;
+        border-radius: 10px;
+        background: rgba(15,163,163,.06);
+        border: 1px solid rgba(15,163,163,.15);
+        color: var(--muted);
+        font-size: .82rem;
+        line-height: 1.5;
+        margin-bottom: 1.4rem;
+    }
+
+        .info-box svg {
+            flex: none;
+            color: var(--teal-dark);
+            margin-top: 2px;
+        }
+
+
+    /* =========================================
+               SECTION TITLE
+               ========================================= */
+
+    .section-title {
+        color: var(--navy);
+        font-family: 'Sora';
+        font-size: .95rem;
+        font-weight: 700;
+        margin: .5rem 0 1rem;
+        padding-bottom: .65rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+
+    /* =========================================
+               BUTTONS
+               ========================================= */
+
+    .btn-teal {
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        transition: .25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-teal:hover {
+            background: var(--teal-dark);
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(15,163,163,.3);
+        }
+
+    .btn-cancel {
+        background: #fff;
+        color: var(--navy);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-weight: 600;
+        padding: .7rem 1.3rem;
+        font-size: .9rem;
+        text-decoration: none;
+        transition: .2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-cancel:hover {
+            background: #fafbfb;
+            color: var(--navy);
+            border-color: var(--teal);
+        }
+
+
+    /* =========================================
+               META
+               ========================================= */
+
+    .meta-info {
+        color: var(--muted);
+        font-size: .78rem;
+    }
+
+
+    /* =========================================
+               RESPONSIVE
+               ========================================= */
+
+    @@media (max-width: 768px) {
+
+        .form-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .form-body {
+            padding: 1rem;
+        }
+    }
+
+</style>
+
+
+<!-- CONTENT -->
+
+<div class="content">
+
+
+    <!-- BREADCRUMB -->
+
+    <div class="crumb">
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index">
+
+            Dashboard
+
+        </a>
+
+        /
+
+        <a asp-area="Admin"
+           asp-controller="ContactMessage"
+           asp-action="Index">
+
+            İletişim Mesajları
+
+        </a>
+
+        /
+
+        <span class="cur">
+
+            Mesaj Detayı
+
+        </span>
+
+    </div>
+
+
+    <!-- PAGE INTRO -->
+
+    <div class="page-intro">
+
+        <h1>
+            İletişim Mesajı Detayı
+        </h1>
+
+        <p>
+            Kullanıcı tarafından gönderilen iletişim mesajının
+            detaylarını görüntüleyebilirsiniz.
+        </p>
+
+    </div>
+
+
+    <!-- CONTACT MESSAGE DETAIL -->
+
+    <div class="contact-message-detail-card">
+
+
+        <!-- HEADER -->
+
+        <div class="form-header">
+
+            <div>
+
+                <h5>
+                    Mesaj Bilgileri
+                </h5>
+
+                <span>
+                    İletişim formundan gönderilen mesaj.
+                </span>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <span class="status-badge status-read">
+
+                <span class="status-dot"></span>
+
+                Okundu
+
+            </span>
+
+        </div>
+
+
+        <!-- BODY -->
+
+        <div class="form-body">
+
+
+            <!-- INFO -->
+
+            <div class="info-box">
+
+                <svg width="18"
+                     height="18"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+
+                    <circle cx="12"
+                            cy="12"
+                            r="10" />
+
+                    <line x1="12"
+                          y1="16"
+                          x2="12"
+                          y2="12" />
+
+                    <line x1="12"
+                          y1="8"
+                          x2="12.01"
+                          y2="8" />
+
+                </svg>
+
+                <span>
+                    Bu mesaj detay sayfası açıldığı için mesajın
+                    okundu durumu otomatik olarak güncellenmiştir.
+                </span>
+
+            </div>
+
+
+            <!-- SENDER -->
+
+            <div class="section-title">
+                Gönderen Bilgileri
+            </div>
+
+
+            <div class="row g-4">
+
+
+                <!-- FULL NAME -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Ad Soyad
+                    </label>
+
+                    <div class="detail-value">
+
+                        @Model.FullName
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        E-posta
+                    </label>
+
+                    <div class="detail-value">
+
+                        @Model.Email
+
+                    </div>
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Telefon
+                    </label>
+
+                    <div class="detail-value">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Phone))
+                        {
+                            @Model.Phone
+                        }
+                        else
+                        {
+                            <span style="color:var(--muted);">
+                                Belirtilmedi
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Gönderim Tarihi
+                    </label>
+
+                    <div class="detail-value">
+
+                        @Model.CreatedAt?
+                        .ToLocalTime()
+                        .ToString("dd.MM.yyyy HH:mm")
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div class="section-title mt-4">
+                Mesaj İçeriği
+            </div>
+
+
+            <div class="row g-4">
+
+
+                <!-- SUBJECT -->
+
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Konu
+                    </label>
+
+                    <div class="detail-value">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Subject))
+                        {
+                            @Model.Subject
+                        }
+                        else
+                        {
+                            <span style="color:var(--muted);">
+                                Konu belirtilmedi
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Mesaj
+                    </label>
+
+                    <div class="detail-value detail-message">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Message))
+                        {
+                            @Model.Message
+                        }
+                        else
+                        {
+                            <span style="color:var(--muted);">
+                                Mesaj içeriği bulunmuyor.
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+
+                <div class="meta-info">
+
+                    Mesaj ID:
+                    @Model.Id
+
+                </div>
+
+
+                <div class="d-flex gap-2">
+
+                    <!-- BACK -->
+
+                    <a asp-area="Admin"
+                       asp-controller="ContactMessage"
+                       asp-action="Index"
+                       class="btn-cancel">
+
+                        Geri Dön
+
+                    </a>
+
+
+                    <!-- EMAIL -->
+                    @if (!string.IsNullOrWhiteSpace(Model.Email))
+                    {
+                        <a href="mailto:@Model.Email"
+                           class="btn-teal">
+
+                            <svg width="17"
+                                 height="17"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2.2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+
+                                <rect x="3"
+                                      y="5"
+                                      width="18"
+                                      height="14"
+                                      rx="2" />
+
+                                <polyline points="3 7 12 13 21 7" />
+
+                            </svg>
+
+                            E-posta Gönder
+
+                        </a>
+                    }
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>

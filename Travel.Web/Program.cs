@@ -13,6 +13,12 @@ using Travel.Web.Services.AboutValueServices;
 using Travel.Web.Services.AltBannerServices;
 using Travel.Web.Services.BannerServices;
 using Travel.Web.Services.CategoryServices;
+using Travel.Web.Services.ContactCardServices;
+using Travel.Web.Services.ContactFAQServices;
+using Travel.Web.Services.ContactFormServices;
+using Travel.Web.Services.ContactMapServices;
+using Travel.Web.Services.ContactMessageServices;
+using Travel.Web.Services.ContactPageHeadServices;
 using Travel.Web.Services.DestinationServices;
 using Travel.Web.Services.QuestionServices;
 using Travel.Web.Services.ReviewServices;
@@ -82,10 +88,23 @@ builder.Services.AddScoped<IAltBannerService, AltBannerService>();
 
 builder.Services.AddScoped<IAboutPageHeadService, AboutPageHeadService>();
 
+builder.Services.AddScoped<IContactPageHeadService, ContactPageHeadService>();
+
+builder.Services.AddScoped<IContactCardService, ContactCardService>();
+builder.Services.AddScoped<IContactFormService, ContactFormService>();
+builder.Services.AddScoped<IContactMapService, ContactMapService>();
+builder.Services.AddScoped<IContactFAQService, ContactFAQService>();
+builder.Services.AddScoped<IContactMessageService, ContactMessageService>();
+
+
 builder.Services.AddScoped<IAboutStorySectionService,AboutStorySectionService>();
+
 builder.Services.AddScoped<IAboutStatService, AboutStatService>();
+
 builder.Services.AddScoped<IAboutValueService, AboutValueService>();
+
 builder.Services.AddScoped<IAboutTimelineService, AboutTimelineService>();
+
 builder.Services.AddScoped<IAboutTeamMemberService, AboutTeamMemberService>();
 // =====================================================
 // DATABASE SETTINGS OBJECT

@@ -1,0 +1,837 @@
+﻿@model List<Travel.Web.DTOs.ContactMessageDtos.ResultContactMessageDto>
+
+@{
+    ViewData["Title"] = "İletişim Mesajları";
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+
+    var totalMessages = Model?.Count ?? 0;
+    var hasMessages = Model != null && Model.Any();
+    var unreadMessages = Model?.Count(x => !x.IsRead) ?? 0;
+    var readMessages = Model?.Count(x => x.IsRead) ?? 0;
+}
+
+<style>
+
+    /* =========================
+               CONTACT MESSAGE INDEX
+               ========================= */
+
+    .crumb {
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+        .crumb a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+            .crumb a:hover {
+                color: var(--teal-dark);
+            }
+
+        .crumb .cur {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+
+    /* =========================
+               PAGE INTRO
+               ========================= */
+
+    .page-intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+        .page-intro h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--navy);
+            margin: .15rem 0 .3rem;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .94rem;
+            max-width: 65ch;
+        }
+
+
+    /* =========================
+               KPI
+               ========================= */
+
+    .kpi {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+    }
+
+        .kpi .ic {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: rgba(15,163,163,.1);
+            color: var(--teal-dark);
+            flex: none;
+        }
+
+        .kpi .num {
+            font-family: 'Sora';
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--navy);
+            line-height: 1;
+        }
+
+        .kpi .lab {
+            font-size: .82rem;
+            color: var(--muted);
+            margin-top: .15rem;
+        }
+
+
+    /* =========================
+               CARD
+               ========================= */
+
+    .contact-message-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .contact-message-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .contact-message-card-header h5 {
+            margin: 0;
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: .95rem;
+        }
+
+        .contact-message-card-header span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+
+    /* =========================
+               TABLE
+               ========================= */
+
+    .tbl-wrap {
+        overflow-x: auto;
+    }
+
+    .contact-message-table {
+        width: 100%;
+        min-width: 1050px;
+        border-collapse: collapse;
+    }
+
+        .contact-message-table th {
+            padding: .9rem 1rem;
+            background: #fafbfb;
+            color: var(--muted);
+            font-size: .78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        .contact-message-table td {
+            padding: .9rem 1rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+            color: var(--navy);
+            font-size: .88rem;
+        }
+
+        .contact-message-table tbody tr {
+            transition: .2s;
+        }
+
+            .contact-message-table tbody tr:hover {
+                background: #fcfefe;
+            }
+
+            .contact-message-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+
+    /* =========================
+               SENDER
+               ========================= */
+
+    .sender-name {
+        font-family: 'Sora';
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .2rem;
+    }
+
+    .sender-email {
+        color: var(--muted);
+        font-size: .78rem;
+    }
+
+
+    /* =========================
+               SUBJECT
+               ========================= */
+
+    .message-subject {
+        font-weight: 700;
+        color: var(--navy);
+        max-width: 250px;
+    }
+
+
+    /* =========================
+               MESSAGE
+               ========================= */
+
+    .message-preview {
+        max-width: 320px;
+        color: var(--muted);
+        line-height: 1.45;
+    }
+
+
+    /* =========================
+               DATE
+               ========================= */
+
+    .message-date {
+        color: var(--muted);
+        font-size: .8rem;
+        white-space: nowrap;
+    }
+
+
+    /* =========================
+               STATUS
+               ========================= */
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        border-radius: 999px;
+        padding: .38rem .7rem;
+        font-size: .74rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .status-read {
+        color: #13795b;
+        background: rgba(25, 135, 84, .1);
+    }
+
+    .status-unread {
+        color: #9a6700;
+        background: rgba(255, 193, 7, .14);
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+
+    /* =========================
+               ACTIONS
+               ========================= */
+
+    .actions {
+        display: flex;
+        gap: .45rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: #fff;
+        transition: .2s;
+        text-decoration: none;
+    }
+
+        .action-btn.detail {
+            color: var(--teal-dark);
+        }
+
+            .action-btn.detail:hover {
+                background: rgba(15,163,163,.08);
+                border-color: var(--teal);
+            }
+
+
+    /* =========================
+               EMPTY STATE
+               ========================= */
+
+    .empty {
+        text-align: center;
+        padding: 4rem 1rem;
+    }
+
+        .empty .eic {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: rgba(15,163,163,.1);
+            color: var(--teal-dark);
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1rem;
+        }
+
+        .empty h3 {
+            font-family: 'Sora';
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 1.2rem;
+            margin-bottom: .4rem;
+        }
+
+        .empty p {
+            color: var(--muted);
+            margin: 0;
+        }
+
+
+    /* =========================
+               RESPONSIVE
+               ========================= */
+
+    @@media (max-width: 768px) {
+
+        .page-intro {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .contact-message-card-header {
+            align-items: flex-start;
+            gap: .5rem;
+            flex-direction: column;
+        }
+    }
+
+</style>
+
+
+<div class="content">
+
+    <!-- =========================
+         BREADCRUMB
+         ========================= -->
+
+    <div class="crumb">
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index">
+
+            Dashboard
+
+        </a>
+
+        /
+
+        <span class="cur">
+            İletişim Mesajları
+        </span>
+
+    </div>
+
+
+    <!-- =========================
+         PAGE INTRO
+         ========================= -->
+
+    <div class="page-intro">
+
+        <div>
+
+            <h1>
+                İletişim Mesajları
+            </h1>
+
+            <p>
+                Web sitesindeki iletişim formu üzerinden gönderilen
+                mesajları görüntüleyebilir ve detaylarını inceleyebilirsiniz.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         KPI
+         ========================= -->
+
+    <div class="row g-3 mb-4">
+
+
+        <!-- TOTAL -->
+
+        <div class="col-12 col-md-4">
+
+            <div class="kpi">
+
+                <div class="ic">
+
+                    <svg width="20"
+                         height="20"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <rect x="3"
+                              y="4"
+                              width="18"
+                              height="16"
+                              rx="2" />
+
+                        <path d="M3 8l9 6 9-6" />
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <div class="num">
+                        @totalMessages
+                    </div>
+
+                    <div class="lab">
+                        Toplam Mesaj
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- UNREAD -->
+
+        <div class="col-12 col-md-4">
+
+            <div class="kpi">
+
+                <div class="ic">
+
+                    <svg width="20"
+                         height="20"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z" />
+
+                        <polyline points="22,6 12,13 2,6" />
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <div class="num">
+                        @unreadMessages
+                    </div>
+
+                    <div class="lab">
+                        Okunmamış Mesaj
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- READ -->
+
+        <div class="col-12 col-md-4">
+
+            <div class="kpi">
+
+                <div class="ic">
+
+                    <svg width="20"
+                         height="20"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <polyline points="20 6 9 17 4 12" />
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <div class="num">
+                        @readMessages
+                    </div>
+
+                    <div class="lab">
+                        Okunmuş Mesaj
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CARD
+         ========================= -->
+
+    <div class="contact-message-card">
+
+
+        <!-- HEADER -->
+
+        <div class="contact-message-card-header">
+
+            <div>
+
+                <h5>
+                    Gelen Mesajlar
+                </h5>
+
+                <span>
+                    Kullanıcıların iletişim formu üzerinden gönderdiği mesajlar.
+                </span>
+
+            </div>
+
+            <span>
+                @totalMessages kayıt
+            </span>
+
+        </div>
+
+
+        @if (hasMessages)
+        {
+
+            <!-- =========================
+                 TABLE
+                 ========================= -->
+
+            <div class="tbl-wrap">
+
+                <table class="contact-message-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="width:60px;">
+                                #
+                            </th>
+
+                            <th>
+                                Gönderen
+                            </th>
+
+                            <th>
+                                Konu
+                            </th>
+
+                            <th>
+                                Mesaj
+                            </th>
+
+                            <th>
+                                Tarih
+                            </th>
+
+                            <th>
+                                Durum
+                            </th>
+
+                            <th style="width:100px;">
+                                İşlemler
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @{
+                            int count = 0;
+                        }
+
+                        @foreach (var item in Model)
+                        {
+                            count++;
+
+                            <tr>
+
+                                <!-- NUMBER -->
+
+                                <td>
+
+                                    <span style="font-weight:700;">
+                                        @count
+                                    </span>
+
+                                </td>
+
+
+                                <!-- SENDER -->
+
+                                <td>
+
+                                    <div class="sender-name">
+                                        @item.FullName
+                                    </div>
+
+                                    <div class="sender-email">
+                                        @item.Email
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Phone))
+                                    {
+                                        <div class="sender-email">
+                                            @item.Phone
+                                        </div>
+                                    }
+
+                            </td>
+
+
+                            <!-- SUBJECT -->
+
+                            <td>
+
+                                <div class="message-subject">
+
+                                    @(string.IsNullOrWhiteSpace(item.Subject)
+                                                                    ? "Konu belirtilmemiş"
+                                                                    : item.Subject)
+
+                            </div>
+
+                                </td>
+
+
+                                <!-- MESSAGE -->
+
+                                <td>
+
+                                    <div class="message-preview">
+
+                                @if (!string.IsNullOrWhiteSpace(item.Message))
+                                        {
+                                            @(item.Message.Length > 100
+                                                                            ? item.Message.Substring(0, 100) + "..."
+                                                                            : item.Message)
+                                                                }
+                                        else
+                                        {
+                                            <span style="color:var(--muted);">
+                                                Mesaj bulunmuyor
+                                            </span>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- DATE -->
+
+                                <td>
+
+                                    <div class="message-date">
+
+                                        @item.CreatedAt?
+                                        .ToLocalTime()
+                                        .ToString("dd.MM.yyyy HH:mm")
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    @if (item.IsRead)
+                                    {
+                                        <span class="status-badge status-read">
+
+                                            <span class="status-dot"></span>
+
+                                            Okundu
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge status-unread">
+
+                                            <span class="status-dot"></span>
+
+                                            Yeni
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <a asp-area="Admin"
+                                           asp-controller="ContactMessage"
+                                           asp-action="Detail"
+                                           asp-route-id="@item.Id"
+                                           class="action-btn detail"
+                                           title="Mesaj Detayı">
+
+                                            <svg width="16"
+                                                 height="16"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="2"
+                                                 stroke-linecap="round"
+                                                 stroke-linejoin="round">
+
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12Z" />
+
+                                                <circle cx="12"
+                                                        cy="12"
+                                                        r="3" />
+
+                                            </svg>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        }
+        else
+        {
+
+            <!-- =========================
+                 EMPTY STATE
+                 ========================= -->
+
+            <div class="empty">
+
+                <div class="eic">
+
+                    <svg width="26"
+                         height="26"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <rect x="3"
+                              y="4"
+                              width="18"
+                              height="16"
+                              rx="2" />
+
+                        <path d="M3 8l9 6 9-6" />
+
+                    </svg>
+
+                </div>
+
+
+                <h3>
+                    Henüz iletişim mesajı bulunmuyor
+                </h3>
+
+
+                <p>
+                    Web sitesindeki iletişim formundan henüz
+                    herhangi bir mesaj gönderilmemiş.
+                </p>
+
+            </div>
+
+        }
+
+    </div>
+
+</div>

@@ -1,54 +1,295 @@
-﻿
+﻿@model List<Travel.Web.DTOs.ContactFAQDtos.ResultContactFAQDto>
+
 @{
     Layout = null;
 }
 
-<!-- SSS / FAQ -->
-<div class="faq-wrap">
-    <div class="text-center max-w-600 mx-auto mb-4">
-        <div class="eyebrow">Sıkça Sorulan Sorular</div>
-        <h2 style="font-family:'Sora';font-weight:700;font-size:1.8rem;color:var(--navy);margin-top:.4rem">Aklınıza Takılanlar</h2>
-        <p style="color:var(--muted);font-size:.95rem">Rezervasyon ve vize süreçleri ile ilgili en sık sorulan soruların yanıtları.</p>
+@if (Model != null && Model.Any())
+{
+    <div class="faq-wrap">
+
+        <!-- FAQ BAŞLIK -->
+        <div class="faq-heading">
+
+            <div class="eyebrow">
+                Sıkça Sorulan Sorular
+            </div>
+
+            <h2>
+                Aklınıza Takılanlar
+            </h2>
+
+            <p>
+                Rezervasyon ve vize süreçleri ile ilgili en sık sorulan
+                soruların yanıtları.
+            </p>
+
+        </div>
+
+        <!-- FAQ LİSTESİ -->
+        <div class="faq-list">
+
+            @foreach (var item in Model)
+            {
+                <div class="faq-item">
+
+                    <!-- SORU -->
+                    <button type="button"
+                            class="faq-question">
+
+                        <span>
+                            @item.Question
+                        </span>
+
+                        <span class="faq-icon">
+                            +
+                        </span>
+
+                    </button>
+
+                    <!-- CEVAP -->
+                    <div class="faq-answer">
+
+                        <p>
+                            @item.Answer
+                        </p>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
     </div>
+}
 
-    <div class="accordion" id="faqAccordion">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
-                    Ön rezervasyon yaptıktan sonra ödeme nasıl gerçekleşiyor?
-                </button>
-            </h2>
-            <div id="f1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Web sitemiz üzerinden yaptığınız ön rezervasyon sonrasında kontenjanınız 48 saat boyunca adınıza bloke edilir. Seyahat danışmanımız sizi arayarak tur sözleşmesi ve kredi kartı / havale ödeme seçeneklerini güvenle tamamlamanıza yardımcı olur.
-                </div>
-            </div>
-        </div>
+<style>
 
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
-                    Schengen vizesi alımında danışmanlık hizmeti veriyor musunuz?
-                </button>
-            </h2>
-            <div id="f2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Evet, tur rezervasyonu yapan misafirlerimize konsolosluk onaylı otel/uçak rezervasyon belgeleri ve eksiksiz vize başvuru evrak dosyası hazırlanması konusunda ücretsiz rehberlik sunuyoruz.
-                </div>
-            </div>
-        </div>
+    /* =========================
+           FAQ
+        ========================= */
 
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f3">
-                    Tur iptal ve iade koşulları nelerdir?
-                </button>
-            </h2>
-            <div id="f3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Tur kalkış tarihine 30 gün kalana kadar yapılan iptallerde uçak bileti kuralları haricindeki tüm tur ücreti kesintisiz iade edilir. İsteğe bağlı seyahat iptal sigortası ile vize reddi durumunda tam iade güvencesi de sunulmaktadır.
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    .faq-wrap {
+        margin-top: 4rem;
+        padding-bottom: 1rem;
+    }
+
+        /* =========================
+           FAQ BAŞLIK
+        ========================= */
+
+        .faq-wrap .faq-heading {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 2rem;
+        }
+
+            .faq-wrap .faq-heading .eyebrow {
+                font-family: 'Sora', sans-serif;
+                text-transform: uppercase;
+                letter-spacing: .22em;
+                font-size: .72rem;
+                font-weight: 700;
+                color: var(--teal-dark);
+            }
+
+            .faq-wrap .faq-heading h2 {
+                font-family: 'Sora', sans-serif;
+                font-weight: 700;
+                font-size: 1.8rem;
+                color: var(--navy);
+                margin: .4rem 0 .6rem;
+            }
+
+            .faq-wrap .faq-heading p {
+                color: var(--muted);
+                font-size: .95rem;
+                line-height: 1.65;
+                margin: 0;
+            }
+
+    /* =========================
+           FAQ LİSTESİ
+        ========================= */
+
+    .faq-list {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* =========================
+           FAQ ITEM
+        ========================= */
+
+    .faq-item {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        margin-bottom: .8rem;
+        overflow: hidden;
+        background: #fff;
+        transition: .2s ease;
+    }
+
+        .faq-item:hover {
+            border-color: #d9d3c9;
+        }
+
+    /* =========================
+           SORU
+        ========================= */
+
+    .faq-question {
+        width: 100%;
+        border: 0;
+        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.1rem 1.3rem;
+        background: #fff;
+        color: var(--navy);
+        font-family: 'Sora', sans-serif;
+        font-weight: 600;
+        font-size: .98rem;
+        text-align: left;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+        .faq-question:hover {
+            color: var(--teal-dark);
+        }
+
+    /* =========================
+           AÇIK SORU
+        ========================= */
+
+    .faq-item.active .faq-question {
+        color: var(--teal-dark);
+        background: rgba(15, 163, 163, .04);
+    }
+
+    /* =========================
+           + İKONU
+        ========================= */
+
+    .faq-icon {
+        flex: 0 0 auto;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(15, 163, 163, .08);
+        color: var(--teal-dark);
+        font-family: 'Inter', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 500;
+        transition: .25s ease;
+    }
+
+    /* =========================
+           AÇIK İKON
+        ========================= */
+
+    .faq-item.active .faq-icon {
+        background: var(--teal);
+        color: #fff;
+        transform: rotate(45deg);
+    }
+
+    /* =========================
+           CEVAP
+        ========================= */
+
+    .faq-answer {
+        display: none;
+        padding: 0 1.3rem 1.3rem;
+        background: #fff;
+    }
+
+    .faq-item.active .faq-answer {
+        display: block;
+    }
+
+    .faq-answer p {
+        margin: 0;
+        color: var(--muted);
+        font-size: .92rem;
+        line-height: 1.65;
+    }
+
+    /* =========================
+           MOBİL
+        ========================= */
+
+    @@media (max-width: 768px) {
+
+        .faq-wrap {
+            margin-top: 3rem;
+        }
+
+            .faq-wrap .faq-heading h2 {
+                font-size: 1.5rem;
+            }
+
+            .faq-wrap .faq-heading p {
+                font-size: .88rem;
+            }
+
+        .faq-question {
+            padding: 1rem 1.05rem;
+            font-size: .9rem;
+        }
+
+        .faq-answer {
+            padding: 0 1.05rem 1.1rem;
+        }
+
+            .faq-answer p {
+                font-size: .88rem;
+            }
+
+        .faq-icon {
+            width: 28px;
+            height: 28px;
+            font-size: 1.05rem;
+        }
+    }
+
+</style>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const faqButtons = document.querySelectorAll(".faq-question");
+
+        faqButtons.forEach(function (button) {
+
+            button.addEventListener("click", function () {
+
+                const currentItem = this.closest(".faq-item");
+
+                // Diğer açık soruları kapat
+                document.querySelectorAll(".faq-item").forEach(function (item) {
+
+                    if (item !== currentItem) {
+                        item.classList.remove("active");
+                    }
+
+                });
+
+                // Tıklananı aç/kapat
+                currentItem.classList.toggle("active");
+
+            });
+
+        });
+
+    });
+
+</script>
