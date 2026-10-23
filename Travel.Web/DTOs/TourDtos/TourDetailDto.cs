@@ -1,4 +1,6 @@
-﻿
+using Travel.Web.DTOs.QuestionDtos;
+using Travel.Web.DTOs.ReviewDtos;
+
 namespace Travel.Web.DTOs.TourDtos
 {
     public class TourDetailDto
@@ -49,7 +51,7 @@ namespace Travel.Web.DTOs.TourDtos
 
         public List<string> GalleryImages { get; set; } = new();
 
-        public List<TourDateDto> TourDates { get; set; } = new();
+        public List<TourDateResultDto> TourDates { get; set; } = new();
 
         public List<DayProgramDto> DayPrograms { get; set; } = new();
 
@@ -72,6 +74,33 @@ namespace Travel.Web.DTOs.TourDtos
         public int ReviewCount { get; set; }
 
         public int ReservationCount { get; set; }
+
+        // ---- Detay sayfası için hesaplanan alanlar ----
+
+        public string? CountryName { get; set; }
+
+        public string? CityName { get; set; }
+
+        public List<ReviewListDto> Reviews { get; set; } = new();
+
+        /// <summary>Index 0 = 1 yıldız ... Index 4 = 5 yıldız (yüzde)</summary>
+        public int[] RatingDistribution { get; set; } = new int[5];
+
+        public List<QuestionListDto> Questions { get; set; } = new();
+
+        public List<TourListItemDto> SimilarTours { get; set; } = new();
+
+        public bool IsFavorite { get; set; }
+
+        public bool HasReviewed { get; set; }
+
+        public decimal ChildPrice { get; set; }
+
+        /// <summary>Gün gün programdaki şehirlerden oluşan rota.</summary>
+        public string RouteText => string.Join(" · ", DayPrograms
+            .Select(x => x.City)
+            .Where(x => !string.IsNullOrWhiteSpace(x) && x != "—" && x != "-")
+            .Distinct());
     }
 }
 

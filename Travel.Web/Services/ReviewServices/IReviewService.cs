@@ -1,4 +1,4 @@
-﻿using Travel.Web.DTOs.ReviewDtos;
+using Travel.Web.DTOs.ReviewDtos;
 
 namespace Travel.Web.Services.ReviewServices
 {
@@ -10,5 +10,8 @@ namespace Travel.Web.Services.ReviewServices
         Task DeleteAsync(string id);
         Task UpdateAsync(UpdateReviewDto updateReviewDto);
         Task MarkAsReadAsync(string id);
+        Task<List<ReviewListDto>> GetByTourAsync(string tourId);
+        Task<List<ReviewListDto>> GetByUserAsync(string userId);
+        Task<bool> HasUserReviewedAsync(string userId, string tourId);
     }
 }

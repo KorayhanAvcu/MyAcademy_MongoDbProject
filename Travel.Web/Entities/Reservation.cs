@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Travel.Web.Entities.Common;
 using Travel.Web.Entities.Enums;
@@ -7,7 +7,6 @@ namespace Travel.Web.Entities
 {
     public class Reservation : BaseEntity
     {
-        [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; } = default!;
 
         [BsonRepresentation(BsonType.ObjectId)]
@@ -25,6 +24,6 @@ namespace Travel.Web.Entities
 
         public decimal TotalPrice { get; set; }
 
-        public ReservationStatus Status { get; set; }
+        public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
     }
 }

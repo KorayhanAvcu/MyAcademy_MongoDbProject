@@ -1,6 +1,7 @@
-﻿
+
+@model Travel.Web.Models.ProfileViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = L["Profilim"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -985,45 +986,329 @@
     }
 </style>
 
+<style>
+    .badge-cancel { background: rgba(180,90,79,.12); color: #b45a4f }
+    .trip-card form { display: inline }
+    .side-link { text-decoration: none }
+    .btn-outline { background:#fff;border:1px solid var(--line);color:var(--navy);border-radius:999px;font-weight:600;padding:.55rem 1.15rem;font-size:.88rem }
+</style>
+
+@{
+    var tr = new CultureInfo("tr-TR");
+
+    var menu = new[]
+    {
+        ("overview", "Genel Bakış", "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"),
+        ("profile", "Profil Bilgilerim", "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4 4-6 8-6s8 2 8 6"),
+        ("trips", "Rezervasyonlarım", "M3 7h18v12H3zM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"),
+        ("favorites", "Favori Turlarım", "M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"),
+        ("reviews", "Yorumlarım", "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"),
+        ("questions", "Sorularım", "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01")
+    };
+
+    string StatusBadge(string status) => status switch
+    {
+        "Approved" => "badge-ok",
+        "Cancelled" => "badge-cancel",
+        _ => "badge-wait"
+    };
+
+    string StatusText(string status) => status switch
+    {
+        "Approved" => L["Onaylandı"].Value,
+        "Cancelled" => L["İptal Edildi"].Value,
+        _ => L["Bekliyor"].Value
+    };
+
+    var next = Model.UpcomingReservations.FirstOrDefault();
+}
+
+@functions {
+    private static string Stars(int n) =>
+        string.Concat(Enumerable.Range(1, 5).Select(i => i <= n ? "★" : "<span class='off'>★</span>"));
+}
 
 <!-- PAGE HEAD -->
 <div class="container prof-head">
-    <div class="crumb"><a href="index.html">Ana Sayfa</a> / <span class="cur">Profilim</span></div>
-    <div class="eyebrow">Hesabım</div>
-    <h1>Profilim</h1>
-    <p>Seyahatlerini, favorilerini ve Travelio deneyimini buradan yönetebilirsin.</p>
+    <div class="crumb"><a asp-controller="Default" asp-action="Index">@L["Ana Sayfa"]</a> / <span class="cur">@L["Profilim"]</span></div>
+    <div class="eyebrow">@L["Hesabım"]</div>
+    <h1>@L["Profilim"]</h1>
+    <p>@L["Seyahatlerini, favorilerini ve Travelio deneyimini buradan yönetebilirsin."]</p>
 </div>
 
 <div class="container pb-2">
-    <!-- mobile menu button -->
     <div class="d-lg-none mb-3">
         <button class="menu-btn-mobile" type="button" data-bs-toggle="offcanvas" data-bs-target="#accountMenu">
-            <span>Hesap Menüsü</span>
+            <span>@L["Hesap Menüsü"]</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
         </button>
     </div>
 
     <div class="row g-4">
-        <!-- SIDEBAR (desktop) -->
+        <!-- SIDEBAR -->
         <div class="col-lg-3 d-none d-lg-block">
             <div class="side-sticky">
-                <div class="side-card" id="sidebarDesktop"></div>
+                <div class="side-card">
+                    <div class="side-user">
+                        <div class="av">@Model.Initials</div>
+                        <div style="min-width:0"><b>@Model.FirstName @Model.LastName</b><span>@Model.Email</span></div>
+                    </div>
+                    <div class="side-menu">
+                        @foreach (var (id, label, icon) in menu)
+                        {
+                            <button type="button" class="side-link @(Model.ActiveTab == id ? "active" : "")" data-pane="@id" onclick="go('@id')">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="@icon" /></svg>
+                                @L[label]
+                            </button>
+                        }
+                        <div class="side-sep"></div>
+                        <button type="button" class="side-link logout" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                            @L["Çıkış Yap"]
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- CONTENT -->
-        <div class="col-lg-9" id="contentArea"></div>
+        <div class="col-lg-9">
+
+            <!-- OVERVIEW -->
+            <div class="pane" data-pane="overview">
+                <div class="pane-head">
+                    <h1>@L["Merhaba"] @Model.FirstName 👋</h1>
+                    <p>@L["Bir sonraki maceranın detaylarına göz atabilir, geçmiş seyahatlerini ve favorilerini yönetebilirsin."]</p>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3"><div class="stat-card"><div class="num">@Model.UpcomingReservations.Count</div><div class="lab">@L["Yaklaşan Tur"]</div></div></div>
+                    <div class="col-6 col-md-3"><div class="stat-card"><div class="num">@Model.Reservations.Count(x => x.Status != "Cancelled")</div><div class="lab">@L["Rezervasyon"]</div></div></div>
+                    <div class="col-6 col-md-3"><div class="stat-card"><div class="num">@Model.Favorites.Count</div><div class="lab">@L["Favori Tur"]</div></div></div>
+                    <div class="col-6 col-md-3"><div class="stat-card"><div class="num">@Model.Reviews.Count</div><div class="lab">@L["Yorum"]</div></div></div>
+                </div>
+
+                @if (next != null)
+                {
+                    <h2 style="font-family:'Sora';font-weight:700;font-size:1.25rem;color:var(--navy);margin-bottom:1rem">@L["Yaklaşan Seyahatin"]</h2>
+                    <div class="upcoming mb-4">
+                        <img src="@next.TourImage" alt="@next.TourName">
+                        <div class="inner">
+                            <h3>@next.TourName</h3>
+                            <div class="up-meta">
+                                <span>📅 <b>@next.TourStartDate.ToString("d MMMM yyyy")</b></span>
+                                <span>👥 <b>@next.TotalPerson @L["kişi"]</b></span>
+                                <span>⌛ @L["Kalan"]: <b>@((next.TourStartDate.Date - DateTime.Today).Days) @L["gün"]</b></span>
+                                <span class="status-chip status-ok">● @StatusText(next.Status)</span>
+                            </div>
+                            <div class="up-btns d-flex gap-2 flex-wrap">
+                                <a asp-controller="Tours" asp-action="TourDetail" asp-route-id="@next.TourId" class="btn-white">@L["Tur Detayı"]</a>
+                                <button type="button" class="btn-linewhite" onclick="go('trips')">@L["Rezervasyonu Gör"]</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card-soft mb-4">
+                        <div class="empty">
+                            <h3>@L["Yaklaşan bir seyahatin yok."]</h3>
+                            <p>@L["Yeni rotalar keşfetmeye ne dersin?"]</p>
+                            <a asp-controller="Tours" asp-action="Index" class="btn-teal">@L["Turları Keşfet"]</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- PROFILE -->
+            <div class="pane" data-pane="profile">
+                <div class="pane-head"><h1>@L["Profil Bilgilerim"]</h1><p>@L["Kişisel bilgilerini buradan güncelleyebilirsin."]</p></div>
+                <form class="card-soft" asp-controller="Profile" asp-action="UpdateProfile" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6 field"><label>@L["Ad"]</label><input name="FirstName" value="@Model.FirstName" required></div>
+                        <div class="col-md-6 field"><label>@L["Soyad"]</label><input name="LastName" value="@Model.LastName" required></div>
+                        <div class="col-md-6 field"><label>@L["E-posta"]</label><input type="email" value="@Model.Email" disabled></div>
+                        <div class="col-md-6 field"><label>@L["Telefon"]</label><input name="PhoneNumber" value="@Model.PhoneNumber"></div>
+                    </div>
+                    <button type="submit" class="btn-teal mt-4">@L["Bilgileri Güncelle"]</button>
+                </form>
+            </div>
+
+            <!-- RESERVATIONS -->
+            <div class="pane" data-pane="trips">
+                <div class="pane-head"><h1>@L["Rezervasyonlarım"]</h1><p>@L["Yaklaşan ve geçmiş tüm seyahatlerin."]</p></div>
+
+                @if (!Model.Reservations.Any())
+                {
+                    <div class="card-soft"><div class="empty">
+                        <h3>@L["Henüz rezervasyonun yok."]</h3>
+                        <a asp-controller="Tours" asp-action="Index" class="btn-teal">@L["Turları Keşfet"]</a>
+                    </div></div>
+                }
+
+                @foreach (var group in new[] { (L["Yaklaşan"].Value, Model.UpcomingReservations), (L["Geçmiş / İptal"].Value, Model.PastReservations) })
+                {
+                    if (!group.Item2.Any()) { continue; }
+
+                    <h3 style="font-family:'Sora';font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:1.2rem 0 .9rem">@group.Item1</h3>
+
+                    @foreach (var r in group.Item2)
+                    {
+                        <div class="trip-card">
+                            <img src="@r.TourImage" alt="@r.TourName">
+                            <div class="trip-info">
+                                <h4>@r.TourName</h4>
+                                <div class="meta">
+                                    <span>📅 @r.TourStartDate.ToString("d MMM yyyy")@(r.TourEndDate.HasValue ? " - " + r.TourEndDate.Value.ToString("d MMM yyyy") : "")</span>
+                                    <span>👥 @r.AdultCount @L["Yetişkin"]@(r.ChildCount > 0 ? $", {r.ChildCount} {L["Çocuk"].Value}" : "")</span>
+                                    <span>💳 @r.TotalPrice.ToString("N0", tr) TL</span>
+                                </div>
+                                <div class="resno">@L["Rezervasyon tarihi"]: @r.CreatedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                            </div>
+                            <div class="trip-right">
+                                <span class="badge-soft @StatusBadge(r.Status)">@StatusText(r.Status)</span>
+                                <div class="acts">
+                                    <a asp-controller="Tours" asp-action="TourDetail" asp-route-id="@r.TourId" class="mini-btn">@L["Tur Detayı"]</a>
+                                    @if (r.Status != "Cancelled" && r.TourStartDate.Date > DateTime.Today)
+                                    {
+                                        <form asp-controller="Profile" asp-action="CancelReservation" method="post" onsubmit="return confirm('@L["Rezervasyonu iptal etmek istediğine emin misin?"]')">
+                                            <input type="hidden" name="id" value="@r.Id" />
+                                            <button type="submit" class="mini-btn">@L["İptal Et"]</button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- FAVORITES -->
+            <div class="pane" data-pane="favorites">
+                <div class="pane-head"><h1>@L["Favori Turlarım"]</h1><p>@L["Daha sonra incelemek için kaydettiğin turlar."]</p></div>
+
+                @if (!Model.Favorites.Any())
+                {
+                    <div class="card-soft"><div class="empty">
+                        <h3>@L["Henüz favori turun yok."]</h3>
+                        <p>@L["Yeni rotalar keşfetmeye ne dersin?"]</p>
+                        <a asp-controller="Tours" asp-action="Index" class="btn-teal">@L["Turları Keşfet"]</a>
+                    </div></div>
+                }
+
+                <div class="row g-4">
+                    @foreach (var t in Model.Favorites)
+                    {
+                        <div class="col-sm-6 col-lg-4">
+                            <article class="tour-card">
+                                <div class="tour-media">
+                                    <img src="@t.CoverImageUrl" alt="@t.Name">
+                                    <form asp-controller="Profile" asp-action="RemoveFavorite" method="post">
+                                        <input type="hidden" name="tourId" value="@t.Id" />
+                                        <button type="submit" class="fav" title="@L["Favoriden kaldır"]">
+                                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" /></svg>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="tour-body">
+                                    <div class="tour-country">@t.DestinationName</div>
+                                    <h3 class="tour-title">@t.Name</h3>
+                                    <div class="tour-meta"><span>🗓️ @t.DurationDays @L["Gün"]</span>@if (t.ReviewCount > 0) {<span><span style="color:#f4a92c">★</span> @t.AverageRating.ToString("0.0")</span>}</div>
+                                    <div class="tour-foot">
+                                        <div class="price"><small>@L["Kişi başı"]</small><b>@t.Price.ToString("N0", tr) <span>TL</span></b></div>
+                                        <a asp-controller="Tours" asp-action="TourDetail" asp-route-id="@t.Id" class="btn-incele">@L["Turu İncele"]</a>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- REVIEWS -->
+            <div class="pane" data-pane="reviews">
+                <div class="pane-head"><h1>@L["Yorumlarım"]</h1><p>@L["Turlar hakkında paylaştığın değerlendirmeler."]</p></div>
+
+                @if (!Model.Reviews.Any())
+                {
+                    <div class="card-soft"><div class="empty">
+                        <h3>@L["Henüz yorumun yok."]</h3>
+                        <p>@L["Katıldığın turlar hakkında deneyimini paylaşabilirsin."]</p>
+                    </div></div>
+                }
+
+                @foreach (var r in Model.Reviews)
+                {
+                    <div class="rev-card">
+                        <div class="top">
+                            <div><h4>@r.TourName</h4><span class="rev-date">@r.CreatedAt?.ToLocalTime().ToString("d MMMM yyyy")</span></div>
+                            <span class="rev-stars">@Html.Raw(Stars(r.Rating))</span>
+                        </div>
+                        <p>@r.Comment</p>
+                        <div class="rev-acts">
+                            <a asp-controller="Tours" asp-action="TourDetail" asp-route-id="@r.TourId" asp-fragment="yorumlar" class="mini-btn">@L["Tura Git"]</a>
+                            <form asp-controller="Profile" asp-action="DeleteReview" method="post" onsubmit="return confirm('@L["Yorumu silmek istiyor musun?"]')">
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button type="submit" class="mini-btn">@L["Sil"]</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- QUESTIONS -->
+            <div class="pane" data-pane="questions">
+                <div class="pane-head"><h1>@L["Sorularım"]</h1><p>@L["Tur detay sayfalarında sorduğun sorular ve yanıtları."]</p></div>
+
+                @if (!Model.Questions.Any())
+                {
+                    <div class="card-soft"><div class="empty"><h3>@L["Henüz soru sormadın."]</h3></div></div>
+                }
+
+                @foreach (var q in Model.Questions)
+                {
+                    <div class="q-card">
+                        <div class="top">
+                            <div>
+                                <div class="tour-name">@q.TourName</div>
+                                <div class="q-txt">@q.QuestionText</div>
+                                <div class="q-date">@q.CreatedAt?.ToLocalTime().ToString("d MMMM yyyy")</div>
+                            </div>
+                            <span class="badge-soft @(q.IsAnswered ? "badge-ok" : "badge-wait")">@(q.IsAnswered ? L["Cevaplandı"] : L["Cevap Bekliyor"])</span>
+                        </div>
+                        @if (q.IsAnswered)
+                        {
+                            <div class="q-answer"><span class="who">Travelio</span><span class="txt">@q.Answer</span></div>
+                        }
+                        else
+                        {
+                            <div class="q-wait-note">@L["Ekibimiz sorunu en kısa sürede yanıtlayacak."]</div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
     </div>
 </div>
 
 <!-- OFFCANVAS (mobile menu) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="accountMenu" style="width:300px;background:var(--cream)">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" style="font-family:'Sora';font-weight:700;color:var(--navy)">Hesap Menüsü</h5>
+        <h5 class="offcanvas-title" style="font-family:'Sora';font-weight:700;color:var(--navy)">@L["Hesap Menüsü"]</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body p-2">
-        <div class="side-card" id="sidebarMobile"></div>
+        <div class="side-card">
+            <div class="side-menu">
+                @foreach (var (id, label, icon) in menu)
+                {
+                    <button type="button" class="side-link @(Model.ActiveTab == id ? "active" : "")" data-pane="@id" onclick="go('@id')">@L[label]</button>
+                }
+                <div class="side-sep"></div>
+                <a class="side-link logout" asp-controller="Auth" asp-action="SignOut">@L["Çıkış Yap"]</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1032,446 +1317,25 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center p-4">
-                <div style="width:56px;height:56px;border-radius:16px;background:rgba(192,85,79,.1);color:#c0554f;display:grid;place-items:center;margin:0 auto 1rem">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
-                </div>
-                <h5 style="font-family:'Sora';font-weight:700;color:var(--navy)">Çıkış yapmak istediğine emin misin?</h5>
-                <p style="color:var(--muted);font-size:.9rem">Hesabından çıkış yapıldığında rezervasyonların ve favorilerin güvende kalır.</p>
+                <h5 style="font-family:'Sora';font-weight:700;color:var(--navy)">@L["Çıkış yapmak istediğine emin misin?"]</h5>
                 <div class="d-flex gap-2 justify-content-center mt-3">
-                    <button class="btn-outline" data-bs-dismiss="modal">Vazgeç</button>
-                    <a href="@Url.Action("SignOut", "Auth")"
-                       class="btn-teal"
-                       style="background:#c0554f">
-                        Çıkış Yap
-                    </a>
+                    <button class="btn-outline" data-bs-dismiss="modal">@L["Vazgeç"]</button>
+                    <a asp-controller="Auth" asp-action="SignOut" class="btn-teal" style="background:#c0554f">@L["Çıkış Yap"]</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- RATING MODAL -->
-<div class="modal fade" id="rateModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" style="font-family:'Sora';font-weight:700;color:var(--navy)">Değerlendirmeyi Güncelle</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p id="rateTourName" style="color:var(--muted);font-size:.9rem;margin-bottom:.6rem"></p>
-                <div id="ratePicker">
-                    <span class="star-pick" data-v="1">★</span><span class="star-pick" data-v="2">★</span><span class="star-pick" data-v="3">★</span><span class="star-pick" data-v="4">★</span><span class="star-pick" data-v="5">★</span>
-                </div>
-            </div>
-            <div class="modal-footer border-0">
-                <button class="btn-teal" onclick="saveRating()">Kaydet</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- DELETE REVIEW MODAL -->
-<div class="modal fade" id="delModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body text-center p-4">
-                <h5 style="font-family:'Sora';font-weight:700;color:var(--navy)">Yorumu silmek istiyor musun?</h5>
-                <p style="color:var(--muted);font-size:.9rem">Bu işlem geri alınamaz.</p>
-                <div class="d-flex gap-2 justify-content-center mt-3">
-                    <button class="btn-outline" data-bs-dismiss="modal">Vazgeç</button>
-                    <button class="btn-teal" style="background:#c0554f" onclick="confirmDeleteReview()">Sil</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast-ok" id="toast">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-    <span id="toastMsg">Kaydedildi.</span>
-</div>
-
 
 <script>
-    /* =============== ICONS =============== */
-    const IC = {
-      overview:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
-      profile:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
-      trips:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v12H3z"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
-      fav:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
-      reviews:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-      questions:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>',
-      ratings:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.6 5.8 21 7 14 2 9.3 9 8.5 12 2"/></svg>',
-      logout:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>'
-    };
-    const MENU = [
-      {id:"overview", label:"Genel Bakış", ic:"overview"},
-      {id:"profile", label:"Profil Bilgilerim", ic:"profile"},
-      {id:"trips", label:"Turlarım", ic:"trips"},
-      {id:"favorites", label:"Favorilerim", ic:"fav"},
-      {id:"reviews", label:"Yorumlarım", ic:"reviews"},
-      {id:"questions", label:"Sorularım", ic:"questions"},
-      {id:"ratings", label:"Değerlendirmelerim", ic:"ratings"}
-    ];
-
-    /* =============== DATA =============== */
-    const IMG = {
-      prag:"https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=800&q=80",
-      norway:"https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=800&q=80",
-      roma:"https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80",
-      paris:"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
-      amsterdam:"https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=800&q=80",
-      tokyo:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80",
-      swiss:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=800&q=80",
-      alsace:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=800&q=80"
-    };
-
-    let FAVORITES = [
-      {title:"Tokyo & Kyoto", country:"Japonya", dur:"8 Gün / 7 Gece", rating:4.8, price:"79.900", img:IMG.tokyo},
-      {title:"İsviçre Alpleri", country:"İsviçre", dur:"7 Gün / 6 Gece", rating:5.0, price:"58.200", img:IMG.swiss},
-      {title:"Kuzey Işıkları Norveç", country:"Norveç", dur:"6 Gün / 5 Gece", rating:4.9, price:"64.900", img:IMG.norway},
-      {title:"Paris & Alsace", country:"Fransa", dur:"7 Gün / 6 Gece", rating:4.8, price:"47.900", img:IMG.alsace}
-    ];
-
-    let MYREVIEWS = [
-      {id:1, title:"Roma & Toskana Keşfi", stars:5, date:"12 Haziran 2026", text:"Roma zaten çok güzeldi ama Toskana bölümü turun en unutulmaz kısmıydı. Rehberimiz de çok ilgiliydi."},
-      {id:2, title:"Paris & Disneyland", stars:5, date:"18 Mart 2026", text:"İlk Paris seyahatimizdi ve organizasyon gerçekten çok başarılıydı."},
-      {id:3, title:"Amsterdam Kanalları", stars:4, date:"16 Kasım 2025", text:"Tur çok güzeldi, yalnızca serbest zaman biraz daha uzun olabilirdi."}
-    ];
-
-    const TRIPS = {
-      upcoming:[
-        {title:"Prag & Viyana Kültür Turu", country:"Çekya · Avusturya", date:"12 - 17 Ekim 2026", res:"TRV-28491", status:"Onaylandı", img:IMG.prag},
-        {title:"Kuzey Işıkları Norveç", country:"Norveç", date:"8 - 13 Ocak 2027", res:"TRV-30214", status:"Onaylandı", img:IMG.norway}
-      ],
-      completed:[
-        {title:"Roma & Toskana Keşfi", country:"İtalya", date:"4 - 9 Haziran 2026", res:"TRV-24187", status:"Tamamlandı", reviewed:true, img:IMG.roma},
-        {title:"Paris & Disneyland", country:"Fransa", date:"10 - 14 Mart 2026", res:"TRV-21930", status:"Tamamlandı", reviewed:true, img:IMG.paris},
-        {title:"Amsterdam Kanalları", country:"Hollanda", date:"8 - 11 Kasım 2025", res:"TRV-19004", status:"Tamamlandı", reviewed:false, img:IMG.amsterdam}
-      ]
-    };
-
-    const QUESTIONS = [
-      {tour:"Roma & Toskana Keşfi", q:"Vatikan giriş bileti tur ücretine dahil mi?", date:"3 Haziran 2026", status:"answered", a:"Vatikan müzeleri giriş ücretleri tur paketine dahil değildir."},
-      {tour:"Kuzey Işıkları Norveç", q:"Termal kıyafet sağlanıyor mu?", date:"28 Temmuz 2026", status:"waiting"},
-      {tour:"Tokyo & Kyoto", q:"Tur sırasında hızlı tren kullanılıyor mu?", date:"15 Temmuz 2026", status:"answered", a:"Evet. Tokyo - Kyoto geçişinde Shinkansen hızlı treni kullanılmaktadır."}
-    ];
-
-    let RATINGS = [
-      {title:"Roma & Toskana Keşfi", country:"İtalya", stars:5, date:"12 Haziran 2026"},
-      {title:"Paris & Disneyland", country:"Fransa", stars:5, date:"18 Mart 2026"},
-      {title:"Amsterdam Kanalları", country:"Hollanda", stars:4, date:"16 Kasım 2025"},
-      {title:"Prag Noel Pazarları", country:"Çekya", stars:5, date:"22 Aralık 2025"}
-    ];
-
-    /* =============== HELPERS =============== */
-    function starStr(n){ let s=""; for(let i=1;i<=5;i++) s+= i<=n?"★":"<span class='off'>★</span>"; return s; }
-    function toast(msg){ const t=document.getElementById("toast"); document.getElementById("toastMsg").textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2600); }
-
-    /* =============== SIDEBAR =============== */
-    function sidebarHTML(){
-      return `
-      <div class="side-user">
-        <div class="av">EY</div>
-        <div style="min-width:0"><b>Eylül Yılmaz</b><span>eylul.yilmaz@email.com</span></div>
-      </div>
-      <div class="side-menu">
-        ${MENU.map(m=>`<button class="side-link" data-pane="${m.id}" onclick="go('${m.id}')">${IC[m.ic]} ${m.label}</button>`).join("")}
-        <div class="side-sep"></div>
-        <button class="side-link logout" data-bs-toggle="modal" data-bs-target="#logoutModal">${IC.logout} Çıkış Yap</button>
-      </div>`;
-    }
-    document.getElementById("sidebarDesktop").innerHTML = sidebarHTML();
-    document.getElementById("sidebarMobile").innerHTML = sidebarHTML();
-
-    /* =============== NAVIGATION =============== */
-    let current = "overview";
+    // Sekmeler sunucuda render edilir; JS yalnızca görünürlüğü değiştirir.
     function go(id){
-      current = id;
-      document.querySelectorAll(".side-link[data-pane]").forEach(b=> b.classList.toggle("active", b.dataset.pane===id));
-      document.getElementById("contentArea").innerHTML = RENDER[id]();
+      document.querySelectorAll(".pane").forEach(p => p.classList.toggle("active", p.dataset.pane === id));
+      document.querySelectorAll(".side-link[data-pane]").forEach(b => b.classList.toggle("active", b.dataset.pane === id));
+      const url = new URL(location.href); url.searchParams.set("tab", id); history.replaceState(null, "", url);
       const oc = document.getElementById("accountMenu");
-      const inst = bootstrap.Offcanvas.getInstance(oc);
+      const inst = window.bootstrap ? bootstrap.Offcanvas.getInstance(oc) : null;
       if(inst) inst.hide();
-      window.scrollTo({top:0, behavior:"smooth"});
-      if(id==="ratings") bindRatingButtons();
     }
-
-    /* =============== RENDERERS =============== */
-    const RENDER = {
-      overview(){
-        const stats = [
-          {ic:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v12H3z"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>', num:2, lab:"Yaklaşan Tur"},
-          {ic:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>', num:4, lab:"Tamamlanan Tur"},
-          {ic:IC.fav, num:7, lab:"Favori Tur"},
-          {ic:IC.reviews, num:5, lab:"Yorum"}
-        ];
-        const t = TRIPS.upcoming[0];
-        const acts = [
-          {t:'<b>Roma & Toskana</b> turuna yorum yaptın.', time:"2 gün önce", ic:IC.reviews},
-          {t:'<b>Tokyo & Kyoto</b> turunu favorilere ekledin.', time:"5 gün önce", ic:IC.fav},
-          {t:'<b>Prag & Viyana</b> rezervasyonun onaylandı.', time:"12 gün önce", ic:IC.trips},
-          {t:'<b>Kuzey Işıkları</b> turu hakkında soru sordun.', time:"18 gün önce", ic:IC.questions}
-        ];
-        return `
-        <div class="pane active">
-          <div class="pane-head">
-            <h1>Merhaba Eylül 👋</h1>
-            <p>Bir sonraki maceranın detaylarına göz atabilir, geçmiş seyahatlerini ve favorilerini yönetebilirsin.</p>
-          </div>
-          <div class="row g-3 mb-4">
-            ${stats.map(s=>`<div class="col-6 col-md-3"><div class="stat-card"><div class="ico">${s.ic}</div><div class="num">${s.num}</div><div class="lab">${s.lab}</div></div></div>`).join("")}
-          </div>
-
-          <h2 style="font-family:'Sora';font-weight:700;font-size:1.25rem;color:var(--navy);margin-bottom:1rem">Yaklaşan Seyahatin</h2>
-          <div class="upcoming mb-4">
-            <img src="${t.img}" alt="${t.title}">
-            <div class="inner">
-              <span class="up-badge">Rezervasyon ${t.res}</span>
-              <h3>${t.title}</h3>
-              <div class="sub">${t.country}</div>
-              <div class="up-meta">
-                <span>📅 <b>${t.date}</b></span>
-                <span>⏳ <b>6 Gün / 5 Gece</b></span>
-                <span>⌛ Kalan: <b>63 gün</b></span>
-                <span class="status-chip status-ok">● ${t.status}</span>
-              </div>
-              <div class="up-btns d-flex gap-2 flex-wrap">
-                <a href="tour-detail.html" class="btn-white">Tur Detayı</a>
-                <button class="btn-linewhite" onclick="go('trips')">Rezervasyonu Gör</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="card-soft">
-            <h2 style="font-family:'Sora';font-weight:700;font-size:1.15rem;color:var(--navy);margin-bottom:1rem">Son Aktiviteler</h2>
-            ${acts.map(a=>`<div class="act-item"><div class="act-ico">${a.ic}</div><div><div class="t">${a.t}</div><div class="time">${a.time}</div></div></div>`).join("")}
-          </div>
-        </div>`;
-      },
-
-      profile(){
-        return `
-        <div class="pane active">
-          <div class="pane-head"><h1>Profil Bilgilerim</h1><p>Kişisel bilgilerini buradan güncelleyebilirsin.</p></div>
-          <div class="card-soft">
-            <div class="row g-3">
-              <div class="col-md-6 field"><label>Ad</label><input value="Eylül"></div>
-              <div class="col-md-6 field"><label>Soyad</label><input value="Yılmaz"></div>
-              <div class="col-md-6 field"><label>E-posta</label><input type="email" value="eylul.yilmaz@email.com"></div>
-              <div class="col-md-6 field"><label>Telefon</label><input value="+90 532 123 45 67"></div>
-              <div class="col-md-6 field"><label>Doğum Tarihi</label><input type="date" value="1994-09-14"></div>
-              <div class="col-md-6 field"><label>Şehir</label><input value="İstanbul"></div>
-              <div class="col-md-6 field"><label>Ülke</label>
-                <select><option selected>Türkiye</option><option>Almanya</option><option>Hollanda</option><option>Birleşik Krallık</option></select>
-              </div>
-            </div>
-            <button class="btn-teal mt-4" onclick="toast('Profil bilgilerin güncellendi.')">Bilgileri Güncelle</button>
-          </div>
-        </div>`;
-      },
-
-      trips(){
-        const card = (t)=>`
-          <div class="trip-card">
-            <img src="${t.img}" alt="${t.title}">
-            <div class="trip-info">
-              <div class="country">${t.country}</div>
-              <h4>${t.title}</h4>
-              <div class="meta"><span>📅 ${t.date}</span></div>
-              <div class="resno">Rezervasyon: ${t.res}</div>
-            </div>
-            <div class="trip-right">
-              <span class="badge-soft ${t.status==='Onaylandı'?'badge-ok':'badge-done'}">${t.status}</span>
-              <div class="acts">
-                <a href="tour-detail.html" class="mini-btn">Tur Detayı</a>
-                ${t.status==='Tamamlandı' ? (t.reviewed?'<button class="mini-btn" onclick="go(&quot;reviews&quot;)">Yorumunu Gör</button>':'<button class="mini-btn solid" onclick="go(&quot;reviews&quot;)">Yorum Yap</button>') : ''}
-              </div>
-            </div>
-          </div>`;
-        return `
-        <div class="pane active">
-          <div class="pane-head"><h1>Turlarım</h1><p>Yaklaşan ve tamamlanan tüm seyahatlerin.</p></div>
-          <div class="subtabs" role="tablist">
-            <button class="subtab active" onclick="tripFilter(this,'all')">Tümü</button>
-            <button class="subtab" onclick="tripFilter(this,'upcoming')">Yaklaşan</button>
-            <button class="subtab" onclick="tripFilter(this,'completed')">Tamamlanan</button>
-          </div>
-          <div id="tripUpcoming">
-            <h3 style="font-family:'Sora';font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.9rem">Yaklaşan</h3>
-            ${TRIPS.upcoming.map(card).join("")}
-          </div>
-          <div id="tripCompleted">
-            <h3 style="font-family:'Sora';font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:1.6rem 0 .9rem">Tamamlanan</h3>
-            ${TRIPS.completed.map(card).join("")}
-          </div>
-        </div>`;
-      },
-
-      favorites(){
-        if(FAVORITES.length===0){
-          return `<div class="pane active"><div class="pane-head"><h1>Favorilerim</h1><p>Daha sonra incelemek için kaydettiğin turlar.</p></div>
-            <div class="card-soft"><div class="empty">
-              <div class="ico">${IC.fav}</div><h3>Henüz favori turun yok.</h3><p>Yeni rotalar keşfetmeye ne dersin?</p>
-              <a href="tours.html" class="btn-teal">Turları Keşfet</a>
-            </div></div></div>`;
-        }
-        return `
-        <div class="pane active">
-          <div class="pane-head"><h1>Favorilerim</h1><p>Daha sonra incelemek için kaydettiğin turlar.</p></div>
-          <div class="row g-4" id="favGrid">
-            ${FAVORITES.map((t,i)=>`
-              <div class="col-sm-6 col-lg-4" data-fav="${i}">
-                <article class="tour-card">
-                  <div class="tour-media">
-                    <img src="${t.img}" alt="${t.title}">
-                    <button class="fav" title="Favoriden kaldır" onclick="removeFav(${i})">
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tour-body">
-                    <div class="tour-country">${t.country}</div>
-                    <h3 class="tour-title">${t.title}</h3>
-                    <div class="tour-meta"><span>🗓️ ${t.dur}</span><span><span style="color:#f4a92c">★</span> ${t.rating.toFixed(1)}</span></div>
-                    <div class="tour-foot">
-                      <div class="price"><small>Kişi başı</small><b>${t.price} <span>TL</span></b></div>
-                      <a href="tour-detail.html" class="btn-incele">Turu İncele</a>
-                    </div>
-                  </div>
-                </article>
-              </div>`).join("")}
-          </div>
-        </div>`;
-      },
-
-      reviews(){
-        if(MYREVIEWS.length===0){
-          return `<div class="pane active"><div class="pane-head"><h1>Yorumlarım</h1></div>
-            <div class="card-soft"><div class="empty"><div class="ico">${IC.reviews}</div><h3>Henüz yorumun yok.</h3><p>Tamamladığın turlar hakkında deneyimini paylaşabilirsin.</p><button class="btn-teal" onclick="go('trips')">Turlarıma Git</button></div></div></div>`;
-        }
-        return `
-        <div class="pane active">
-          <div class="pane-head"><h1>Yorumlarım</h1><p>Turlar hakkında paylaştığın değerlendirmeler.</p></div>
-          <div id="reviewList">
-            ${MYREVIEWS.map(r=>`
-              <div class="rev-card" data-rev="${r.id}">
-                <div class="top">
-                  <div><h4>${r.title}</h4><span class="rev-date">${r.date}</span></div>
-                  <span class="rev-stars">${starStr(r.stars)}</span>
-                </div>
-                <p>${r.text}</p>
-                <div class="rev-acts">
-                  <button class="mini-btn" onclick="toast('Düzenleme demo modunda çalışıyor.')">Düzenle</button>
-                  <button class="mini-btn" onclick="askDeleteReview(${r.id})">Sil</button>
-                </div>
-              </div>`).join("")}
-          </div>
-        </div>`;
-      },
-
-      questions(){
-        return `
-        <div class="pane active">
-          <div class="pane-head"><h1>Sorularım</h1><p>Tur detay sayfalarında sorduğun sorular ve yanıtları.</p></div>
-          ${QUESTIONS.map(q=>`
-            <div class="q-card">
-              <div class="top">
-                <div>
-                  <div class="tour-name">${q.tour}</div>
-                  <div class="q-txt">${q.q}</div>
-                  <div class="q-date">${q.date}</div>
-                </div>
-                <span class="badge-soft ${q.status==='answered'?'badge-ok':'badge-wait'}">${q.status==='answered'?'Cevaplandı':'Cevap Bekliyor'}</span>
-              </div>
-              ${q.status==='answered'
-                ? `<div class="q-answer"><span class="who">Travelio</span><span class="txt">${q.a}</span></div>`
-                : `<div class="q-wait-note">Ekibimiz sorunu en kısa sürede yanıtlayacak.</div>`}
-            </div>`).join("")}
-        </div>`;
-      },
-
-      ratings(){
-        return `
-        <div class="pane active">
-          <div class="pane-head"><h1>Değerlendirmelerim</h1><p>Katıldığın turlara verdiğin puanlar.</p></div>
-          <div class="row g-3" id="rateGrid">
-            ${RATINGS.map((r,i)=>`
-              <div class="col-sm-6 col-lg-4">
-                <div class="rate-card">
-                  <div class="country">${r.country}</div>
-                  <h4>${r.title}</h4>
-                  <div class="stars" data-stars="${i}">${starStr(r.stars)}</div>
-                  <div class="score">${r.stars} / 5</div>
-                  <div class="date">${r.date}</div>
-                  <button class="mini-btn mt-3" data-rate="${i}">Değerlendirmeyi Güncelle</button>
-                </div>
-              </div>`).join("")}
-          </div>
-        </div>`;
-      }
-    };
-
-    /* =============== INTERACTIONS =============== */
-    // trips filter
-    function tripFilter(btn, type){
-      document.querySelectorAll(".subtab").forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById("tripUpcoming").style.display = (type==="completed")?"none":"block";
-      document.getElementById("tripCompleted").style.display = (type==="upcoming")?"none":"block";
-    }
-
-    // favorites
-    function removeFav(i){
-      FAVORITES.splice(i,1);
-      document.getElementById("contentArea").innerHTML = RENDER.favorites();
-      toast("Favorilerden kaldırıldı.");
-    }
-
-    // delete review
-    let pendingDelId = null;
-    function askDeleteReview(id){ pendingDelId = id; new bootstrap.Modal(document.getElementById("delModal")).show(); }
-    function confirmDeleteReview(){
-      MYREVIEWS = MYREVIEWS.filter(r=>r.id!==pendingDelId);
-      bootstrap.Modal.getInstance(document.getElementById("delModal")).hide();
-      document.getElementById("contentArea").innerHTML = RENDER.reviews();
-      toast("Yorum silindi.");
-    }
-
-    // ratings modal
-    let rateIndex = null, ratePicked = 0;
-    function bindRatingButtons(){
-      document.querySelectorAll("[data-rate]").forEach(b=>{
-        b.addEventListener("click", ()=>{
-          rateIndex = +b.dataset.rate;
-          ratePicked = RATINGS[rateIndex].stars;
-          document.getElementById("rateTourName").textContent = RATINGS[rateIndex].title;
-          paintPicker();
-          new bootstrap.Modal(document.getElementById("rateModal")).show();
-        });
-      });
-    }
-    function paintPicker(){
-      document.querySelectorAll("#ratePicker .star-pick").forEach(s=> s.classList.toggle("on", +s.dataset.v<=ratePicked));
-    }
-    document.querySelectorAll("#ratePicker .star-pick").forEach(s=>{
-      s.addEventListener("click", ()=>{ ratePicked = +s.dataset.v; paintPicker(); });
-    });
-    function saveRating(){
-      if(rateIndex===null) return;
-      RATINGS[rateIndex].stars = ratePicked;
-      bootstrap.Modal.getInstance(document.getElementById("rateModal")).hide();
-      document.getElementById("contentArea").innerHTML = RENDER.ratings();
-      bindRatingButtons();
-      toast("Değerlendirmen güncellendi.");
-    }
-
-    function doLogout(){
-      bootstrap.Modal.getInstance(document.getElementById("logoutModal")).hide();
-      toast("Çıkış yapıldı (demo).");
-    }
-
-    /* init */
-    go("overview");
+    go(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ActiveTab)));
 </script>

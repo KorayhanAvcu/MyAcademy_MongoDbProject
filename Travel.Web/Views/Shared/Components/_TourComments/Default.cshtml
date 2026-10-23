@@ -1,64 +1,91 @@
-﻿
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
 @{
     Layout = null;
+    var isAuth = User.Identity?.IsAuthenticated == true;
+    var fullStars = (int)Math.Round(Model.AverageRating);
+
+    string Initials(string? name) => string.Concat((name ?? "?")
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => char.ToUpper(x[0])));
 }
 
 <!-- REVIEWS -->
-<div class="content-block">
-    <h2>Misafir Yorumları</h2>
+<div class="content-block" id="yorumlar">
+    <h2>@L["Misafir Yorumları"]</h2>
+
     <div class="rev-summary mb-3">
         <div class="rev-score">
-            <div class="num">4.8</div>
-            <div class="stars">★★★★★</div>
-            <div class="cnt">1.687 değerlendirme</div>
+            <div class="num">@(Model.ReviewCount > 0 ? Model.AverageRating.ToString("0.0") : "–")</div>
+            <div class="stars">
+                @for (var i = 1; i <= 5; i++)
+                {
+                    if (i <= fullStars) { <text>★</text> } else { <span style="color:#d8cfc0">★</span> }
+                }
+            </div>
+            <div class="cnt">@Model.ReviewCount @L["değerlendirme"]</div>
         </div>
+
         <div class="rev-bars">
-            <div class="bar-row"><span class="lab">5 yıldız</span><div class="bar-track"><div class="bar-fill" style="width:82%"></div></div><span class="pct">%82</span></div>
-            <div class="bar-row"><span class="lab">4 yıldız</span><div class="bar-track"><div class="bar-fill" style="width:13%"></div></div><span class="pct">%13</span></div>
-            <div class="bar-row"><span class="lab">3 yıldız</span><div class="bar-track"><div class="bar-fill" style="width:4%"></div></div><span class="pct">%4</span></div>
-            <div class="bar-row"><span class="lab">2 yıldız</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span class="pct">%1</span></div>
-            <div class="bar-row"><span class="lab">1 yıldız</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="pct">%0</span></div>
+            @for (var star = 5; star >= 1; star--)
+            {
+                var pct = Model.RatingDistribution[star - 1];
+                <div class="bar-row">
+                    <span class="lab">@star @L["yıldız"]</span>
+                    <div class="bar-track"><div class="bar-fill" style="width:@pct%"></div></div>
+                    <span class="pct">%@pct</span>
+                </div>
+            }
         </div>
     </div>
 
-    <div class="review-card">
-        <div class="rev-user">
-            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80" alt="" />
-            <div><b>Elif Yılmaz</b><span class="sub">Roma & Toskana Turu · 12 Haziran 2026</span></div>
-            <span class="rev-stars">★★★★★</span>
+    @if (!Model.Reviews.Any())
+    {
+        <p>@L["Bu tur için henüz yorum yapılmadı. İlk yorumu sen yap!"]</p>
+    }
+
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="review-card">
+            <div class="rev-user">
+                @if (!string.IsNullOrWhiteSpace(review.UserImageUrl))
+                {
+                    <img src="@review.UserImageUrl" alt="" />
+                }
+                else
+                {
+                    <span class="qa-avatar" style="width:44px;height:44px">@Initials(review.UserName)</span>
+                }
+                <div>
+                    <b>@review.UserName</b>
+                    <span class="sub">@review.CreatedAt?.ToLocalTime().ToString("d MMMM yyyy")</span>
+                </div>
+                <span class="rev-stars">
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        if (i <= review.Rating) { <text>★</text> } else { <span class="off">★</span> }
+                    }
+                </span>
+            </div>
+            <p>@review.Comment</p>
         </div>
-        <p>Roma zaten çok güzeldi ama Toskana bölümü turu bambaşka bir seviyeye taşıdı. Rehberimiz hem bilgili hem de çok ilgiliydi.</p>
-    </div>
-    <div class="review-card">
-        <div class="rev-user">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="" />
-            <div><b>Mert Kaya</b><span class="sub">Roma & Toskana Turu · 4 Haziran 2026</span></div>
-            <span class="rev-stars">★★★★★</span>
-        </div>
-        <p>Program oldukça dengeliydi. Hem rehberli gezilere hem de kendi başımıza şehri keşfetmeye zamanımız oldu.</p>
-    </div>
-    <div class="review-card">
-        <div class="rev-user">
-            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80" alt="" />
-            <div><b>Zeynep Demir</b><span class="sub">Roma & Toskana Turu · 21 Mayıs 2026</span></div>
-            <span class="rev-stars">★★★★★</span>
-        </div>
-        <p>Floransa ve Toskana kesinlikle favorim oldu. Oteller temizdi ve transferlerde hiçbir sorun yaşamadık.</p>
-    </div>
-    <div class="review-card">
-        <div class="rev-user">
-            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="" />
-            <div><b>Burak Şahin</b><span class="sub">Roma & Toskana Turu · 9 Mayıs 2026</span></div>
-            <span class="rev-stars">★★★★<span class="off">★</span></span>
-        </div>
-        <p>Tur genel olarak çok başarılıydı. Vatikan günü biraz yoğun geçti ama organizasyon ve rehberlik çok iyiydi.</p>
-    </div>
+    }
 
     <div class="write-box">
         <div>
-            <b>Bu Tura Katıldın mı?</b>
-            <p>Deneyimini diğer gezginlerle paylaş.</p>
+            <b>@L["Bu Tura Katıldın mı?"]</b>
+            <p>@L["Deneyimini diğer gezginlerle paylaş."]</p>
         </div>
-        <button class="btn-teal" data-bs-toggle="modal" data-bs-target="#reviewModal">Yorum Yaz</button>
+
+        @if (!isAuth)
+        {
+            <a class="btn-teal" asp-controller="Auth" asp-action="SignIn">@L["Yorum için giriş yap"]</a>
+        }
+        else if (Model.HasReviewed)
+        {
+            <span class="btn-teal" style="opacity:.6;cursor:default">@L["Yorumun alındı"]</span>
+        }
+        else
+        {
+            <button type="button" class="btn-teal" data-bs-toggle="modal" data-bs-target="#reviewModal">@L["Yorum Yaz"]</button>
+        }
     </div>
 </div>

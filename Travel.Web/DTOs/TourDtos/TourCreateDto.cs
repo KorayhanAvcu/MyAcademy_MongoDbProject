@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Travel.Web.DTOs.TourDtos
 {
@@ -10,6 +10,12 @@ namespace Travel.Web.DTOs.TourDtos
         public string? ShortDescription { get; set; }
 
         public string? Description { get; set; }
+
+        public string? NameEn { get; set; }
+
+        public string? ShortDescriptionEn { get; set; }
+
+        public string? DescriptionEn { get; set; }
 
         [Required(ErrorMessage = "Kategori seçilmelidir.")]
         public string CategoryId { get; set; } = string.Empty;

@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Travel.Web.DTOs.TourDtos;
 
 namespace Travel.Web.ViewComponents.Tour_Highlights
 {
     public class _TourHighlightsViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke(TourDetailDto model)
         {
-            return View();
-
+            return View(model);
         }
     }
 }

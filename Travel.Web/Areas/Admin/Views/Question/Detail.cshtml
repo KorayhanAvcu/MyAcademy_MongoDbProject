@@ -1,0 +1,41 @@
+@using Travel.Web.DTOs.QuestionDtos
+@model QuestionDetailDto
+@{
+    ViewData["Title"] = L["Soruyu Cevapla"].Value;
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+}
+
+<div class="content" style="max-width:900px">
+    <div class="page-intro">
+        <div>
+            <div class="eyebrow">@L["Sorular"]</div>
+            <h1>@L["Soruyu Cevapla"]</h1>
+            <p>@L["Verdiğiniz cevap tur detay sayfasında ve kullanıcının profilinde görünür."]</p>
+        </div>
+        <a asp-action="Index" class="btn-soft">← @L["Sorulara Dön"]</a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="card-x mb-3" style="padding:1.4rem">
+        <div class="small text-muted mb-1">@Model.TourName · @Model.CreatedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+        <h3 style="font-family:'Sora';font-size:1.15rem;color:var(--navy)">@Model.QuestionText</h3>
+
+        @if (Model.IsAnswered)
+        {
+            <div class="alert alert-success mt-3 mb-0">
+                <b>@L["Mevcut cevap"]:</b> @Model.Answer
+            </div>
+        }
+    </div>
+
+    <form asp-action="Answer" method="post" class="card-x" style="padding:1.4rem">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <label class="form-label fw-semibold">@L["Cevabınız"]</label>
+        <textarea name="Answer" class="form-control" rows="5" required maxlength="1000">@Model.Answer</textarea>
+        <button type="submit" class="btn-soft mt-3">@(Model.IsAnswered ? L["Cevabı Güncelle"] : L["Cevabı Gönder"])</button>
+    </form>
+</div>

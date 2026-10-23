@@ -1,23 +1,10 @@
-﻿@using System.Globalization
+@using System.Globalization
 @model List<Travel.Web.DTOs.TourDtos.TourListItemDto>
 
 @{
-    ViewData["Title"] = "Turlar";
+    ViewData["Title"] = L["Turlar"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var destinations = Model
-        .Where(x => !string.IsNullOrWhiteSpace(x.DestinationName))
-        .Select(x => x.DestinationName!)
-        .Distinct()
-        .OrderBy(x => x)
-        .ToList();
-
-    var categories = Model
-        .Where(x => !string.IsNullOrWhiteSpace(x.CategoryName))
-        .Select(x => x.CategoryName!)
-        .Distinct()
-        .OrderBy(x => x)
-        .ToList();
 }
 
 <style>
@@ -676,1600 +663,347 @@
 
 </style>
 
+<style>
+    .fav.on { color: #e0575b }
+    .fav.on svg { fill: currentColor }
+    .date-row { display: flex; gap: .5rem }
+    .date-row input, .pax-select { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: .55rem .7rem; font-size: .85rem; color: var(--navy); background: var(--cream); outline: none }
+    .date-row label { font-size: .72rem; color: var(--muted); font-weight: 600; display: block; margin-bottom: .2rem }
+    .tour-item.hide { display: none }
+</style>
 
-<!-- =========================
-     PAGE HEADER
-========================== -->
+@{
+    var favoriteIds = (ViewBag.FavoriteIds as List<string>) ?? new List<string>();
+    var tr = new CultureInfo("tr-TR");
 
+}
+
+<!-- PAGE HEADER -->
 <header class="page-head">
-
     <div class="container">
-
         <div class="breadcrumbz mb-3">
-
-            <a asp-controller="Home"
-               asp-action="Index">
-
-                Ana Sayfa
-
-            </a>
-
-            · Turlar
-
+            <a asp-controller="Default" asp-action="Index">@L["Ana Sayfa"]</a> · @L["Turlar"]
         </div>
-
-        <div class="eyebrow">
-            Dünyayı keşfet
-        </div>
-
-        <h1>
-            Hayalindeki Turu Bul
-        </h1>
-
-        <p>
-            Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun
-            büyüleyici rotalarına kadar sana uygun seyahati keşfet.
-        </p>
-
+        <div class="eyebrow">@L["Dünyayı keşfet"]</div>
+        <h1>@L["Hayalindeki Turu Bul"]</h1>
+        <p>@L["Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun büyüleyici rotalarına kadar sana uygun seyahati keşfet."]</p>
     </div>
-
 </header>
 
-
-<!-- =========================
-     LISTING
-========================== -->
-
+<!-- LISTING -->
 <section class="listing">
-
     <div class="container">
-
         <div class="row g-4">
 
-
-            <!-- =========================
-                 SIDEBAR
-            ========================== -->
-
+            <!-- SIDEBAR (desktop) -->
             <div class="col-lg-3 d-none d-lg-block">
-
                 <div class="sticky-side">
-
-                    <div class="filter-card"
-                         id="filterCardDesktop">
+                    <div class="filter-card">
+                        <partial name="_TourFilterPanel" model="Model" />
                     </div>
-
                 </div>
-
             </div>
 
-
-            <!-- =========================
-                 RESULTS
-            ========================== -->
-
+            <!-- RESULTS -->
             <div class="col-lg-9">
-
-
-                <!-- TOOLBAR -->
-
                 <div class="toolbar">
-
                     <div>
-
-                        <h2>
-                            Turlar
-                        </h2>
-
-                        <div class="count">
-
-                            <span id="resultCount">
-                                @Model.Count
-                            </span>
-
-                            tur bulundu
-
-                        </div>
-
+                        <h2>@L["Turlar"]</h2>
+                        <div class="count"><span id="resultCount">@Model.Count</span> @L["tur bulundu"]</div>
                     </div>
-
-
                     <div class="d-flex align-items-center gap-2">
-
-                        <button class="btn-filter-mobile d-lg-none"
-                                type="button"
-                                data-bs-toggle="offcanvas"
-                                data-bs-target="#filterOffcanvas">
-
-                            Filtrele
-
+                        <button class="btn-filter-mobile d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
+                            @L["Filtrele"]
                         </button>
-
-
                         <div class="sort-wrap">
-
-                            <label for="sortSelect"
-                                   class="d-none d-sm-block">
-
-                                Sırala:
-
-                            </label>
-
+                            <label for="sortSelect" class="d-none d-sm-block">@L["Sırala:"]</label>
                             <select id="sortSelect">
-
-                                <option value="onerilen">
-                                    Önerilen
-                                </option>
-
-                                <option value="puan">
-                                    En Yüksek Puan
-                                </option>
-
-                                <option value="fiyat-artan">
-                                    Fiyat: Düşükten Yükseğe
-                                </option>
-
-                                <option value="fiyat-azalan">
-                                    Fiyat: Yüksekten Düşüğe
-                                </option>
-
+                                <option value="onerilen">@L["Önerilen"]</option>
+                                <option value="populer">@L["En Çok Rezervasyon"]</option>
+                                <option value="puan">@L["En Yüksek Puan"]</option>
+                                <option value="fiyat-artan">@L["Fiyat: Düşükten Yükseğe"]</option>
+                                <option value="fiyat-azalan">@L["Fiyat: Yüksekten Düşüğe"]</option>
+                                <option value="tarih">@L["En Yakın Tarih"]</option>
                             </select>
-
                         </div>
-
                     </div>
-
                 </div>
 
+                <div class="active-chips" id="activeChips"></div>
 
-                <!-- ACTIVE CHIPS -->
-
-                <div class="active-chips"
-                     id="activeChips">
-                </div>
-
-
-                <!-- TOUR GRID -->
-
-                <div class="row g-4"
-                     id="tourGrid">
-
+                <div class="row g-4" id="tourGrid">
                     @foreach (var tour in Model)
                     {
+                        var isFav = favoriteIds.Contains(tour.Id);
+
                         <div class="col-md-6 tour-item"
-                             data-name="@tour.Name"
-                             data-description="@tour.ShortDescription"
+                             data-name="@tour.Name.ToLower(tr)"
+                             data-text="@((tour.Name + " " + tour.ShortDescription + " " + tour.DestinationName).ToLower(tr))"
                              data-category="@tour.CategoryName"
                              data-destination="@tour.DestinationName"
                              data-duration="@tour.DurationDays"
-                             data-price="@tour.Price"
-                             data-rating="@tour.ReservationCount">
-
+                             data-price="@tour.Price.ToString(CultureInfo.InvariantCulture)"
+                             data-rating="@tour.AverageRating.ToString(CultureInfo.InvariantCulture)"
+                             data-reservations="@tour.ReservationCount"
+                             data-dates="@string.Join(",", tour.DateKeys)">
                             <article class="tour-card">
-
-
-                                <!-- IMAGE -->
-
                                 <div class="tour-media">
-
                                     @if (!string.IsNullOrWhiteSpace(tour.CoverImageUrl))
                                     {
-                                        <img src="@tour.CoverImageUrl"
-                                             alt="@tour.Name"
-                                             loading="lazy" />
+                                        <img src="@tour.CoverImageUrl" alt="@tour.Name" loading="lazy" />
                                     }
                                     else
                                     {
-                                        <div class="tour-image-placeholder">
-
-                                            <i class="bi bi-image"></i>
-
-                                        </div>
+                                        <div class="tour-image-placeholder"></div>
                                     }
 
-
-                                    @if (tour.ReservationCount > 10)
+                                    @if (tour.IsBestSeller)
                                     {
-                                        <span class="tour-badge">
-                                            Popüler
-                                        </span>
+                                        <span class="tour-badge">@L["Çok Satan"]</span>
+                                    }
+                                    else if (tour.IsNew)
+                                    {
+                                        <span class="tour-badge">@L["Yeni"]</span>
+                                    }
+                                    else if (tour.RemainingCapacity > 0 && tour.RemainingCapacity <= 10)
+                                    {
+                                        <span class="tour-badge">@L["Son"] @tour.RemainingCapacity @L["Kontenjan"]</span>
+                                    }
+                                    else if (tour.DateKeys.Count == 0)
+                                    {
+                                        <span class="tour-badge">@L["Tarih Bekleniyor"]</span>
                                     }
 
+                                    <button class="fav @(isFav ? "on" : "")" type="button" aria-label="@L["Favorilere ekle"]"
+                                            data-tour-id="@tour.Id" onclick="toggleFav(this)">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
+                                        </svg>
+                                    </button>
+                                </div>
 
-                                <button class="fav"
-                                        type="button"
-                                        aria-label="Favorilere ekle"
-                                        onclick="this.classList.toggle('on')">
-
-                                    <svg width="18"
-                                         height="18"
-                                         viewBox="0 0 24 24"
-                                         fill="none"
-                                         stroke="currentColor"
-                                         stroke-width="2">
-
-                                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
-
-                                    </svg>
-
-                                </button>
-
-                            </div>
-
-
-                            <!-- BODY -->
-
-                            <div class="tour-body">
-
-
-                                <div class="tour-topline">
-
-                                    <span class="tour-country">
-
-                                        @(string.IsNullOrWhiteSpace(tour.DestinationName)
-                                                                                ? "Destinasyon"
-                                                                                : tour.DestinationName)
-
-                                    </span>
-
-
-                                    <span class="tour-cat">
-
-                                        @(string.IsNullOrWhiteSpace(tour.CategoryName)
-                                                                                ? "Tur"
-                                                                                : tour.CategoryName)
-
-                                    </span>
-
+                                <div class="tour-body">
+                                    <div class="tour-topline">
+                                        <span class="tour-country">@(tour.DestinationName ?? L["Destinasyon"].Value)</span>
+                                        <span class="tour-cat">@(tour.CategoryName ?? L["Tur"].Value)</span>
                                     </div>
 
+                                    <h3 class="tour-title">@tour.Name</h3>
 
-                                    <h3 class="tour-title">
-
-                                        @tour.Name
-
-                                    </h3>
-
-
-                                @if (!string.IsNullOrWhiteSpace(tour.ShortDescription))
+                                    @if (!string.IsNullOrWhiteSpace(tour.ShortDescription))
                                     {
-                                        <div class="tour-description">
-
-                                            @tour.ShortDescription
-
-                                        </div>
+                                        <p class="tour-description">@tour.ShortDescription</p>
                                     }
-
 
                                     <div class="tour-meta">
-
-                                        <span class="tour-meta-item">
-
-                                            <i class="bi bi-calendar3 me-1"></i>
-
-                                            @tour.DurationDays gün
-
-                                            @if (tour.DurationNights > 0)
-                                            {
-                                                <span>
-                                                    / @tour.DurationNights gece
-                                                </span>
-                                            }
-
-                                        </span>
-
-
+                                        <span>🗓️ @tour.DurationDays @L["Gün"] / @tour.DurationNights @L["Gece"]</span>
+                                        @if (tour.ReviewCount > 0)
+                                        {
+                                            <span class="rating"><span class="star">★</span> @tour.AverageRating.ToString("0.0") <span style="color:var(--muted);font-weight:400">(@tour.ReviewCount)</span></span>
+                                        }
                                         @if (tour.UpcomingDate.HasValue)
                                         {
-                                            <span class="tour-meta-item">
-
-                                                <i class="bi bi-clock me-1"></i>
-
-                                                @tour.UpcomingDate.Value.ToString(
-                                                "dd.MM.yyyy",
-                                                                                CultureInfo.GetCultureInfo("tr-TR"))
-
-                                    </span>
-                                                                        }
-
+                                            <span>✈️ @tour.UpcomingDate.Value.ToString("d MMM yyyy")</span>
+                                        }
                                     </div>
-
 
                                     <div class="tour-foot">
-
-                                        <div class="price">
-
-                                            <small>
-                                                Kişi başı
-                                            </small>
-
-                                            <b>
-
-                                                @tour.Price.ToString(
-                                                "N0",
-                                                                                        CultureInfo.GetCultureInfo("tr-TR"))
-
-                                            <span>
-                                                TL
-                                            </span>
-
-                                        </b>
-
+                                        <div class="price"><small>@L["Kişi başı"]</small><b>@tour.Price.ToString("N0", tr) <span>TL</span></b></div>
+                                        <a asp-controller="Tours" asp-action="TourDetail" asp-route-id="@tour.Id" class="btn-incele">@L["Turu İncele"]</a>
                                     </div>
-
-
-                                    <a asp-controller="Tours"
-                                       asp-action="TourDetail"
-                                       asp-route-id="@tour.Id"
-                                       class="btn-incele">
-
-                                        Turu İncele
-
-                                    </a>
-
                                 </div>
-
-                            </div>
-
-                        </article>
-
-                    </div>
-                                        }
-
-                </div>
-
-
-                <!-- =========================
-                     EMPTY STATE
-                ========================== -->
-
-                <div id="emptyState"
-                     style="display:@(Model.Any() ? "none" : "block")">
-
-                    <div class="empty-state">
-
-                        <div class="ico">
-
-                            <svg width="28"
-                                 height="28"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round">
-
-                                <circle cx="11"
-                                        cy="11"
-                                        r="8" />
-
-                                <line x1="21"
-                                      y1="21"
-                                      x2="16.65"
-                                      y2="16.65" />
-
-                            </svg>
-
+                            </article>
                         </div>
-
-
-                        <h3>
-                            Aradığın kriterlere uygun tur bulunamadı.
-                        </h3>
-
-                        <p>
-                            Filtreleri biraz gevşetmeyi dene
-                            ya da tümünü temizleyerek yeniden başla.
-                        </p>
-
-
-                        <button class="btn-teal"
-                                type="button"
-                                onclick="clearFilters()">
-
-                            Filtreleri Temizle
-
-                        </button>
-
-                    </div>
-
+                    }
                 </div>
 
+                <!-- EMPTY -->
+                <div id="emptyState" style="@(Model.Any() ? "display:none" : "")">
+                    <div class="empty-state">
+                        <h3>@L["Aradığın kriterlere uygun tur bulunamadı."]</h3>
+                        <p>@L["Filtreleri biraz gevşetmeyi dene ya da tümünü temizleyerek yeniden başla."]</p>
+                        <button class="btn-teal" type="button" onclick="clearFilters()">@L["Filtreleri Temizle"]</button>
+                    </div>
+                </div>
 
-                <!-- =========================
-                     MINI CTA
-                ========================== -->
-
+                <!-- MINI CTA -->
                 <div class="mini-cta">
-
-                    <div class="eyebrow">
-                        Yardımcı olalım
-                    </div>
-
-                    <h2>
-                        Aradığın Rotayı Bulamadın mı?
-                    </h2>
-
-                    <p>
-                        Hayalindeki destinasyonu bize söyle,
-                        sana uygun seyahat seçeneklerini birlikte bulalım.
-                    </p>
-
-                    <a asp-controller="Home"
-                       asp-action="Index"
-                       asp-fragment="iletisim"
-                       class="btn-teal">
-
-                        Bize Ulaş
-
-                    </a>
-
+                    <div class="eyebrow">@L["Yardımcı olalım"]</div>
+                    <h2>@L["Aradığın Rotayı Bulamadın mı?"]</h2>
+                    <p>@L["Hayalindeki destinasyonu bize söyle, sana uygun seyahat seçeneklerini birlikte bulalım."]</p>
+                    <a asp-controller="Contact" asp-action="Index" class="btn-teal">@L["Bize Ulaş"]</a>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </section>
 
-
-<!-- =========================
-     MOBILE FILTER
-========================== -->
-
-<div class="offcanvas offcanvas-start"
-     tabindex="-1"
-     id="filterOffcanvas"
-     style="width:320px">
-
+<!-- MOBILE FILTER -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="filterOffcanvas" style="width:320px">
     <div class="offcanvas-header">
-
-        <h5 class="offcanvas-title"
-            style="font-family:'Sora';font-weight:700;color:var(--navy)">
-
-            Filtrele
-
-        </h5>
-
-        <button type="button"
-                class="btn-close"
-                data-bs-dismiss="offcanvas">
-        </button>
-
+        <h5 class="offcanvas-title" style="font-family:'Sora';font-weight:700;color:var(--navy)">@L["Filtrele"]</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
-
-
     <div class="offcanvas-body">
-
-        <div class="filter-card"
-             id="filterCardMobile"
-             style="box-shadow:none;border:none;padding:0">
+        <div class="filter-card" style="box-shadow:none;border:none;padding:0">
+            <partial name="_TourFilterPanel" model="Model" />
         </div>
-
     </div>
-
 </div>
 
+@Html.AntiForgeryToken()
 
 <script>
+    /* Filtre panelleri (masaüstü + mobil) aynı class'ları kullanır.
+       Değer içeren alanlar (arama, tarih, kişi) değiştiğinde diğer panele kopyalanır. */
 
-    /* =========================
-       DATA
-    ========================== */
+    const PRICE = { p1: [0, 25000], p2: [25000, 40000], p3: [40000, 60000], p4: [60000, 1e12] };
+    const DUR = { "1-3": [1, 3], "4-5": [4, 5], "6-7": [6, 7], "8+": [8, 999] };
 
-    const TOURS = [
-
-        @foreach (var tour in Model)
-        {
-                <text>
-                {
-                    id: "@tour.Id",
-                    title: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(tour.Name)),
-                    description: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(tour.ShortDescription ?? "")),
-                    destination: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(tour.DestinationName ?? "")),
-                    category: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(tour.CategoryName ?? "")),
-                    duration: @tour.DurationDays,
-                    nights: @tour.DurationNights,
-                    price: @tour.Price.ToString(CultureInfo.InvariantCulture),
-                    reservations: @tour.ReservationCount,
-                    image: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(tour.CoverImageUrl ?? ""))
-                },
-                </text>
-        }
-
-    ];
-
-
-    /* =========================
-       FILTER OPTIONS
-    ========================== */
-
-    const DUR_OPTS = [
-        {
-            key: "1-3",
-            label: "1 - 3 Gün",
-            min: 1,
-            max: 3
-        },
-        {
-            key: "4-5",
-            label: "4 - 5 Gün",
-            min: 4,
-            max: 5
-        },
-        {
-            key: "6-7",
-            label: "6 - 7 Gün",
-            min: 6,
-            max: 7
-        },
-        {
-            key: "8+",
-            label: "8 Gün ve Üzeri",
-            min: 8,
-            max: 999
-        }
-    ];
-
-
-    const PRICE_OPTS = [
-        {
-            key: "p1",
-            label: "0 - 25.000 ₺",
-            min: 0,
-            max: 25000
-        },
-        {
-            key: "p2",
-            label: "25.000 - 40.000 ₺",
-            min: 25000,
-            max: 40000
-        },
-        {
-            key: "p3",
-            label: "40.000 - 60.000 ₺",
-            min: 40000,
-            max: 60000
-        },
-        {
-            key: "p4",
-            label: "60.000 ₺ ve üzeri",
-            min: 60000,
-            max: 999999999
-        }
-    ];
-
-
-    const DEST_OPTS = [
-
-        @foreach (var destination in destinations)
-        {
-                <text>
-                {
-                    key: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(destination)),
-                    label: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(destination))
-                },
-                </text>
-        }
-
-    ];
-
-
-    const TYPE_OPTS = [
-
-        @foreach (var category in categories)
-        {
-                <text>
-                @Html.Raw(System.Text.Json.JsonSerializer.Serialize(category)),
-                </text>
-        }
-
-    ];
-
-
-    /* =========================
-       STATE
-    ========================== */
-
-    const state = {
-
-        q: "",
-
-        dest: [],
-
-        dur: [],
-
-        price: [],
-
-        type: [],
-
-        sort: "onerilen"
-
-    };
-
-
-    /* =========================
-       DESTINATION COUNT
-    ========================== */
-
-    function destCount(key) {
-
-        return TOURS.filter(
-            t => t.destination === key
-        ).length;
-
+    function checked(cls){ return [...new Set([...document.querySelectorAll("." + cls + ":checked")].map(x => x.value))]; }
+    function val(cls){ const el = document.querySelector("." + cls); return el ? el.value : ""; }
+    function mirror(el){
+      const cls = [...el.classList].find(c => c.startsWith("f-"));
+      if(!cls) return;
+      document.querySelectorAll("." + cls).forEach(x => {
+        if(x === el) return;
+        if(x.type === "checkbox" || x.type === "radio"){ if(x.value === el.value) x.checked = el.checked; }
+        else x.value = el.value;
+      });
     }
 
-
-    /* =========================
-       SIDEBAR
-    ========================== */
-
-    function sidebarHTML() {
-
-        return `
-
-        <h2>
-            Turları Filtrele
-        </h2>
-
-        <p class="filter-sub">
-            Sana en uygun rotayı bulmak için daralt.
-        </p>
-
-
-        <div class="filter-group">
-
-            <h3>
-                Tur Ara
-            </h3>
-
-            <div class="search-wrap">
-
-                <svg width="16"
-                     height="16"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="2">
-
-                    <circle cx="11"
-                            cy="11"
-                            r="8"/>
-
-                    <line x1="21"
-                          y1="21"
-                          x2="16.65"
-                          y2="16.65"/>
-
-                </svg>
-
-
-                <input type="text"
-                       class="f-search"
-                       placeholder="Tur veya destinasyon ara" />
-
-            </div>
-
-        </div>
-
-
-        <div class="filter-group">
-
-            <h3>
-                Destinasyon
-            </h3>
-
-            ${DEST_OPTS.map(o => `
-
-                <label class="fcheck">
-
-                    <span class="lbl">
-
-                        <input type="checkbox"
-                               class="f-dest"
-                               value="${o.key}">
-
-                        ${o.label}
-
-                    </span>
-
-                    <span class="cnt">
-                        (${destCount(o.key)})
-                    </span>
-
-                </label>
-
-            `).join("")}
-
-        </div>
-
-
-        <div class="filter-group">
-
-            <h3>
-                Tur Süresi
-            </h3>
-
-            ${DUR_OPTS.map(o => `
-
-                <label class="fcheck">
-
-                    <span class="lbl">
-
-                        <input type="checkbox"
-                               class="f-dur"
-                               value="${o.key}">
-
-                        ${o.label}
-
-                    </span>
-
-                </label>
-
-            `).join("")}
-
-        </div>
-
-
-        <div class="filter-group">
-
-            <h3>
-                Fiyat Aralığı
-            </h3>
-
-            ${PRICE_OPTS.map(o => `
-
-                <label class="fcheck">
-
-                    <span class="lbl">
-
-                        <input type="checkbox"
-                               class="f-price"
-                               value="${o.key}">
-
-                        ${o.label}
-
-                    </span>
-
-                </label>
-
-            `).join("")}
-
-        </div>
-
-
-        <div class="filter-group">
-
-            <h3>
-                Tur Tipi
-            </h3>
-
-            ${TYPE_OPTS.map(o => `
-
-                <label class="fcheck">
-
-                    <span class="lbl">
-
-                        <input type="checkbox"
-                               class="f-type"
-                               value="${o}">
-
-                        ${o}
-
-                    </span>
-
-                </label>
-
-            `).join("")}
-
-        </div>
-
-
-        <div class="filter-actions">
-
-            <button class="btn-teal"
-                    type="button"
-                    onclick="applyFromButton()">
-
-                Filtreleri Uygula
-
-            </button>
-
-
-            <button class="clear-link"
-                    type="button"
-                    onclick="clearFilters()">
-
-                Filtreleri Temizle
-
-            </button>
-
-        </div>
-
-        `;
-
+    function readState(){
+      return {
+        q: val("f-search").trim().toLocaleLowerCase("tr-TR"),
+        dest: checked("f-dest"),
+        cat: checked("f-cat"),
+        price: checked("f-price"),
+        dur: checked("f-dur"),
+        from: val("f-from"),
+        to: val("f-to"),
+        pax: parseInt(val("f-pax") || "1", 10)
+      };
     }
 
+    function matches(item, s){
+      const d = item.dataset;
+      if(s.q && !d.text.includes(s.q)) return false;
+      if(s.dest.length && !s.dest.includes(d.destination)) return false;
+      if(s.cat.length && !s.cat.includes(d.category)) return false;
 
-    document.getElementById(
-        "filterCardDesktop"
-    ).innerHTML = sidebarHTML();
+      const price = parseFloat(d.price);
+      if(s.price.length && !s.price.some(k => price >= PRICE[k][0] && price < PRICE[k][1])) return false;
 
+      const dur = parseInt(d.duration, 10);
+      if(s.dur.length && !s.dur.some(k => dur >= DUR[k][0] && dur <= DUR[k][1])) return false;
 
-    document.getElementById(
-        "filterCardMobile"
-    ).innerHTML = sidebarHTML();
-
-
-    /* =========================
-       SYNC STATE
-    ========================== */
-
-    function syncState() {
-
-        const search =
-            document.querySelector(".f-search")?.value
-                .trim()
-                .toLowerCase() || "";
-
-
-        state.q = search;
-
-
-        state.dest =
-            [
-                ...document.querySelectorAll(
-                    ".f-dest:checked"
-                )
-            ].map(i => i.value);
-
-
-        state.dur =
-            [
-                ...document.querySelectorAll(
-                    ".f-dur:checked"
-                )
-            ].map(i => i.value);
-
-
-        state.price =
-            [
-                ...document.querySelectorAll(
-                    ".f-price:checked"
-                )
-            ].map(i => i.value);
-
-
-        state.type =
-            [
-                ...document.querySelectorAll(
-                    ".f-type:checked"
-                )
-            ].map(i => i.value);
-
-
-        state.dest =
-            [...new Set(state.dest)];
-
-        state.dur =
-            [...new Set(state.dur)];
-
-        state.price =
-            [...new Set(state.price)];
-
-        state.type =
-            [...new Set(state.type)];
-
+      // Tarih + kişi: seçilen aralıkta, istenen kişi kadar yeri olan bir kalkış olmalı
+      if(s.from || s.to || s.pax > 1){
+        const dates = (d.dates || "").split(",").filter(Boolean).map(x => x.split("|"));
+        const ok = dates.some(([date, remaining]) =>
+          (!s.from || date >= s.from) && (!s.to || date <= s.to) && parseInt(remaining, 10) >= s.pax);
+        if(!ok) return false;
+      }
+      return true;
     }
 
+    function firstDate(item){ return (item.dataset.dates || "9999").split(",")[0].split("|")[0] || "9999"; }
 
-    /* =========================
-       FILTER
-    ========================== */
+    function render(){
+      const s = readState();
+      const grid = document.getElementById("tourGrid");
+      const items = [...grid.querySelectorAll(".tour-item")];
+      let count = 0;
 
-    function getFiltered() {
+      items.forEach(item => {
+        const ok = matches(item, s);
+        item.classList.toggle("hide", !ok);
+        if(ok) count++;
+      });
 
-        let list = TOURS.filter(t => {
+      const sort = document.getElementById("sortSelect").value;
+      const by = {
+        "populer": (a, b) => b.dataset.reservations - a.dataset.reservations,
+        "puan": (a, b) => b.dataset.rating - a.dataset.rating,
+        "fiyat-artan": (a, b) => a.dataset.price - b.dataset.price,
+        "fiyat-azalan": (a, b) => b.dataset.price - a.dataset.price,
+        "tarih": (a, b) => firstDate(a).localeCompare(firstDate(b))
+      }[sort];
+      if(by) items.sort(by).forEach(x => grid.appendChild(x));
 
-            if (state.q) {
-
-                const hay =
-                    (
-                        t.title +
-                        " " +
-                        t.description +
-                        " " +
-                        t.destination +
-                        " " +
-                        t.category
-                    ).toLowerCase();
-
-
-                if (!hay.includes(state.q)) {
-
-                    return false;
-
-                }
-
-            }
-
-
-            if (
-                state.dest.length &&
-                !state.dest.includes(t.destination)
-            ) {
-
-                return false;
-
-            }
-
-
-            if (state.dur.length) {
-
-                const ok =
-                    state.dur.some(k => {
-
-                        const o =
-                            DUR_OPTS.find(
-                                d => d.key === k
-                            );
-
-                        return (
-                            t.duration >= o.min &&
-                            t.duration <= o.max
-                        );
-
-                    });
-
-
-                if (!ok) {
-
-                    return false;
-
-                }
-
-            }
-
-
-            if (state.price.length) {
-
-                const ok =
-                    state.price.some(k => {
-
-                        const o =
-                            PRICE_OPTS.find(
-                                p => p.key === k
-                            );
-
-                        return (
-                            t.price >= o.min &&
-                            t.price < o.max
-                        );
-
-                    });
-
-
-                if (!ok) {
-
-                    return false;
-
-                }
-
-            }
-
-
-            if (
-                state.type.length &&
-                !state.type.includes(t.category)
-            ) {
-
-                return false;
-
-            }
-
-
-            return true;
-
-        });
-
-
-        /* SORT */
-
-        switch (state.sort) {
-
-            case "fiyat-artan":
-
-                list.sort(
-                    (a, b) =>
-                        a.price - b.price
-                );
-
-                break;
-
-
-            case "fiyat-azalan":
-
-                list.sort(
-                    (a, b) =>
-                        b.price - a.price
-                );
-
-                break;
-
-
-            case "puan":
-
-                list.sort(
-                    (a, b) =>
-                        b.reservations -
-                        a.reservations
-                );
-
-                break;
-
-        }
-
-
-        return list;
-
+      document.getElementById("resultCount").textContent = count;
+      document.getElementById("emptyState").style.display = count ? "none" : "block";
+      renderChips(s);
     }
 
+    function renderChips(s){
+      const chips = [];
+      s.dest.forEach(v => chips.push(["f-dest", v, v]));
+      s.cat.forEach(v => chips.push(["f-cat", v, v]));
+      s.price.forEach(v => chips.push(["f-price", v, document.querySelector('.f-price[value="' + v + '"]').dataset.label]));
+      s.dur.forEach(v => chips.push(["f-dur", v, document.querySelector('.f-dur[value="' + v + '"]').dataset.label]));
+      if(s.from) chips.push(["f-from", "", "≥ " + s.from]);
+      if(s.to) chips.push(["f-to", "", "≤ " + s.to]);
+      if(s.pax > 1) chips.push(["f-pax", "", s.pax + " 👤"]);
+      if(s.q) chips.push(["f-search", "", '"' + s.q + '"']);
 
-    /* =========================
-       FORMAT
-    ========================== */
-
-    function fmt(number) {
-
-        return Number(number)
-            .toLocaleString("tr-TR");
-
+      const wrap = document.getElementById("activeChips");
+      wrap.innerHTML = "";
+      chips.forEach(([cls, value, text]) => {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = text + " ×";
+        chip.onclick = () => {
+          document.querySelectorAll("." + cls).forEach(x => {
+            if(x.type === "checkbox"){ if(x.value === value) x.checked = false; }
+            else if(cls === "f-pax") x.value = "1";
+            else x.value = "";
+          });
+          render();
+        };
+        wrap.appendChild(chip);
+      });
     }
 
-
-    /* =========================
-       CARD
-    ========================== */
-
-    function cardHTML(t) {
-
-        const image =
-            t.image
-                ? `
-                    <img src="${t.image}"
-                         alt="${t.title}"
-                         loading="lazy" />
-                  `
-                : `
-                    <div class="tour-image-placeholder">
-
-                        <i class="bi bi-image"></i>
-
-                    </div>
-                  `;
-
-
-        const badge =
-            t.reservations > 10
-                ? `<span class="tour-badge">Popüler</span>`
-                : "";
-
-
-        return `
-
-        <div class="col-md-6">
-
-            <article class="tour-card">
-
-
-                <div class="tour-media">
-
-                    ${image}
-
-                    ${badge}
-
-
-                    <button class="fav"
-                            type="button"
-                            aria-label="Favorilere ekle"
-                            onclick="this.classList.toggle('on')">
-
-                        <svg width="18"
-                             height="18"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2">
-
-                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
-
-                        </svg>
-
-                    </button>
-
-                </div>
-
-
-                <div class="tour-body">
-
-
-                    <div class="tour-topline">
-
-                        <span class="tour-country">
-                            ${t.destination || "Destinasyon"}
-                        </span>
-
-                        <span class="tour-cat">
-                            ${t.category || "Tur"}
-                        </span>
-
-                    </div>
-
-
-                    <h3 class="tour-title">
-                        ${t.title}
-                    </h3>
-
-
-                    ${
-                        t.description
-                            ? `
-                                <div class="tour-description">
-                                    ${t.description}
-                                </div>
-                              `
-                            : ""
-                    }
-
-
-                    <div class="tour-meta">
-
-                        <span class="tour-meta-item">
-
-                            <i class="bi bi-calendar3 me-1"></i>
-
-                            ${t.duration} gün
-
-                            ${
-                                t.nights > 0
-                                    ? ` / ${t.nights} gece`
-                                    : ""
-                            }
-
-                        </span>
-
-
-                        <span class="tour-meta-item">
-
-                            <i class="bi bi-people me-1"></i>
-
-                            ${t.reservations}
-                            rezervasyon
-
-                        </span>
-
-                    </div>
-
-
-                    <div class="tour-foot">
-
-                        <div class="price">
-
-                            <small>
-                                Kişi başı
-                            </small>
-
-                            <b>
-
-                                ${fmt(t.price)}
-
-                                <span>
-                                    TL
-                                </span>
-
-                            </b>
-
-                        </div>
-
-
-                        <a href="/Tours/TourDetail?id=${t.id}"
-                           class="btn-incele">
-
-                            Turu İncele
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        </div>
-
-        `;
-
+    function clearFilters(){
+      document.querySelectorAll(".f-dest,.f-cat,.f-price,.f-dur").forEach(x => x.checked = false);
+      document.querySelectorAll(".f-search,.f-from,.f-to").forEach(x => x.value = "");
+      document.querySelectorAll(".f-pax").forEach(x => x.value = "1");
+      document.getElementById("sortSelect").value = "onerilen";
+      render();
     }
 
-
-    /* =========================
-       CHIPS
-    ========================== */
-
-    function chipsHTML() {
-
-        const chips = [];
-
-
-        state.dest.forEach(k => {
-
-            const o =
-                DEST_OPTS.find(
-                    d => d.key === k
-                );
-
-            if (o) {
-
-                chips.push({
-                    text: o.label,
-                    kind: "dest",
-                    value: k
-                });
-
-            }
-
-        });
-
-
-        state.dur.forEach(k => {
-
-            const o =
-                DUR_OPTS.find(
-                    d => d.key === k
-                );
-
-            if (o) {
-
-                chips.push({
-                    text: o.label,
-                    kind: "dur",
-                    value: k
-                });
-
-            }
-
-        });
-
-
-        state.price.forEach(k => {
-
-            const o =
-                PRICE_OPTS.find(
-                    p => p.key === k
-                );
-
-            if (o) {
-
-                chips.push({
-                    text: o.label,
-                    kind: "price",
-                    value: k
-                });
-
-            }
-
-        });
-
-
-        state.type.forEach(v => {
-
-            chips.push({
-                text: v,
-                kind: "type",
-                value: v
-            });
-
-        });
-
-
-        if (state.q) {
-
-            chips.push({
-                text: '"' + state.q + '"',
-                kind: "q",
-                value: state.q
-            });
-
-        }
-
-
-        return chips
-            .map(c => `
-
-                <span class="chip"
-                      onclick="removeChip(
-                          '${c.kind}',
-                          '${c.value.replace(/'/g, "\\'")}'
-                      )">
-
-                    ${c.text}
-
-                    <span class="x">
-                        ×
-                    </span>
-
-                </span>
-
-            `)
-            .join("");
-
+    function applyFromButton(){
+      render();
+      const inst = bootstrap.Offcanvas.getInstance(document.getElementById("filterOffcanvas"));
+      if(inst) inst.hide();
     }
 
+    document.addEventListener("input", e => {
+      if(e.target.matches(".f-search,.f-dest,.f-cat,.f-price,.f-dur,.f-from,.f-to,.f-pax")){ mirror(e.target); render(); }
+    });
+    document.getElementById("sortSelect").addEventListener("change", render);
 
-    /* =========================
-       REMOVE CHIP
-    ========================== */
+    /* Ana sayfadaki arama kutusundan gelen parametreler: ?dest=&cat=&date=&pax=&q= */
+    (function initFromQuery(){
+      const p = new URLSearchParams(location.search);
+      const setCheck = (cls, v) => document.querySelectorAll("." + cls).forEach(x => { if(x.value === v) x.checked = true; });
+      if(p.get("dest")) setCheck("f-dest", p.get("dest"));
+      if(p.get("cat")) setCheck("f-cat", p.get("cat"));
+      if(p.get("date")) document.querySelectorAll(".f-from").forEach(x => x.value = p.get("date"));
+      if(p.get("pax")) document.querySelectorAll(".f-pax").forEach(x => x.value = p.get("pax"));
+      if(p.get("q")) document.querySelectorAll(".f-search").forEach(x => x.value = p.get("q"));
+      render();
+    })();
 
-    function removeChip(kind, value) {
-
-        const uncheck =
-            (selector, val) => {
-
-                document
-                    .querySelectorAll(selector)
-                    .forEach(input => {
-
-                        if (input.value === val) {
-
-                            input.checked = false;
-
-                        }
-
-                    });
-
-            };
-
-
-        if (kind === "dest") {
-
-            uncheck(".f-dest", value);
-
-        }
-
-
-        if (kind === "dur") {
-
-            uncheck(".f-dur", value);
-
-        }
-
-
-        if (kind === "price") {
-
-            uncheck(".f-price", value);
-
-        }
-
-
-        if (kind === "type") {
-
-            uncheck(".f-type", value);
-
-        }
-
-
-        if (kind === "q") {
-
-            document
-                .querySelectorAll(".f-search")
-                .forEach(i => {
-
-                    i.value = "";
-
-                });
-
-        }
-
-
-        syncState();
-
-        render();
-
+    /* Favori */
+    async function toggleFav(btn){
+      const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+      const res = await fetch("/Tours/ToggleFavorite", {
+        method: "POST",
+        body: new URLSearchParams({ tourId: btn.dataset.tourId, __RequestVerificationToken: token })
+      });
+      if(res.status === 401){ location.href = "/Auth/SignIn"; return; }
+      if(res.ok){ const data = await res.json(); btn.classList.toggle("on", data.isFavorite); }
     }
-
-
-    /* =========================
-       RENDER
-    ========================== */
-
-    function render() {
-
-        const list =
-            getFiltered();
-
-
-        const grid =
-            document.getElementById(
-                "tourGrid"
-            );
-
-
-        const empty =
-            document.getElementById(
-                "emptyState"
-            );
-
-
-        const resultCount =
-            document.getElementById(
-                "resultCount"
-            );
-
-
-        resultCount.textContent =
-            list.length;
-
-
-        document.getElementById(
-            "activeChips"
-        ).innerHTML =
-            chipsHTML();
-
-
-        if (list.length === 0) {
-
-            grid.innerHTML = "";
-
-            empty.style.display =
-                "block";
-
-            return;
-
-        }
-
-
-        grid.innerHTML =
-            list.map(cardHTML).join("");
-
-
-        empty.style.display =
-            "none";
-
-    }
-
-
-    /* =========================
-       EVENTS
-    ========================== */
-
-    document.addEventListener(
-        "input",
-        function (e) {
-
-            if (
-                e.target.matches(
-                    ".f-search, .f-dest, .f-dur, .f-price, .f-type"
-                )
-            ) {
-
-                syncState();
-
-                render();
-
-            }
-
-        }
-    );
-
-
-    document.getElementById(
-        "sortSelect"
-    ).addEventListener(
-        "change",
-        function (e) {
-
-            state.sort =
-                e.target.value;
-
-            render();
-
-        }
-    );
-
-
-    /* =========================
-       APPLY
-    ========================== */
-
-    function applyFromButton() {
-
-        syncState();
-
-        render();
-
-
-        const offcanvas =
-            document.getElementById(
-                "filterOffcanvas"
-            );
-
-
-        const instance =
-            bootstrap.Offcanvas
-                .getInstance(offcanvas);
-
-
-        if (instance) {
-
-            instance.hide();
-
-        }
-
-    }
-
-
-    /* =========================
-       CLEAR
-    ========================== */
-
-    function clearFilters() {
-
-        document
-            .querySelectorAll(".f-search")
-            .forEach(i => {
-
-                i.value = "";
-
-            });
-
-
-        document
-            .querySelectorAll(
-                ".f-dest, .f-dur, .f-price, .f-type"
-            )
-            .forEach(i => {
-
-                i.checked = false;
-
-            });
-
-
-        state.q = "";
-
-        state.dest = [];
-
-        state.dur = [];
-
-        state.price = [];
-
-        state.type = [];
-
-        state.sort =
-            "onerilen";
-
-
-        document.getElementById(
-            "sortSelect"
-        ).value =
-            "onerilen";
-
-
-        syncState();
-
-        render();
-
-    }
-
-
-    /* =========================
-       INITIAL
-    ========================== */
-
-    syncState();
-
-    render();
-
 </script>

@@ -1,37 +1,52 @@
-﻿
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
 @{
     Layout = null;
+    var isAuth = User.Identity?.IsAuthenticated == true;
+
+    string Initials(string? name) => string.Concat((string.IsNullOrWhiteSpace(name) ? "M" : name)
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => char.ToUpper(x[0])));
 }
 
 <!-- Q&A -->
-<div class="content-block">
-    <h2>Tur Hakkında Sorular</h2>
-    <div class="qa-item">
-        <div class="qa-q">
-            <span class="qa-avatar">AD</span>
-            <div><div class="who">Ayşe Demir</div><div class="txt">Vatikan giriş bileti tur ücretine dahil mi?</div></div>
+<div class="content-block" id="sorular">
+    <h2>@L["Tur Hakkında Sorular"]</h2>
+
+    @if (!Model.Questions.Any())
+    {
+        <p>@L["Henüz cevaplanmış bir soru yok."]</p>
+    }
+
+    @foreach (var q in Model.Questions)
+    {
+        <div class="qa-item">
+            <div class="qa-q">
+                <span class="qa-avatar">@Initials(q.UserName)</span>
+                <div>
+                    <div class="who">@(string.IsNullOrWhiteSpace(q.UserName) ? L["Misafir"] : q.UserName)</div>
+                    <div class="txt">@q.QuestionText</div>
+                </div>
+            </div>
+            <div class="qa-a">
+                <span class="brand-mini">Travelio</span>
+                <span class="txt">@q.Answer</span>
+            </div>
         </div>
-        <div class="qa-a"><span class="brand-mini">Travelio</span><span class="txt">Vatikan müzeleri giriş ücretleri tur paketine dahil değildir. Güncel giriş ücretleri tur öncesinde misafirlerimizle paylaşılır.</span></div>
-    </div>
-    <div class="qa-item">
-        <div class="qa-q">
-            <span class="qa-avatar">MK</span>
-            <div><div class="who">Mehmet Kaya</div><div class="txt">Tur sırasında serbest zamanımız olacak mı?</div></div>
-        </div>
-        <div class="qa-a"><span class="brand-mini">Travelio</span><span class="txt">Evet. Roma ve Floransa programlarında misafirlerimizin bireysel keşif yapabilmesi için serbest zaman bulunmaktadır.</span></div>
-    </div>
-    <div class="qa-item">
-        <div class="qa-q">
-            <span class="qa-avatar">SA</span>
-            <div><div class="who">Selin Arslan</div><div class="txt">Schengen vizem yok, vize hizmeti veriyor musunuz?</div></div>
-        </div>
-        <div class="qa-a"><span class="brand-mini">Travelio</span><span class="txt">Tur paketine vize ücreti dahil değildir ancak gerekli evrak süreci konusunda danışmanlık sağlanmaktadır.</span></div>
-    </div>
+    }
 
     <div class="ask-box">
-        <div class="book-label" style="margin-top:0">Bu tur hakkında merak ettiğin bir şey mi var?</div>
-        <textarea id="askInput" placeholder="Sorunu yaz..."></textarea>
-        <button class="btn-teal mt-3" onclick="sendQuestion()">Soru Gönder</button>
-        <div id="askOk" style="display:none;color:var(--teal-dark);font-weight:600;font-size:.9rem;margin-top:.8rem">Sorun alındı! Ekibimiz en kısa sürede yanıtlayacak.</div>
+        <div class="book-label" style="margin-top:0">@L["Bu tur hakkında merak ettiğin bir şey mi var?"]</div>
+
+        @if (isAuth)
+        {
+            <form asp-controller="Tours" asp-action="AskQuestion" method="post">
+                <input type="hidden" name="TourId" value="@Model.Id" />
+                <textarea name="QuestionText" placeholder="@L["Sorunu yaz..."]" required minlength="5" maxlength="500"></textarea>
+                <button type="submit" class="btn-teal mt-3">@L["Soru Gönder"]</button>
+            </form>
+        }
+        else
+        {
+            <a class="btn-teal" asp-controller="Auth" asp-action="SignIn">@L["Soru sormak için giriş yap"]</a>
+        }
     </div>
 </div>

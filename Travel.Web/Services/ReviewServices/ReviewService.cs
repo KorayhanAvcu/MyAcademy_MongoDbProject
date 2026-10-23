@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Travel.Web.DTOs.ReviewDtos;
@@ -80,6 +80,8 @@ namespace Travel.Web.Services.ReviewServices
             review.IsActive = true;
 
             await _reviewCollection.InsertOneAsync(review);
+
+            await RecalculateTourRatingAsync(review.TourId);
         }
 
         public async Task UpdateAsync(UpdateReviewDto updateReviewDto)
@@ -95,8 +97,74 @@ namespace Travel.Web.Services.ReviewServices
 
         public async Task DeleteAsync(string id)
         {
+            var review = await _reviewCollection
+                .Find(x => x.Id == id)
+                .FirstOrDefaultAsync();
+
             await _reviewCollection.DeleteOneAsync(
                 x => x.Id == id);
+
+            if (review != null)
+                await RecalculateTourRatingAsync(review.TourId);
+        }
+
+        public async Task<List<ReviewListDto>> GetByTourAsync(string tourId)
+        {
+            var reviews = await _reviewCollection
+                .Find(x => x.TourId == tourId && x.IsActive)
+                .SortByDescending(x => x.CreatedAt)
+                .ToListAsync();
+
+            return _mapper.Map<List<ReviewListDto>>(reviews);
+        }
+
+        public async Task<List<ReviewListDto>> GetByUserAsync(string userId)
+        {
+            var reviews = await _reviewCollection
+                .Find(x => x.UserId == userId)
+                .SortByDescending(x => x.CreatedAt)
+                .ToListAsync();
+
+            var result = _mapper.Map<List<ReviewListDto>>(reviews);
+
+            var tourIds = result.Select(x => x.TourId).Distinct().ToList();
+            var tours = await _tourCollection
+                .Find(x => tourIds.Contains(x.Id))
+                .ToListAsync();
+
+            foreach (var review in result)
+                review.TourName = tours.FirstOrDefault(x => x.Id == review.TourId)?.Name ?? "-";
+
+            return result;
+        }
+
+        public async Task<bool> HasUserReviewedAsync(string userId, string tourId)
+        {
+            return await _reviewCollection
+                .Find(x => x.UserId == userId && x.TourId == tourId)
+                .AnyAsync();
+        }
+
+        /// <summary>
+        /// Turun ortalama puanını ve yorum sayısını Aggregation Pipeline
+        /// ile hesaplayıp Tour dokümanına (denormalize) yazar.
+        /// </summary>
+        private async Task RecalculateTourRatingAsync(string tourId)
+        {
+            var stats = await _reviewCollection.Aggregate()
+                .Match(x => x.TourId == tourId && x.IsActive)
+                .Group(x => x.TourId, g => new
+                {
+                    Average = g.Average(x => x.Rating),
+                    Count = g.Count()
+                })
+                .FirstOrDefaultAsync();
+
+            var update = Builders<Tour>.Update
+                .Set(x => x.AverageRating, stats == null ? 0 : Math.Round(stats.Average, 1))
+                .Set(x => x.ReviewCount, stats?.Count ?? 0);
+
+            await _tourCollection.UpdateOneAsync(x => x.Id == tourId, update);
         }
 
         public async Task MarkAsReadAsync(string id)

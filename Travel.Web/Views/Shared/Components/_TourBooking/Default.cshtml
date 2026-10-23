@@ -1,56 +1,100 @@
-﻿
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
 @{
     Layout = null;
+    var isAuth = User.Identity?.IsAuthenticated == true;
+    var firstAvailable = Model.TourDates.FirstOrDefault(x => x.RemainingCapacity > 0);
 }
 
 <!-- RIGHT: BOOKING -->
-<div class="col-lg-4">
-    <div class="book-sticky">
-        <div class="book-card">
-            <div class="price-top">
-                <small>Kişi başı</small>
-                <div class="big" id="unitPrice">42.500 <span>TL</span></div>
-                <div class="price-note">Vergiler ve belirtilen hizmetler dahildir.</div>
-            </div>
+<div class="book-sticky">
+    <div class="book-card">
+        <div class="price-top">
+            <small>@L["Kişi başı"]</small>
+            <div class="big">@Model.Price.ToString("N0", new CultureInfo("tr-TR")) <span>TL</span></div>
+            <div class="price-note">@L["Çocuk (2-11 yaş)"]: @Model.ChildPrice.ToString("N0", new CultureInfo("tr-TR")) TL</div>
+        </div>
 
-            <div class="book-label">Tur Tarihi</div>
+        <form asp-controller="Tours" asp-action="Reserve" method="post" id="reserveForm">
+            <input type="hidden" name="TourId" value="@Model.Id" />
+            <input type="hidden" name="AdultCount" id="adultInput" value="2" />
+            <input type="hidden" name="ChildCount" id="childInput" value="0" />
+
+            <div class="book-label">@L["Tur Tarihi"]</div>
+
             <div id="dateOptions">
-                <label class="date-opt sel"><span class="d">12 - 17 Ekim 2026</span><input type="radio" name="tourDate" checked><span class="left">Son 4 Kontenjan</span></label>
-                <label class="date-opt"><span class="d">9 - 14 Kasım 2026</span><input type="radio" name="tourDate"></label>
-                <label class="date-opt"><span class="d">7 - 12 Aralık 2026</span><input type="radio" name="tourDate"><span class="left">Son 6 Kontenjan</span></label>
-                <label class="date-opt"><span class="d">14 - 19 Mart 2027</span><input type="radio" name="tourDate"></label>
+                @if (!Model.TourDates.Any())
+                {
+                    <p style="color:var(--muted);font-size:.9rem">@L["Şu anda satışta tarih bulunmuyor."]</p>
+                }
+
+                @foreach (var date in Model.TourDates)
+                {
+                    var full = date.RemainingCapacity <= 0;
+                    var selected = firstAvailable != null && date.Id == firstAvailable.Id;
+
+                    <label class="date-opt @(selected ? "sel" : "") @(full ? "full" : "")"
+                           data-remaining="@date.RemainingCapacity"
+                           style="@(full ? "opacity:.5;cursor:not-allowed" : "")">
+                        <span class="d">@date.StartDate.ToString("d MMM") - @date.EndDate.ToString("d MMM yyyy")</span>
+                        <input type="radio" name="TourDateId" value="@date.Id" @(selected ? "checked" : "") @(full ? "disabled" : "") />
+                        @if (full)
+                        {
+                            <span class="left">@L["Kontenjan Doldu"]</span>
+                        }
+                        else if (date.RemainingCapacity <= 10)
+                        {
+                            <span class="left">@L["Son"] @date.RemainingCapacity @L["Kontenjan"]</span>
+                        }
+                        else
+                        {
+                            <span class="left" style="color:var(--muted);font-weight:500">@date.RemainingCapacity @L["kişilik yer"]</span>
+                        }
+                    </label>
+                }
             </div>
 
-            <div class="book-label">Kişi Sayısı</div>
+            <div class="book-label">@L["Kişi Sayısı"]</div>
             <div class="counter-row">
-                <div class="cl"><b>Yetişkin</b><span>12 yaş ve üzeri</span></div>
+                <div class="cl"><b>@L["Yetişkin"]</b><span>@L["12 yaş ve üzeri"]</span></div>
                 <div class="counter">
-                    <button onclick="changeCount('adult',-1)" id="adultMinus">−</button>
+                    <button type="button" onclick="changeCount('adult',-1)" id="adultMinus">−</button>
                     <span class="val" id="adultVal">2</span>
-                    <button onclick="changeCount('adult',1)">+</button>
+                    <button type="button" onclick="changeCount('adult',1)" id="adultPlus">+</button>
                 </div>
             </div>
             <div class="counter-row">
-                <div class="cl"><b>Çocuk</b><span>2 - 11 yaş</span></div>
+                <div class="cl"><b>@L["Çocuk"]</b><span>@L["2 - 11 yaş"]</span></div>
                 <div class="counter">
-                    <button onclick="changeCount('child',-1)" id="childMinus">−</button>
+                    <button type="button" onclick="changeCount('child',-1)" id="childMinus">−</button>
                     <span class="val" id="childVal">0</span>
-                    <button onclick="changeCount('child',1)">+</button>
+                    <button type="button" onclick="changeCount('child',1)" id="childPlus">+</button>
                 </div>
             </div>
 
             <div class="summary">
-                <div class="row-line"><span id="adultLine">2 Yetişkin</span><b id="adultSum">85.000 TL</b></div>
-                <div class="row-line" id="childRow" style="display:none"><span id="childLine">0 Çocuk</span><b id="childSum">0 TL</b></div>
-                <div class="row-line"><span>Ara Toplam</span><b id="subtotal">85.000 TL</b></div>
-                <div class="total"><span>Toplam</span><b id="grandTotal">85.000 TL</b></div>
+                <div class="row-line"><span id="adultLine"></span><b id="adultSum"></b></div>
+                <div class="row-line" id="childRow" style="display:none"><span id="childLine"></span><b id="childSum"></b></div>
+                <div class="total"><span>@L["Toplam"]</span><b id="grandTotal"></b></div>
+                <div id="capWarn" style="display:none;color:#c26a45;font-size:.8rem;font-weight:600;margin-top:.5rem"></div>
             </div>
 
-            <button class="btn-teal" onclick="reserve()">Rezervasyon Yap</button>
-            <div class="trust">
-                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg> Güvenli rezervasyon</span>
-                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Ücretsiz ön rezervasyon</span>
-            </div>
+            @if (!isAuth)
+            {
+                <a class="btn-teal d-block text-center" asp-controller="Auth" asp-action="SignIn">@L["Rezervasyon için giriş yap"]</a>
+            }
+            else if (firstAvailable == null)
+            {
+                <button type="button" class="btn-teal" disabled style="opacity:.5">@L["Kontenjan Yok"]</button>
+            }
+            else
+            {
+                <button type="submit" class="btn-teal" id="reserveBtn">@L["Rezervasyon Yap"]</button>
+            }
+        </form>
+
+        <div class="trust">
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg> @L["Güvenli rezervasyon"]</span>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> @L["Ücretsiz ön rezervasyon"]</span>
         </div>
     </div>
 </div>

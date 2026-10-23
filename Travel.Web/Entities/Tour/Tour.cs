@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Travel.Web.Entities.Common;
 using Travel.Web.Entities.Enums;
@@ -13,6 +13,13 @@ namespace Travel.Web.Entities.Tour
 
         public string Description { get; set; } = string.Empty;
 
+        // İngilizce içerik (çoklu dil). Boşsa Türkçe alanlar kullanılır.
+        public string? NameEn { get; set; }
+
+        public string? ShortDescriptionEn { get; set; }
+
+        public string? DescriptionEn { get; set; }
+
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string CategoryId { get; set; } = default!;
@@ -26,6 +33,7 @@ namespace Travel.Web.Entities.Tour
 
         public string? TourType { get; set; }
 
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal Price { get; set; }
 
         public int DurationDays { get; set; }
@@ -77,6 +85,7 @@ namespace Travel.Web.Entities.Tour
 
 
         // Denormalized
+        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public double AverageRating { get; set; }
 
         public int ReviewCount { get; set; }

@@ -1,552 +1,218 @@
-﻿
+﻿@model Travel.Web.DTOs.StatisticDtos.DashboardDto
+@using Travel.Web.DTOs.ReservationDtos
+@using Travel.Web.DTOs.ReviewDtos
+@using Travel.Web.DTOs.QuestionDtos
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/AdminLayout/Layout.cshtml";
+
+    var tr = new CultureInfo("tr-TR");
+    var reservations = (List<ReservationListDto>)ViewBag.RecentReservations;
+    var reviews = (List<ReviewListDto>)ViewBag.RecentReviews;
+    var questions = (List<QuestionListDto>)ViewBag.PendingQuestions;
+
+    string Badge(string s) => s switch { "Approved" => "b-ok", "Cancelled" => "b-cancel", _ => "b-wait" };
+    string StatusText(string s) => s switch { "Approved" => L["Onaylandı"].Value, "Cancelled" => L["İptal Edildi"].Value, _ => L["Bekliyor"].Value };
+    string Initials(string? n) => string.Concat((n ?? "?").Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(x => char.ToUpper(x[0])));
 }
-
-
-<!-- =========================
-     DASHBOARD CONTENT
-     ========================= -->
 
 <div class="content">
 
-
-    <!-- =========================
-         PAGE INTRO
-         ========================= -->
-
     <div class="page-intro">
-
         <div>
-
-            <div class="eyebrow">
-                Genel Bakış
-            </div>
-
-            <h1>
-                Hoş Geldiniz, Murat 👋
-            </h1>
-
-            <p>
-                Travelio platformundaki son gelişmeleri ve
-                önemli verileri buradan takip edebilirsiniz.
-            </p>
-
+            <div class="eyebrow">@L["Genel Bakış"]</div>
+            <h1>@L["Hoş Geldiniz"] 👋</h1>
+            <p>@L["Travelio platformundaki son gelişmeleri ve önemli verileri buradan takip edebilirsiniz."]</p>
         </div>
-
-
-        <div class="date-pill">
-
-            <svg width="15"
-                 height="15"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-
-                <rect x="3"
-                      y="4"
-                      width="18"
-                      height="18"
-                      rx="2" />
-
-                <line x1="16"
-                      y1="2"
-                      x2="16"
-                      y2="6" />
-
-                <line x1="8"
-                      y1="2"
-                      x2="8"
-                      y2="6" />
-
-                <line x1="3"
-                      y1="10"
-                      x2="21"
-                      y2="10" />
-
-            </svg>
-
-            13 Ağustos 2026
-
-        </div>
-
+        <div class="date-pill">📅 @DateTime.Now.ToString("d MMMM yyyy")</div>
     </div>
 
-
-    <!-- =========================
-         KPIs
-         ========================= -->
-
+    <!-- KPIs -->
     <div class="row g-3 mb-3">
-
-
-        <!-- TOTAL TOURS -->
-
         <div class="col-6 col-xl-3">
-
             <div class="kpi">
-
-                <div class="top">
-
-                    <div class="ic">
-
-                        <svg width="20"
-                             height="20"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round">
-
-                            <path d="M3 7h18v12H3z" />
-
-                            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-
-                        </svg>
-
-                    </div>
-
-                    <span class="trend">
-                        +3
-                    </span>
-
-                </div>
-
-
-                <div class="num">
-                    48
-                </div>
-
-                <div class="lab">
-                    Toplam Tur
-                </div>
-
-                <div class="sub">
-                    <span class="up">
-                        42 aktif tur
-                    </span>
-                </div>
-
+                <div class="num">@Model.TotalTours</div>
+                <div class="lab">@L["Toplam Tur"]</div>
+                <div class="sub"><span class="up">@Model.ActiveTours @L["aktif"]</span> · @Model.PassiveTours @L["pasif / taslak"]</div>
             </div>
-
         </div>
-
-
-        <!-- TOTAL BOOKINGS -->
-
         <div class="col-6 col-xl-3">
-
             <div class="kpi">
-
-                <div class="top">
-
-                    <div class="ic">
-
-                        <svg width="20"
-                             height="20"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round">
-
-                            <path d="M9 11l3 3L22 4" />
-
-                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-
-                        </svg>
-
-                    </div>
-
-                    <span class="trend">
-                        +12%
-                    </span>
-
-                </div>
-
-
-                <div class="num">
-                    1.284
-                </div>
-
-                <div class="lab">
-                    Toplam Rezervasyon
-                </div>
-
-                <div class="sub">
-
-                    <span class="up">
-                        Bu ay +126
-                    </span>
-
-                    · geçen aya göre %12 artış
-
-                </div>
-
+                <div class="num">@Model.TotalReservations.ToString("N0", tr)</div>
+                <div class="lab">@L["Toplam Rezervasyon"]</div>
+                <div class="sub"><span class="up">@L["Bu ay"] +@Model.ThisMonthReservations</span></div>
             </div>
-
         </div>
-
-
-        <!-- TOTAL USERS -->
-
         <div class="col-6 col-xl-3">
-
             <div class="kpi">
-
-                <div class="top">
-
-                    <div class="ic">
-
-                        <svg width="20"
-                             height="20"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round">
-
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-
-                            <circle cx="9"
-                                    cy="7"
-                                    r="4" />
-
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-
-                        </svg>
-
-                    </div>
-
-                    <span class="trend">
-                        +318
-                    </span>
-
-                </div>
-
-
-                <div class="num">
-                    8.642
-                </div>
-
-                <div class="lab">
-                    Toplam Kullanıcı
-                </div>
-
-                <div class="sub">
-
-                    <span class="up">
-                        Bu ay +318
-                    </span>
-
-                </div>
-
+                <div class="num">@Model.TotalUsers.ToString("N0", tr)</div>
+                <div class="lab">@L["Toplam Kullanıcı"]</div>
+                <div class="sub">@Model.TotalDestinations @L["destinasyon"] · ★ @Model.AverageTourRating.ToString("0.0") @L["ort. puan"]</div>
             </div>
-
         </div>
-
-
-        <!-- PENDING QUESTIONS -->
-
         <div class="col-6 col-xl-3">
-
             <div class="kpi">
-
-                <div class="top">
-
-                    <div class="ic warn">
-
-                        <svg width="20"
-                             height="20"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2"
-                             stroke-linecap="round"
-                             stroke-linejoin="round">
-
-                            <circle cx="12"
-                                    cy="12"
-                                    r="10" />
-
-                            <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" />
-
-                            <line x1="12"
-                                  y1="17"
-                                  x2="12"
-                                  y2="17" />
-
-                        </svg>
-
-                    </div>
-
-                </div>
-
-
-                <div class="num">
-                    17
-                </div>
-
-                <div class="lab">
-                    Bekleyen Sorular
-                </div>
-
-                <div class="sub warn">
-                    Yanıt bekliyor
-                </div>
-
+                <div class="num">@Model.PendingQuestions</div>
+                <div class="lab">@L["Bekleyen Sorular"]</div>
+                <div class="sub warn"><a asp-area="Admin" asp-controller="Question" asp-action="Index">@L["Yanıtla"] →</a></div>
             </div>
-
         </div>
-
     </div>
 
-
-    <!-- =========================
-         CHART + POPULAR TOURS
-         ========================= -->
-
     <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <div class="kpi">
+                <div class="lab">🏆 @L["En çok rezervasyon alan tur"]</div>
+                <div class="num" style="font-size:1.2rem;margin-top:.4rem">@(Model.MostReservedTour?.Name ?? "–")</div>
+                <div class="sub">@(Model.MostReservedTour?.Value ?? 0) @L["rezervasyon"]</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="kpi">
+                <div class="lab">💰 @L["En yüksek gelir sağlayan tur"]</div>
+                <div class="num" style="font-size:1.2rem;margin-top:.4rem">@(Model.TopRevenueTour?.Name ?? "–")</div>
+                <div class="sub">@((Model.TopRevenueTour?.Value ?? 0).ToString("N0", tr)) TL</div>
+            </div>
+        </div>
+    </div>
 
-
-        <!-- RESERVATION CHART -->
-
+    <!-- CHART + TOP 5 -->
+    <div class="row g-3 mb-3">
         <div class="col-lg-8">
-
             <div class="card-x h-100">
-
-                <div class="card-head">
-
-                    <h3>
-                        Rezervasyon İstatistikleri
-                    </h3>
-
-
-                    <select class="chart-select"
-                            id="rangeSelect">
-
-                        <option>
-                            Son 7 Gün
-                        </option>
-
-                        <option>
-                            Son 30 Gün
-                        </option>
-
-                        <option selected>
-                            Son 6 Ay
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="card-body">
-
-                    <div class="chart-wrap">
-
-                        <canvas id="resChart"></canvas>
-
-                    </div>
-
-                </div>
-
+                <div class="card-head"><h3>@L["Son 6 Aylık Rezervasyonlar"]</h3></div>
+                <div class="card-body"><div class="chart-wrap"><canvas id="dashChart"></canvas></div></div>
             </div>
-
         </div>
-
-
-        <!-- POPULAR TOURS -->
-
         <div class="col-lg-4">
-
             <div class="card-x h-100">
-
-                <div class="card-head">
-
-                    <h3>
-                        En Popüler Turlar
-                    </h3>
-
+                <div class="card-head"><h3>@L["En Çok Rezervasyon Alan 5 Tur"]</h3></div>
+                <div class="card-body pt-2">
+                    @if (!Model.TopTours.Any()) { <p class="text-muted">@L["Henüz rezervasyon yok."]</p> }
+                    @for (var i = 0; i < Model.TopTours.Count; i++)
+                    {
+                        var t = Model.TopTours[i];
+                        <div class="pt-item">
+                            <span class="rank">@(i + 1)</span>
+                            @if (!string.IsNullOrWhiteSpace(t.ImageUrl)) { <img src="@t.ImageUrl" alt="@t.Name"> }
+                            <div class="nm"><b>@t.Name</b><span>@t.Value @L["rezervasyon"]</span></div>
+                        </div>
+                    }
                 </div>
-
-
-                <div class="card-body pt-2"
-                     id="popularTours">
-                </div>
-
             </div>
-
         </div>
-
     </div>
 
+    <!-- CATEGORY / DESTINATION AGGREGATIONS -->
+    <div class="row g-3 mb-3">
+        <div class="col-lg-6">
+            <div class="card-x h-100">
+                <div class="card-head"><h3>@L["Kategori Bazında Tur Sayısı"]</h3></div>
+                <div class="card-body"><div class="chart-wrap" style="height:240px"><canvas id="catChart"></canvas></div></div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card-x h-100">
+                <div class="card-head"><h3>@L["Destinasyon Bazında Rezervasyon"]</h3></div>
+                <div class="card-body"><div class="chart-wrap" style="height:240px"><canvas id="destChart"></canvas></div></div>
+            </div>
+        </div>
+    </div>
 
-    <!-- =========================
-         RECENT BOOKINGS
-         ========================= -->
-
+    <!-- RECENT BOOKINGS -->
     <div class="card-x mb-3">
-
         <div class="card-head">
-
-            <h3>
-                Son Rezervasyonlar
-            </h3>
-
-
-            <button class="btn-soft"
-                    type="button">
-
-                Tümünü Gör
-
-            </button>
-
+            <h3>@L["Son Rezervasyonlar"]</h3>
+            <a class="btn-soft" asp-area="Admin" asp-controller="Reservation" asp-action="Index">@L["Tümünü Gör"]</a>
         </div>
-
-
         <div class="card-body pt-2">
-
             <div class="tbl-wrap">
-
                 <table class="tx">
-
                     <thead>
-
-                        <tr>
-
-                            <th>
-                                Rezervasyon No
-                            </th>
-
-                            <th>
-                                Misafir
-                            </th>
-
-                            <th>
-                                Tur
-                            </th>
-
-                            <th>
-                                Tur Tarihi
-                            </th>
-
-                            <th>
-                                Kişi
-                            </th>
-
-                            <th>
-                                Tutar
-                            </th>
-
-                            <th>
-                                Durum
-                            </th>
-
-                        </tr>
-
+                        <tr><th>@L["Misafir"]</th><th>@L["Tur"]</th><th>@L["Tur Tarihi"]</th><th>@L["Kişi"]</th><th>@L["Tutar"]</th><th>@L["Durum"]</th></tr>
                     </thead>
-
-
-                    <tbody id="bookingRows">
+                    <tbody>
+                        @foreach (var r in reservations)
+                        {
+                            <tr>
+                                <td>@r.FullName</td>
+                                <td>@r.TourName</td>
+                                <td>@r.TourStartDate.ToString("d MMM yyyy")</td>
+                                <td>@r.TotalPerson</td>
+                                <td><span class="amount">@r.TotalPrice.ToString("N0", tr) TL</span></td>
+                                <td><span class="badge-x @Badge(r.Status)">@StatusText(r.Status)</span></td>
+                            </tr>
+                        }
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
-
     </div>
-
-
-    <!-- =========================
-         BOTTOM 3 COLUMNS
-         ========================= -->
 
     <div class="row g-3">
-
-
-        <!-- RECENT REVIEWS -->
-
-        <div class="col-lg-4">
-
+        <div class="col-lg-6">
             <div class="card-x h-100">
-
-                <div class="card-head">
-
-                    <h3>
-                        Son Yorumlar
-                    </h3>
-
+                <div class="card-head"><h3>@L["Son Yorumlar"]</h3></div>
+                <div class="card-body pt-2">
+                    @foreach (var r in reviews)
+                    {
+                        <div class="rv">
+                            <div class="h">
+                                <span class="av">@Initials(r.UserName)</span>
+                                <div><b>@r.UserName</b><span>@r.TourName</span></div>
+                                <span class="stars">@(new string('★', r.Rating))</span>
+                            </div>
+                            <p>@r.Comment</p>
+                        </div>
+                    }
                 </div>
-
-
-                <div class="card-body pt-2"
-                     id="recentReviews">
-                </div>
-
             </div>
-
         </div>
-
-
-        <!-- PENDING QUESTIONS -->
-
-        <div class="col-lg-4">
-
+        <div class="col-lg-6">
             <div class="card-x h-100">
-
-                <div class="card-head">
-
-                    <h3>
-                        Yanıt Bekleyen Sorular
-                    </h3>
-
+                <div class="card-head"><h3>@L["Yanıt Bekleyen Sorular"]</h3></div>
+                <div class="card-body pt-2">
+                    @foreach (var q in questions)
+                    {
+                        <div class="qz">
+                            <div class="body">
+                                <div class="tour">@q.TourName</div>
+                                <div class="q">@q.QuestionText</div>
+                                <div class="time">@q.CreatedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                            </div>
+                            <a class="btn-soft" asp-area="Admin" asp-controller="Question" asp-action="Index">@L["Cevapla"]</a>
+                        </div>
+                    }
                 </div>
-
-
-                <div class="card-body pt-2"
-                     id="pendingQuestions">
-                </div>
-
             </div>
-
         </div>
-
-
-        <!-- QUICK ACTIONS -->
-
-        <div class="col-lg-4">
-
-            <div class="card-x h-100">
-
-                <div class="card-head">
-
-                    <h3>
-                        Hızlı İşlemler
-                    </h3>
-
-                </div>
-
-
-                <div class="card-body pt-2"
-                     id="quickActions">
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
-
 </div>
 
+@section Scripts {
+    <script>
+        (function () {
+            if (typeof Chart === "undefined") return;
+            const teal = "#0fa3a3";
+
+            new Chart(document.getElementById("dashChart"), {
+                type: "line",
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyReservations.Select(x => x.Name))),
+                    datasets: [{ label: "Rezervasyon", data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyReservations.Select(x => x.Value))),
+                        borderColor: teal, backgroundColor: "rgba(15,163,163,.15)", fill: true, tension: .38, borderWidth: 3, pointBackgroundColor: "#fff", pointBorderColor: teal }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+            });
+
+            const bar = (id, items) => new Chart(document.getElementById(id), {
+                type: "bar",
+                data: { labels: items.map(x => x.Name), datasets: [{ data: items.map(x => x.Value), backgroundColor: teal, borderRadius: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: "y", plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
+            });
+
+            bar("catChart", @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ToursByCategory)));
+            bar("destChart", @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ReservationsByDestination)));
+        })();
+    </script>
+}

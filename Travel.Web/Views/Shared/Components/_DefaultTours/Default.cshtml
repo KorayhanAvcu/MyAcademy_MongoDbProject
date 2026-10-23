@@ -1,46 +1,70 @@
-﻿
+﻿@model List<Travel.Web.DTOs.TourDtos.TourListItemDto>
 @{
     Layout = null;
+    var tr = new CultureInfo("tr-TR");
 }
+
 <!-- TOURS -->
 <section id="turlar">
-
     <div class="container">
 
         <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
-
             <div class="section-head">
-
-                <div class="eyebrow">
-                    Popüler rotalar
-                </div>
-
-                <h2>
-                    En Çok Tercih Edilen Turlar
-                </h2>
-
-                <p>
-                    Gezginlerin en çok rezervasyon yaptığı,
-                    özenle planlanmış rotalar.
-                </p>
-
+                <div class="eyebrow">@L["Popüler rotalar"]</div>
+                <h2>@L["En Çok Tercih Edilen Turlar"]</h2>
+                <p>@L["Gezginlerin en çok rezervasyon yaptığı, özenle planlanmış rotalar."]</p>
             </div>
 
-
-            <a href="#"
-                   class="btn btn-teal d-none d-md-inline-block mt-3">
-
-                Tüm turları gör
-
+            <a asp-controller="Tours" asp-action="Index" class="btn btn-teal d-none d-md-inline-block mt-3">
+                @L["Tüm turları gör"]
             </a>
-
         </div>
 
+        @if (!Model.Any())
+        {
+            <p class="text-muted">@L["Şu anda yayında tur bulunmuyor."]</p>
+        }
 
-        <div class="row g-4"
-             id="tourGrid">
+        <div class="row g-4" id="tourGrid">
+            @foreach (var t in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <article class="tour-card">
+                        <div class="tour-media">
+                            <img src="@t.CoverImageUrl" alt="@t.Name" loading="lazy" />
+                            @if (t.IsBestSeller)
+                            {
+                                <span class="tour-badge">@L["Çok Satan"]</span>
+                            }
+                            else if (t.IsNew)
+                            {
+                                <span class="tour-badge">@L["Yeni"]</span>
+                            }
+                            else if (t.IsFeatured)
+                            {
+                                <span class="tour-badge">@L["Popüler"]</span>
+                            }
+                        </div>
+                        <div class="tour-body">
+                            <div class="tour-country">@t.DestinationName</div>
+                            <h3 class="tour-title">@t.Name</h3>
+                            <div class="tour-meta">
+                                <span>🗓️ @t.DurationDays @L["gün"]</span>
+                                @if (t.ReviewCount > 0)
+                                {
+                                    <span class="rating"><span class="star">★</span> @t.AverageRating.ToString("0.0") <span style="color:var(--muted);font-weight:400">(@t.ReviewCount)</span></span>
+                                }
+                                <span>@t.ReservationCount @L["rezervasyon"]</span>
+                            </div>
+                            <div class="tour-foot">
+                                <div class="price"><small>@L["Kişi başı"]</small><b>@t.Price.ToString("N0", tr) <span>TL</span></b></div>
+                                <a asp-controller="Tours" asp-action="TourDetail" asp-route-id="@t.Id" class="btn-incele">@L["Turu İncele"]</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
         </div>
 
     </div>
-
 </section>

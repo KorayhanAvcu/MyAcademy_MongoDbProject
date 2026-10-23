@@ -1,8 +1,8 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @inject UserManager<Travel.Web.Entities.AppUser> UserManager
 
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 
 <head>
 
@@ -807,7 +807,15 @@
             }
         }
 
-    </style>
+    
+    /* LANGUAGE SWITCH + SYSTEM TOAST */
+    .lang-switch{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:.2rem;background:#fff}
+    .lang-switch a{font-size:.78rem;font-weight:700;color:var(--muted);padding:.25rem .6rem;border-radius:999px}
+    .lang-switch a.on{background:var(--navy);color:#fff}
+    .site-toast{position:fixed;bottom:24px;right:24px;z-index:2000;background:var(--navy);color:#fff;padding:.9rem 1.1rem .9rem 1.3rem;border-radius:14px;box-shadow:0 18px 50px rgba(14,42,59,.25);font-size:.92rem;font-weight:500;display:flex;gap:1rem;align-items:center;max-width:420px}
+    .site-toast.err{background:#b45a4f}
+    .site-toast button{background:none;border:none;color:#fff;font-size:1.3rem;line-height:1;cursor:pointer}
+</style>
 
 </head>
 
@@ -843,42 +851,51 @@
 
                     <li class="nav-item">
                         <a class="nav-link active" href="/Default/Index">
-                            Ana Sayfa
+                            @L["Ana Sayfa"]
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="/Tours/Index">
-                            Turlar
+                            @L["Turlar"]
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="/Destination/Index">
-                            Destinasyonlar
+                            @L["Destinasyonlar"]
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/Reviews/Index">
-                            Yorumlar
+                        <a class="nav-link" href="/Default/Index#yorumlar">
+                            @L["Yorumlar"]
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="/About/Index">
-                            Hakkımızda
+                            @L["Hakkımızda"]
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="/Contact/Index">
-                            İletişim
+                            @L["İletişim"]
                         </a>
                     </li>
 
                 </ul>
 
+
+                @{
+                    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "en";
+                    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+                }
+                <div class="lang-switch me-2">
+                    <a href="/Culture/Set?culture=tr-TR&returnUrl=@Uri.EscapeDataString(returnUrl)" class="@(isEn ? "" : "on")">TR</a>
+                    <a href="/Culture/Set?culture=en-US&returnUrl=@Uri.EscapeDataString(returnUrl)" class="@(isEn ? "on" : "")">EN</a>
+                </div>
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
@@ -924,13 +941,13 @@
 
                         <a href="/Auth/SignIn"
                            class="btn btn-outline-dark rounded-pill px-4">
-                            Giriş Yap
+                            @L["Giriş Yap"]
                         </a>
 
 
                         <a href="/Auth/Register"
                            class="btn-teal">
-                            Kayıt Ol
+                            @L["Kayıt Ol"]
                         </a>
 
                     </div>
@@ -975,9 +992,7 @@
 
 
                     <p style="max-width:34ch">
-                        Dünyanın dört bir yanına,
-                        özenle tasarlanmış turlarla
-                        unutulmaz seyahatler.
+                        @L["Dünyanın dört bir yanına, özenle tasarlanmış turlarla unutulmaz seyahatler."]
                     </p>
 
 
@@ -1050,22 +1065,22 @@
 
                 <div class="col-6 col-lg-2">
 
-                    <h6>Keşfet</h6>
+                    <h6>@L["Keşfet"]</h6>
 
-                    <a href="#turlar">
-                        Turlar
+                    <a href="/Tours/Index">
+                        @L["Turlar"]
                     </a>
 
-                    <a href="#destinasyonlar">
-                        Destinasyonlar
+                    <a href="/Destination/Index">
+                        @L["Destinasyonlar"]
                     </a>
 
-                    <a href="#yorumlar">
-                        Yorumlar
+                    <a href="/Default/Index#yorumlar">
+                        @L["Yorumlar"]
                     </a>
 
                     <a href="#">
-                        Kampanyalar
+                        @L["Kampanyalar"]
                     </a>
 
                 </div>
@@ -1075,22 +1090,22 @@
 
                 <div class="col-6 col-lg-2">
 
-                    <h6>Kurumsal</h6>
+                    <h6>@L["Kurumsal"]</h6>
 
-                    <a href="#hakkimizda">
-                        Hakkımızda
+                    <a href="/About/Index">
+                        @L["Hakkımızda"]
                     </a>
 
                     <a href="#">
-                        Kariyer
+                        @L["Kariyer"]
                     </a>
 
                     <a href="#">
-                        Blog
+                        @L["Blog"]
                     </a>
 
-                    <a href="#iletisim">
-                        İletişim
+                    <a href="/Contact/Index">
+                        @L["İletişim"]
                     </a>
 
                 </div>
@@ -1100,11 +1115,10 @@
 
                 <div class="col-lg-4">
 
-                    <h6>Bültene Katıl</h6>
+                    <h6>@L["Bültene Katıl"]</h6>
 
                     <p style="max-width:36ch">
-                        Yeni rotalardan ve erken rezervasyon
-                        fırsatlarından ilk sen haberdar ol.
+                        @L["Yeni rotalardan ve erken rezervasyon fırsatlarından ilk sen haberdar ol."]
                     </p>
 
 
@@ -1113,12 +1127,12 @@
 
                         <input class="form-control"
                                style="border-radius:999px"
-                               placeholder="E-posta adresin" />
+                               placeholder="@L["E-posta adresin"]" />
 
                         <button class="btn-teal"
                                 style="white-space:nowrap">
 
-                            Katıl
+                            @L["Katıl"]
 
                         </button>
 
@@ -1134,11 +1148,11 @@
             <div class="foot-bottom d-flex flex-wrap justify-content-between gap-2">
 
                 <span>
-                    © 2026 Travelio. Tüm hakları saklıdır.
+                    @L["© 2026 Travelio. Tüm hakları saklıdır."]
                 </span>
 
                 <span>
-                    Gizlilik · Kullanım Koşulları · Çerezler
+                    @L["Gizlilik · Kullanım Koşulları · Çerezler"]
                 </span>
 
             </div>
@@ -1148,7 +1162,20 @@
     </footer>
 
 
+    <!-- SYSTEM MESSAGES -->
+    @if (TempData["Success"] != null || TempData["Error"] != null)
+    {
+        var isError = TempData["Error"] != null;
+        <div class="site-toast @(isError ? "err" : "")" id="siteToast">
+            <span>@(isError ? TempData["Error"] : TempData["Success"])</span>
+            <button type="button" onclick="this.parentElement.remove()" aria-label="Kapat">×</button>
+        </div>
+        <script>setTimeout(() => document.getElementById("siteToast")?.remove(), 6000);</script>
+    }
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 

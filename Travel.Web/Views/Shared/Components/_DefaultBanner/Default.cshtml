@@ -1,5 +1,4 @@
-﻿
-@using Travel.Web.DTOs.BannerDtos
+﻿@using Travel.Web.DTOs.BannerDtos
 @model List<ResultBannerDto>
 
 @{
@@ -7,262 +6,93 @@
 
     var defaultHeroImage =
         "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80";
+
+    // Banner kaydı yoksa varsayılan hero gösterilir.
+    var heroes = Model.Any()
+        ? Model.Select(x => (x.TopTitle, x.Title, x.Description, x.ImageUrl)).ToList()
+        : new List<(string, string, string, string)>
+        {
+            (L["Travelio ile keşfet"].Value,
+             L["Dünyayı Keşfetmeye Hazır Mısın?"].Value,
+             L["Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun benzersiz rotalarına kadar unutulmaz deneyimler seni bekliyor."].Value,
+             defaultHeroImage)
+        };
+
+    var countries = (ViewBag.Countries as List<string>) ?? new List<string>();
+    int tourCount = ViewBag.TourCount ?? 0;
+    int destinationCount = ViewBag.DestinationCount ?? 0;
+    int userCount = ViewBag.UserCount ?? 0;
+    var tr = new CultureInfo("tr-TR");
 }
 
-@if (!Model.Any())
+@foreach (var hero in heroes)
 {
     <!-- HERO -->
     <header class="hero"
-            style="
-        background:
-        linear-gradient(
-        180deg,
-        rgba(14,42,59,.55) 0%,
-        rgba(14,42,59,.35) 40%,
-        rgba(14,42,59,.72) 100%
-        ),
-        url('@defaultHeroImage') center / cover;
-        ">
+            style="background: linear-gradient(180deg, rgba(14,42,59,.55) 0%, rgba(14,42,59,.35) 40%, rgba(14,42,59,.72) 100%), url('@(string.IsNullOrWhiteSpace(hero.Item4) ? defaultHeroImage : hero.Item4)') center / cover;">
 
         <div class="container hero-content">
 
-            <div class="eyebrow mb-3">
-                Travelio ile keşfet
-            </div>
+            <div class="eyebrow mb-3">@hero.Item1</div>
 
-            <h1>
-                Dünyayı Keşfetmeye Hazır Mısın?
-            </h1>
+            <h1>@hero.Item2</h1>
 
-            <p class="lead">
-                Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun
-                benzersiz rotalarına kadar unutulmaz deneyimler seni bekliyor.
-            </p>
+            <p class="lead">@hero.Item3</p>
 
-
-            <!-- SEARCH -->
-            <div class="search-box">
-
+            <!-- SEARCH: tur listesine filtre parametreleriyle gider -->
+            <form class="search-box" method="get" asp-controller="Tours" asp-action="Index">
                 <div class="row g-0 align-items-center">
 
                     <div class="col-md-3 search-field">
-
-                        <label>Destinasyon</label>
-
-                        <input class="control"
-                               list="dests"
-                               placeholder="Nereye gidelim?"
-                               value="Paris, Fransa" />
-
-                        <datalist id="dests">
-                            <option>Paris, Fransa</option>
-                            <option>Roma, İtalya</option>
-                            <option>Amsterdam, Hollanda</option>
-                            <option>Tokyo, Japonya</option>
-                            <option>Barselona, İspanya</option>
-                            <option>Prag, Çekya</option>
-                        </datalist>
-
-                    </div>
-
-
-                    <div class="col-md-3 search-field">
-
-                        <label>Tarih</label>
-
-                        <input class="control"
-                               type="date" />
-
-                    </div>
-
-
-                    <div class="col-md-3 search-field">
-
-                        <label>Kişi Sayısı</label>
-
-                        <select class="control">
-
-                            <option>1 kişi</option>
-
-                            <option selected>
-                                2 kişi
-                            </option>
-
-                            <option>3 kişi</option>
-
-                            <option>4 kişi</option>
-
-                            <option>5+ kişi</option>
-
+                        <label>@L["Destinasyon"]</label>
+                        <select class="control" name="dest">
+                            <option value="">@L["Tüm destinasyonlar"]</option>
+                            @foreach (var country in countries)
+                            {
+                                <option value="@country">@country</option>
+                            }
                         </select>
-
                     </div>
 
+                    <div class="col-md-3 search-field">
+                        <label>@L["Tarih"]</label>
+                        <input class="control" type="date" name="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    </div>
+
+                    <div class="col-md-3 search-field">
+                        <label>@L["Kişi Sayısı"]</label>
+                        <select class="control" name="pax">
+                            @for (var i = 1; i <= 5; i++)
+                            {
+                                <option value="@i" selected="@(i == 2)">@i @L["kişi"]</option>
+                            }
+                        </select>
+                    </div>
 
                     <div class="col-md-3 p-2">
-
-                        <button class="btn-teal">
-                            Turları Ara
-                        </button>
-
+                        <button type="submit" class="btn-teal">@L["Turları Ara"]</button>
                     </div>
 
                 </div>
+            </form>
 
-            </div>
-
-
-            <!-- STATS -->
+            <!-- STATS (veritabanından) -->
             <div class="stats-row">
-
                 <div class="stat">
-                    <b>48+</b>
-                    <span>Destinasyon</span>
+                    <b>@tourCount.ToString("N0", tr)</b>
+                    <span>@L["Aktif Tur"]</span>
                 </div>
-
                 <div class="stat">
-                    <b>1.200+</b>
-                    <span>Rehberli Tur</span>
+                    <b>@destinationCount.ToString("N0", tr)</b>
+                    <span>@L["Destinasyon"]</span>
                 </div>
-
                 <div class="stat">
-                    <b>92.000</b>
-                    <span>Mutlu Gezgin</span>
+                    <b>@userCount.ToString("N0", tr)</b>
+                    <span>@L["Kayıtlı Gezgin"]</span>
                 </div>
-
             </div>
 
         </div>
 
     </header>
 }
-else
-{
-    @foreach (var item in Model)
-    {
-        <!-- HERO -->
-        <header class="hero"
-                style="
-            background:
-            linear-gradient(
-            180deg,
-            rgba(14,42,59,.55) 0%,
-            rgba(14,42,59,.35) 40%,
-            rgba(14,42,59,.72) 100%
-            ),
-            url('@item.ImageUrl') center / cover;
-            ">
-
-            <div class="container hero-content">
-
-                <div class="eyebrow mb-3">
-                    @item.TopTitle
-                </div>
-
-                <h1>
-                    @item.Title
-                </h1>
-
-                <p class="lead">
-                    @item.Description
-                </p>
-
-
-                <!-- SEARCH -->
-                <div class="search-box">
-
-                    <div class="row g-0 align-items-center">
-
-                        <div class="col-md-3 search-field">
-
-                            <label>Destinasyon</label>
-
-                            <input class="control"
-                                   list="dests"
-                                   placeholder="Nereye gidelim?"
-                                   value="Paris, Fransa" />
-
-                            <datalist id="dests">
-                                <option>Paris, Fransa</option>
-                                <option>Roma, İtalya</option>
-                                <option>Amsterdam, Hollanda</option>
-                                <option>Tokyo, Japonya</option>
-                                <option>Barselona, İspanya</option>
-                                <option>Prag, Çekya</option>
-                            </datalist>
-
-                        </div>
-
-
-                        <div class="col-md-3 search-field">
-
-                            <label>Tarih</label>
-
-                            <input class="control"
-                                   type="date" />
-
-                        </div>
-
-
-                        <div class="col-md-3 search-field">
-
-                            <label>Kişi Sayısı</label>
-
-                            <select class="control">
-
-                                <option>1 kişi</option>
-
-                                <option selected>
-                                    2 kişi
-                                </option>
-
-                                <option>3 kişi</option>
-
-                                <option>4 kişi</option>
-
-                                <option>5+ kişi</option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="col-md-3 p-2">
-
-                            <button class="btn-teal">
-                                Turları Ara
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- STATS -->
-                <div class="stats-row">
-
-                    <div class="stat">
-                        <b>48+</b>
-                        <span>Destinasyon</span>
-                    </div>
-
-                    <div class="stat">
-                        <b>1.200+</b>
-                        <span>Rehberli Tur</span>
-                    </div>
-
-                    <div class="stat">
-                        <b>92.000</b>
-                        <span>Mutlu Gezgin</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </header>
-    }
-}
-

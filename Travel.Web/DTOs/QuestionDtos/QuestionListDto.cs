@@ -1,4 +1,4 @@
-﻿
+
 namespace Travel.Web.DTOs.QuestionDtos
 {
     public class QuestionListDto
@@ -10,6 +10,8 @@ namespace Travel.Web.DTOs.QuestionDtos
         public string TourId { get; set; } = default!;
 
         public string TourName { get; set; } = string.Empty;
+
+        public string? UserName { get; set; }
 
         public string QuestionText { get; set; } = string.Empty;
 

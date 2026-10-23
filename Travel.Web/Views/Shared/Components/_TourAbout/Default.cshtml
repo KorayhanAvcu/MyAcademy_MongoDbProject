@@ -1,30 +1,21 @@
-﻿
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
 @{
     Layout = null;
+    var paragraphs = (Model.Description ?? Model.ShortDescription ?? "")
+        .Split(new[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
 }
 
 <!-- ABOUT -->
 <div class="content-block">
+    <h2>@L["Tur Hakkında"]</h2>
 
-    <h2>
-        Tur Hakkında
-    </h2>
+    @if (!string.IsNullOrWhiteSpace(Model.ShortDescription) && Model.ShortDescription != Model.Description)
+    {
+        <p><b>@Model.ShortDescription</b></p>
+    }
 
-    <p>
-        Roma'nın tarihi sokaklarından Toskana'nın üzüm bağlarına
-        uzanan bu özel rota; İtalya'nın kültürünü, mimarisini ve
-        gastronomisini bir arada keşfetmek isteyen gezginler için
-        hazırlandı. Kolezyum'un gölgesinde başlayan yolculuk,
-        Vatikan'ın sanat hazineleriyle derinleşiyor ve Floransa'nın
-        Rönesans atmosferiyle bambaşka bir renk kazanıyor.
-    </p>
-
-    <p>
-        Pisa'nın ikonik kulesi ve Toskana'nın panoramik kasabalarıyla
-        tamamlanan program, rehberli geziler ile serbest zamanı
-        dengeli biçimde harmanlıyor. Böylece hem İtalya'nın en önemli
-        noktalarını görüyor hem de şehirleri kendi ritminde
-        keşfetmeye vakit buluyorsun.
-    </p>
-
+    @foreach (var paragraph in paragraphs)
+    {
+        <p>@paragraph</p>
+    }
 </div>

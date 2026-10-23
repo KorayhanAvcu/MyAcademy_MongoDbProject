@@ -1,7 +1,8 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Travel.Web.DTOs.TourDtos;
+using Travel.Web.Entities.Enums;
 using Travel.Web.Entities.Tour;
 using Travel.Web.Services.CategoryServices;
 using Travel.Web.Services.DestinationServices;
@@ -24,25 +25,8 @@ namespace Travel.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var tours = await tourService.GetAllAsync();
-
-            var values = mapper.Map<List<TourListItemDto>>(tours);
-
-            foreach (var dto in values)
-            {
-                var tour = tours.FirstOrDefault(x => x.Id == dto.Id);
-
-                if (tour == null)
-                {
-                    continue;
-                }
-
-                dto.UpcomingDate = tour.TourDates
-                    .Where(x => x.StartDate >= DateTime.Today)
-                    .OrderBy(x => x.StartDate)
-                    .Select(x => (DateTime?)x.StartDate)
-                    .FirstOrDefault();
-            }
+            // Kategori / destinasyon adları dolu liste (filtreleme için)
+            var values = await tourService.GetListItemsAsync(onlyActive: false);
 
             return View(values);
         }
@@ -180,6 +164,30 @@ namespace Travel.Web.Areas.Admin.Controllers
 
             TempData["SuccessMessage"] =
                 "Tur başarıyla silindi.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        // =========================================================
+        // AKTİF / PASİF
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleStatus(string id)
+        {
+            var tour = await tourService.GetByIdAsync(id);
+
+            if (tour == null)
+                return NotFound();
+
+            var newStatus = tour.Status == TourStatus.Active ? TourStatus.Passive : TourStatus.Active;
+            await tourService.SetStatusAsync(id, newStatus);
+
+            TempData["SuccessMessage"] = newStatus == TourStatus.Active
+                ? "Tur aktif hale getirildi."
+                : "Tur pasif hale getirildi.";
 
             return RedirectToAction(nameof(Index));
         }

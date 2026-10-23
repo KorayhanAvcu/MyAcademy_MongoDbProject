@@ -1,4 +1,4 @@
-﻿@using Travel.Web.DTOs.DestinationDtos
+@using Travel.Web.DTOs.DestinationDtos
 @model List<ResultDestinationDto>
 
 @{
@@ -10,12 +10,12 @@
     <div class="container">
 
         <div class="section-head mb-5">
-            <div class="eyebrow">İlham veren şehirler</div>
+            <div class="eyebrow">@L["İlham veren şehirler"]</div>
 
-            <h2>Popüler Destinasyonlar</h2>
+            <h2>@L["Popüler Destinasyonlar"]</h2>
 
             <p>
-                Milyonlarca gezginin tekrar tekrar dönmek istediği rüya şehirler.
+                @L["Milyonlarca gezginin tekrar tekrar dönmek istediği rüya şehirler."]
             </p>
         </div>
 
@@ -28,7 +28,7 @@
                 {
                     <div class="col-lg-6">
 
-                        <a class="dest-card tall" href="#">
+                        <a class="dest-card tall" href="/Tours/Index?dest=@Uri.EscapeDataString(Model[0].Country)">
 
                             <img src="@Model[0].ImageUrl"
                                  alt="@Model[0].City" />
@@ -37,7 +37,7 @@
                                 <h3>@Model[0].City</h3>
 
                                 <span>
-                                    @Model[0].Country · Keşfet
+                                    @Model[0].Country · @L["Keşfet"]
                                 </span>
                             </div>
 
@@ -56,7 +56,7 @@
                         {
                             <div class="col-12">
 
-                                <a class="dest-card" href="#">
+                                <a class="dest-card" href="/Tours/Index?dest=@Uri.EscapeDataString(Model[1].Country)">
 
                                     <img src="@Model[1].ImageUrl"
                                          alt="@Model[1].City" />
@@ -66,7 +66,7 @@
                                         <h3>@Model[1].City</h3>
 
                                         <span>
-                                            @Model[1].Country · Keşfet
+                                            @Model[1].Country · @L["Keşfet"]
                                         </span>
 
                                     </div>
@@ -81,7 +81,7 @@
                         {
                             <div class="col-md-6">
 
-                                <a class="dest-card" href="#">
+                                <a class="dest-card" href="/Tours/Index?dest=@Uri.EscapeDataString(Model[2].Country)">
 
                                     <img src="@Model[2].ImageUrl"
                                          alt="@Model[2].City" />
@@ -91,7 +91,7 @@
                                         <h3>@Model[2].City</h3>
 
                                         <span>
-                                            @Model[2].Country · Keşfet
+                                            @Model[2].Country · @L["Keşfet"]
                                         </span>
 
                                     </div>
@@ -106,7 +106,7 @@
                         {
                             <div class="col-md-6">
 
-                                <a class="dest-card" href="#">
+                                <a class="dest-card" href="/Tours/Index?dest=@Uri.EscapeDataString(Model[3].Country)">
 
                                     <img src="@Model[3].ImageUrl"
                                          alt="@Model[3].City" />
@@ -116,7 +116,7 @@
                                         <h3>@Model[3].City</h3>
 
                                         <span>
-                                            @Model[3].Country · Keşfet
+                                            @Model[3].Country · @L["Keşfet"]
                                         </span>
 
                                     </div>
@@ -131,7 +131,7 @@
                         {
                             <div class="col-12">
 
-                                <a class="dest-card" href="#">
+                                <a class="dest-card" href="/Tours/Index?dest=@Uri.EscapeDataString(Model[4].Country)">
 
                                     <img src="@Model[4].ImageUrl"
                                          alt="@Model[4].City" />
@@ -141,7 +141,7 @@
                                         <h3>@Model[4].City</h3>
 
                                         <span>
-                                            @Model[4].Country · Keşfet
+                                            @Model[4].Country · @L["Keşfet"]
                                         </span>
 
                                     </div>

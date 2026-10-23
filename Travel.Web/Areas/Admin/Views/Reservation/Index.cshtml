@@ -1,0 +1,159 @@
+@model List<Travel.Web.DTOs.ReservationDtos.ReservationListDto>
+@using Travel.Web.DTOs.ReservationDtos
+@using Travel.Web.DTOs.UserDtos
+@{
+    ViewData["Title"] = L["Rezervasyonlar"].Value;
+    Layout = "~/Views/AdminLayout/Layout.cshtml";
+
+    var tr = new CultureInfo("tr-TR");
+    var filter = (ReservationFilterDto)ViewBag.Filter;
+    var tours = (List<Travel.Web.Entities.Tour.Tour>)ViewBag.Tours;
+    var users = (List<ResultUserDto>)ViewBag.Users;
+    var selectedTour = tours.FirstOrDefault(x => x.Id == filter.TourId);
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+
+    string Badge(string s) => s switch { "Approved" => "b-ok", "Cancelled" => "b-cancel", _ => "b-wait" };
+    string StatusText(string s) => s switch { "Approved" => L["Onaylandı"].Value, "Cancelled" => L["İptal Edildi"].Value, _ => L["Bekliyor"].Value };
+}
+
+<div class="content">
+
+    <div class="page-intro">
+        <div>
+            <div class="eyebrow">@L["Yönetim"]</div>
+            <h1>@L["Rezervasyonlar"]</h1>
+            <p>@L["Rezervasyonları filtreleyin, onaylayın veya iptal edin. Tur seçerek katılımcı raporu alabilirsiniz."]</p>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <!-- FILTERS -->
+    <form method="get" class="card-x mb-3" style="padding:1rem 1.2rem">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">@L["Tur"]</label>
+                <select name="TourId" class="form-select" onchange="this.form.TourDateId.value='';this.form.submit()">
+                    <option value="">@L["Tüm Turlar"]</option>
+                    @foreach (var t in tours)
+                    {
+                        <option value="@t.Id" selected="@(t.Id == filter.TourId)">@t.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">@L["Tur Tarihi"]</label>
+                <select name="TourDateId" class="form-select" disabled="@(selectedTour == null)">
+                    <option value="">@L["Tüm Tarihler"]</option>
+                    @if (selectedTour != null)
+                    {
+                        foreach (var d in selectedTour.TourDates.OrderBy(x => x.StartDate))
+                        {
+                            <option value="@d.Id" selected="@(d.Id == filter.TourDateId)">@d.StartDate.ToString("dd.MM.yyyy") (@d.RemainingCapacity/@d.Capacity)</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">@L["Kullanıcı"]</label>
+                <select name="UserId" class="form-select">
+                    <option value="">@L["Tümü"]</option>
+                    @foreach (var u in users)
+                    {
+                        <option value="@u.Id" selected="@(u.Id == filter.UserId)">@u.FirstName @u.LastName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label small fw-semibold">@L["Durum"]</label>
+                <select name="Status" class="form-select">
+                    <option value="">@L["Tümü"]</option>
+                    <option value="Pending" selected="@(filter.Status == "Pending")">@L["Bekliyor"]</option>
+                    <option value="Approved" selected="@(filter.Status == "Approved")">@L["Onaylandı"]</option>
+                    <option value="Cancelled" selected="@(filter.Status == "Cancelled")">@L["İptal Edildi"]</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label small fw-semibold">@L["Başlangıç"]</label>
+                <input type="date" name="StartDate" class="form-control" value="@filter.StartDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-1">
+                <label class="form-label small fw-semibold">@L["Bitiş"]</label>
+                <input type="date" name="EndDate" class="form-control" value="@filter.EndDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn-soft">@L["Filtrele"]</button>
+                <a asp-action="Index" class="btn-soft">@L["Temizle"]</a>
+            </div>
+        </div>
+
+        @if (selectedTour != null)
+        {
+            <div class="mt-3 d-flex gap-2 flex-wrap align-items-center">
+                <b style="font-size:.88rem">@L["Rapor Al"]:</b>
+                <a class="btn-soft" asp-action="ExportExcel" asp-route-tourId="@filter.TourId" asp-route-tourDateId="@filter.TourDateId">📊 Excel</a>
+                <a class="btn-soft" asp-action="ExportPdf" asp-route-tourId="@filter.TourId" asp-route-tourDateId="@filter.TourDateId">📄 PDF</a>
+                <span class="text-muted small">@(string.IsNullOrEmpty(filter.TourDateId) ? L["Turun tüm tarihleri"] : L["Seçilen tur tarihi"])</span>
+            </div>
+        }
+    </form>
+
+    <div class="small text-muted mb-2"><b>@Model.Count</b> @L["rezervasyon listeleniyor"] · @L["Toplam"]: <b>@Model.Where(x => x.Status != "Cancelled").Sum(x => x.TotalPrice).ToString("N0", tr) TL</b></div>
+
+    <div class="card-x">
+        <div class="tbl-wrap">
+            <table class="tx">
+                <thead>
+                    <tr>
+                        <th>@L["Misafir"]</th><th>@L["Tur"]</th><th>@L["Tur Tarihi"]</th><th>@L["Yetişkin"]</th><th>@L["Çocuk"]</th>
+                        <th>@L["Tutar"]</th><th>@L["Rezervasyon Tarihi"]</th><th>@L["Durum"]</th><th>@L["İşlemler"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="9" class="text-center text-muted py-4">@L["Kayıt bulunamadı."]</td></tr>
+                    }
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td><b>@r.FullName</b><div class="small text-muted">@r.Email · @r.Phone</div></td>
+                            <td>@r.TourName</td>
+                            <td>@r.TourStartDate.ToString("dd.MM.yyyy")</td>
+                            <td>@r.AdultCount</td>
+                            <td>@r.ChildCount</td>
+                            <td><span class="amount">@r.TotalPrice.ToString("N0", tr) TL</span></td>
+                            <td>@r.CreatedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                            <td><span class="badge-x @Badge(r.Status)">@StatusText(r.Status)</span></td>
+                            <td class="text-nowrap">
+                                @if (r.Status != "Approved")
+                                {
+                                    <form asp-action="Approve" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@r.Id" />
+                                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                        <button type="submit" class="btn-soft">@L["Onayla"]</button>
+                                    </form>
+                                }
+                                @if (r.Status != "Cancelled")
+                                {
+                                    <form asp-action="Cancel" method="post" class="d-inline" onsubmit="return confirm('@L["Rezervasyon iptal edilsin mi?"]')">
+                                        <input type="hidden" name="id" value="@r.Id" />
+                                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                        <button type="submit" class="btn-soft" style="color:#b45a4f">@L["İptal Et"]</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

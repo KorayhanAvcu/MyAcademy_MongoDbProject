@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="12 yaş ve üzeri" xml:space="preserve"><value>12 years and older</value></data>
+  <data name="2 - 11 yaş" xml:space="preserve"><value>2 - 11 years</value></data>
+  <data name="Ad" xml:space="preserve"><value>First name</value></data>
+  <data name="Ad ve soyad zorunludur." xml:space="preserve"><value>First and last name are required.</value></data>
+  <data name="Aktif Tur" xml:space="preserve"><value>Active Tours</value></data>
+  <data name="Ana Sayfa" xml:space="preserve"><value>Home</value></data>
+  <data name="Aradığın Rotayı Bulamadın mı?" xml:space="preserve"><value>Couldn't find your route?</value></data>
+  <data name="Aradığın kriterlere uygun tur bulunamadı." xml:space="preserve"><value>No tours match your criteria.</value></data>
+  <data name="Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun benzersiz rotalarına kadar unutulmaz deneyimler seni bekliyor." xml:space="preserve"><value>From Europe's iconic cities to the unique routes of the Far East, unforgettable experiences await you.</value></data>
+  <data name="Avrupa'nın ikonik şehirlerinden Uzak Doğu'nun büyüleyici rotalarına kadar sana uygun seyahati keşfet." xml:space="preserve"><value>Discover the right trip for you, from Europe's iconic cities to the fascinating routes of the Far East.</value></data>
+  <data name="Bağlantı panoya kopyalandı." xml:space="preserve"><value>Link copied to clipboard.</value></data>
+  <data name="Başlamış veya geçmiş turlar iptal edilemez." xml:space="preserve"><value>Started or past tours cannot be cancelled.</value></data>
+  <data name="Başlangıç" xml:space="preserve"><value>Start</value></data>
+  <data name="Başlangıç Şehri" xml:space="preserve"><value>Departure City</value></data>
+  <data name="Bekleyen Sorular" xml:space="preserve"><value>Pending Questions</value></data>
+  <data name="Bekliyor" xml:space="preserve"><value>Pending</value></data>
+  <data name="Bilgileri Güncelle" xml:space="preserve"><value>Update Details</value></data>
+  <data name="Bir sonraki maceranın detaylarına göz atabilir, geçmiş seyahatlerini ve favorilerini yönetebilirsin." xml:space="preserve"><value>Check the details of your next adventure and manage your past trips and favorites.</value></data>
+  <data name="Bitiş" xml:space="preserve"><value>End</value></data>
+  <data name="Bize Ulaş" xml:space="preserve"><value>Contact Us</value></data>
+  <data name="Blog" xml:space="preserve"><value>Blog</value></data>
+  <data name="Bu Tura Katıldın mı?" xml:space="preserve"><value>Did you join this tour?</value></data>
+  <data name="Bu ay" xml:space="preserve"><value>This month</value></data>
+  <data name="Bu tarih için kontenjan dolmuştur." xml:space="preserve"><value>This date is fully booked.</value></data>
+  <data name="Bu tarih için yeterli kontenjan kalmadığından rezervasyon yeniden açılamaz." xml:space="preserve"><value>The reservation cannot be reopened because there is not enough capacity left for this date.</value></data>
+  <data name="Bu tur hakkında merak ettiğin bir şey mi var?" xml:space="preserve"><value>Anything you'd like to know about this tour?</value></data>
+  <data name="Bu tur için henüz yorum yapılmadı. İlk yorumu sen yap!" xml:space="preserve"><value>No reviews yet. Be the first to review!</value></data>
+  <data name="Bu tur için program henüz eklenmedi." xml:space="preserve"><value>The itinerary for this tour has not been added yet.</value></data>
+  <data name="Bu tura daha önce yorum yaptın." xml:space="preserve"><value>You have already reviewed this tour.</value></data>
+  <data name="Bunları da Beğenebilirsin" xml:space="preserve"><value>You May Also Like</value></data>
+  <data name="Bültene Katıl" xml:space="preserve"><value>Join the Newsletter</value></data>
+  <data name="Cevabı Gönder" xml:space="preserve"><value>Send Answer</value></data>
+  <data name="Cevabı Güncelle" xml:space="preserve"><value>Update Answer</value></data>
+  <data name="Cevabınız" xml:space="preserve"><value>Your answer</value></data>
+  <data name="Cevap Bekliyor" xml:space="preserve"><value>Awaiting Answer</value></data>
+  <data name="Cevapla" xml:space="preserve"><value>Answer</value></data>
+  <data name="Cevaplandı" xml:space="preserve"><value>Answered</value></data>
+  <data name="Daha sonra incelemek için kaydettiğin turlar." xml:space="preserve"><value>Tours you saved to check later.</value></data>
+  <data name="Deneyimini Paylaş" xml:space="preserve"><value>Share Your Experience</value></data>
+  <data name="Deneyimini diğer gezginlerle paylaş." xml:space="preserve"><value>Share your experience with other travelers.</value></data>
+  <data name="Destinasyon" xml:space="preserve"><value>Destination</value></data>
+  <data name="Destinasyon Bazında Rezervasyon" xml:space="preserve"><value>Reservations by Destination</value></data>
+  <data name="Destinasyonlar" xml:space="preserve"><value>Destinations</value></data>
+  <data name="Durum" xml:space="preserve"><value>Status</value></data>
+  <data name="Dünyanın dört bir yanına, özenle tasarlanmış turlarla unutulmaz seyahatler." xml:space="preserve"><value>Unforgettable journeys around the world with carefully designed tours.</value></data>
+  <data name="Dünyayı Keşfetmeye Hazır Mısın?" xml:space="preserve"><value>Ready to Explore the World?</value></data>
+  <data name="Dünyayı keşfet" xml:space="preserve"><value>Explore the world</value></data>
+  <data name="E-posta" xml:space="preserve"><value>Email</value></data>
+  <data name="E-posta adresin" xml:space="preserve"><value>Your email address</value></data>
+  <data name="Ekibimiz sorunu en kısa sürede yanıtlayacak." xml:space="preserve"><value>Our team will answer your question as soon as possible.</value></data>
+  <data name="En Yakın Tarih" xml:space="preserve"><value>Nearest Date</value></data>
+  <data name="En Yüksek Puan" xml:space="preserve"><value>Highest Rated</value></data>
+  <data name="En erken" xml:space="preserve"><value>Earliest</value></data>
+  <data name="En geç" xml:space="preserve"><value>Latest</value></data>
+  <data name="En yüksek gelir sağlayan tur" xml:space="preserve"><value>Top revenue tour</value></data>
+  <data name="En Çok Rezervasyon" xml:space="preserve"><value>Most Booked</value></data>
+  <data name="En Çok Rezervasyon Alan 5 Tur" xml:space="preserve"><value>Top 5 Most Booked Tours</value></data>
+  <data name="En Çok Tercih Edilen Turlar" xml:space="preserve"><value>Most Popular Tours</value></data>
+  <data name="En çok rezervasyon alan tur" xml:space="preserve"><value>Most booked tour</value></data>
+  <data name="Favori Tur" xml:space="preserve"><value>Favorite Tours</value></data>
+  <data name="Favori Turlarım" xml:space="preserve"><value>My Favorite Tours</value></data>
+  <data name="Favoriden kaldır" xml:space="preserve"><value>Remove from favorites</value></data>
+  <data name="Favorilerde" xml:space="preserve"><value>Saved</value></data>
+  <data name="Favorilerden kaldırıldı." xml:space="preserve"><value>Removed from favorites.</value></data>
+  <data name="Favorilere ekle" xml:space="preserve"><value>Add to favorites</value></data>
+  <data name="Filtrele" xml:space="preserve"><value>Filter</value></data>
+  <data name="Filtreleri Temizle" xml:space="preserve"><value>Clear Filters</value></data>
+  <data name="Filtreleri Uygula" xml:space="preserve"><value>Apply Filters</value></data>
+  <data name="Filtreleri biraz gevşetmeyi dene ya da tümünü temizleyerek yeniden başla." xml:space="preserve"><value>Try loosening the filters or clear them all to start over.</value></data>
+  <data name="Fiyat Aralığı" xml:space="preserve"><value>Price Range</value></data>
+  <data name="Fiyat: Düşükten Yükseğe" xml:space="preserve"><value>Price: Low to High</value></data>
+  <data name="Fiyat: Yüksekten Düşüğe" xml:space="preserve"><value>Price: High to Low</value></data>
+  <data name="Fiyata Dahil Olanlar" xml:space="preserve"><value>Included</value></data>
+  <data name="Fiyata Dahil Olmayanlar" xml:space="preserve"><value>Not Included</value></data>
+  <data name="Gece" xml:space="preserve"><value>Nights</value></data>
+  <data name="Genel Bakış" xml:space="preserve"><value>Overview</value></data>
+  <data name="Gezginlerin en çok rezervasyon yaptığı, özenle planlanmış rotalar." xml:space="preserve"><value>Carefully planned routes most booked by travelers.</value></data>
+  <data name="Geçmiş / İptal" xml:space="preserve"><value>Past / Cancelled</value></data>
+  <data name="Geçmiş bir tarihe rezervasyon yapılamaz." xml:space="preserve"><value>You cannot book a past date.</value></data>
+  <data name="Giriş Yap" xml:space="preserve"><value>Sign In</value></data>
+  <data name="Gizlilik · Kullanım Koşulları · Çerezler" xml:space="preserve"><value>Privacy · Terms of Use · Cookies</value></data>
+  <data name="Grup Büyüklüğü" xml:space="preserve"><value>Group Size</value></data>
+  <data name="Gün" xml:space="preserve"><value>Days</value></data>
+  <data name="Gün Gün Tur Programı" xml:space="preserve"><value>Day-by-Day Itinerary</value></data>
+  <data name="Güvenli rezervasyon" xml:space="preserve"><value>Secure booking</value></data>
+  <data name="Hakkımızda" xml:space="preserve"><value>About Us</value></data>
+  <data name="Hayalindeki Turu Bul" xml:space="preserve"><value>Find Your Dream Tour</value></data>
+  <data name="Hayalindeki destinasyonu bize söyle, sana uygun seyahat seçeneklerini birlikte bulalım." xml:space="preserve"><value>Tell us your dream destination and let's find the right travel options together.</value></data>
+  <data name="Henüz cevaplanmış bir soru yok." xml:space="preserve"><value>No answered questions yet.</value></data>
+  <data name="Henüz favori turun yok." xml:space="preserve"><value>You have no favorite tours yet.</value></data>
+  <data name="Henüz rezervasyon yok." xml:space="preserve"><value>No reservations yet.</value></data>
+  <data name="Henüz rezervasyonun yok." xml:space="preserve"><value>You have no reservations yet.</value></data>
+  <data name="Henüz soru sormadın." xml:space="preserve"><value>You haven't asked any questions yet.</value></data>
+  <data name="Henüz yorumun yok." xml:space="preserve"><value>You have no reviews yet.</value></data>
+  <data name="Hesabım" xml:space="preserve"><value>My Account</value></data>
+  <data name="Hesap Menüsü" xml:space="preserve"><value>Account Menu</value></data>
+  <data name="Hoş Geldiniz" xml:space="preserve"><value>Welcome</value></data>
+  <data name="Kalan" xml:space="preserve"><value>Remaining</value></data>
+  <data name="Kampanyalar" xml:space="preserve"><value>Campaigns</value></data>
+  <data name="Kariyer" xml:space="preserve"><value>Careers</value></data>
+  <data name="Kategori" xml:space="preserve"><value>Category</value></data>
+  <data name="Kategori Bazında Tur Sayısı" xml:space="preserve"><value>Tours by Category</value></data>
+  <data name="Katıl" xml:space="preserve"><value>Join</value></data>
+  <data name="Katıldığın turlar hakkında deneyimini paylaşabilirsin." xml:space="preserve"><value>You can share your experience about the tours you joined.</value></data>
+  <data name="Kaydet" xml:space="preserve"><value>Save</value></data>
+  <data name="Kayıt Ol" xml:space="preserve"><value>Sign Up</value></data>
+  <data name="Kayıt bulunamadı." xml:space="preserve"><value>No records found.</value></data>
+  <data name="Kayıtlı Gezgin" xml:space="preserve"><value>Registered Travelers</value></data>
+  <data name="Keşfet" xml:space="preserve"><value>Explore</value></data>
+  <data name="Kişi" xml:space="preserve"><value>People</value></data>
+  <data name="Kişi Sayısı" xml:space="preserve"><value>Travelers</value></data>
+  <data name="Kişi başı" xml:space="preserve"><value>Per person</value></data>
+  <data name="Kişisel bilgilerini buradan güncelleyebilirsin." xml:space="preserve"><value>You can update your personal details here.</value></data>
+  <data name="Konaklama" xml:space="preserve"><value>Accommodation</value></data>
+  <data name="Kontenjan" xml:space="preserve"><value>Seats Left</value></data>
+  <data name="Kontenjan Doldu" xml:space="preserve"><value>Fully Booked</value></data>
+  <data name="Kontenjan Yok" xml:space="preserve"><value>No Availability</value></data>
+  <data name="Kontenjan yetersiz. Lütfen kişi sayısını azaltın veya başka tarih seçin." xml:space="preserve"><value>Not enough capacity. Please reduce the number of travelers or choose another date.</value></data>
+  <data name="Kullanıcı" xml:space="preserve"><value>User</value></data>
+  <data name="Kurumsal" xml:space="preserve"><value>Company</value></data>
+  <data name="Lütfen bilgileri kontrol edin." xml:space="preserve"><value>Please check the details.</value></data>
+  <data name="Lütfen bir puan seç." xml:space="preserve"><value>Please select a rating.</value></data>
+  <data name="Lütfen bir tur tarihi seçin." xml:space="preserve"><value>Please select a tour date.</value></data>
+  <data name="Lütfen sorunuzu yazın." xml:space="preserve"><value>Please write your question.</value></data>
+  <data name="Lütfen yorumunuzu yazın." xml:space="preserve"><value>Please write your review.</value></data>
+  <data name="Maks." xml:space="preserve"><value>Max.</value></data>
+  <data name="Merhaba" xml:space="preserve"><value>Hello</value></data>
+  <data name="Mevcut cevap" xml:space="preserve"><value>Current answer</value></data>
+  <data name="Milyonlarca gezginin tekrar tekrar dönmek istediği rüya şehirler." xml:space="preserve"><value>Dream cities millions of travelers want to return to again and again.</value></data>
+  <data name="Misafir" xml:space="preserve"><value>Guest</value></data>
+  <data name="Misafir Yorumları" xml:space="preserve"><value>Guest Reviews</value></data>
+  <data name="Onayla" xml:space="preserve"><value>Approve</value></data>
+  <data name="Onaylandı" xml:space="preserve"><value>Approved</value></data>
+  <data name="Paylaş" xml:space="preserve"><value>Share</value></data>
+  <data name="Popüler" xml:space="preserve"><value>Popular</value></data>
+  <data name="Popüler Destinasyonlar" xml:space="preserve"><value>Popular Destinations</value></data>
+  <data name="Popüler rotalar" xml:space="preserve"><value>Popular routes</value></data>
+  <data name="Profil Bilgilerim" xml:space="preserve"><value>My Profile Details</value></data>
+  <data name="Profil bilgilerin güncellendi." xml:space="preserve"><value>Your profile has been updated.</value></data>
+  <data name="Profilim" xml:space="preserve"><value>My Profile</value></data>
+  <data name="Puan 1 ile 5 yıldız arasında olmalıdır." xml:space="preserve"><value>Rating must be between 1 and 5 stars.</value></data>
+  <data name="Puanın" xml:space="preserve"><value>Your rating</value></data>
+  <data name="Rapor Al" xml:space="preserve"><value>Get Report</value></data>
+  <data name="Rehber Dili" xml:space="preserve"><value>Guide Language</value></data>
+  <data name="Rezervasyon" xml:space="preserve"><value>Reservations</value></data>
+  <data name="Rezervasyon Tarihi" xml:space="preserve"><value>Booking Date</value></data>
+  <data name="Rezervasyon Yap" xml:space="preserve"><value>Book Now</value></data>
+  <data name="Rezervasyon bulunamadı." xml:space="preserve"><value>Reservation not found.</value></data>
+  <data name="Rezervasyon iptal edilsin mi?" xml:space="preserve"><value>Cancel this reservation?</value></data>
+  <data name="Rezervasyon için giriş yap" xml:space="preserve"><value>Sign in to book</value></data>
+  <data name="Rezervasyon talebin alındı. Durumunu profilinden takip edebilirsin." xml:space="preserve"><value>Your booking request has been received. You can track its status from your profile.</value></data>
+  <data name="Rezervasyon tarihi" xml:space="preserve"><value>Booking date</value></data>
+  <data name="Rezervasyonlar" xml:space="preserve"><value>Reservations</value></data>
+  <data name="Rezervasyonları filtreleyin, onaylayın veya iptal edin. Tur seçerek katılımcı raporu alabilirsiniz." xml:space="preserve"><value>Filter, approve or cancel reservations. Select a tour to get a participant report.</value></data>
+  <data name="Rezervasyonlarım" xml:space="preserve"><value>My Reservations</value></data>
+  <data name="Rezervasyonu Gör" xml:space="preserve"><value>View Reservation</value></data>
+  <data name="Rezervasyonu iptal etmek istediğine emin misin?" xml:space="preserve"><value>Are you sure you want to cancel this reservation?</value></data>
+  <data name="Rezervasyonun iptal edildi." xml:space="preserve"><value>Your reservation has been cancelled.</value></data>
+  <data name="Sana en uygun rotayı bulmak için daralt." xml:space="preserve"><value>Narrow down to find the best route for you.</value></data>
+  <data name="Seyahatlerini, favorilerini ve Travelio deneyimini buradan yönetebilirsin." xml:space="preserve"><value>Manage your trips, favorites and Travelio experience here.</value></data>
+  <data name="Seçilen tarihte kalan kontenjan:" xml:space="preserve"><value>Seats left on the selected date:</value></data>
+  <data name="Seçilen tur tarihi" xml:space="preserve"><value>Selected tour date</value></data>
+  <data name="Seçilen tur tarihi bulunamadı." xml:space="preserve"><value>The selected tour date was not found.</value></data>
+  <data name="Sil" xml:space="preserve"><value>Delete</value></data>
+  <data name="Son" xml:space="preserve"><value>Last</value></data>
+  <data name="Son 6 Aylık Rezervasyonlar" xml:space="preserve"><value>Reservations in the Last 6 Months</value></data>
+  <data name="Son Rezervasyonlar" xml:space="preserve"><value>Recent Reservations</value></data>
+  <data name="Son Yorumlar" xml:space="preserve"><value>Recent Reviews</value></data>
+  <data name="Soru Gönder" xml:space="preserve"><value>Send Question</value></data>
+  <data name="Soru sormak için giriş yap" xml:space="preserve"><value>Sign in to ask a question</value></data>
+  <data name="Sorular" xml:space="preserve"><value>Questions</value></data>
+  <data name="Sorulara Dön" xml:space="preserve"><value>Back to Questions</value></data>
+  <data name="Sorularım" xml:space="preserve"><value>My Questions</value></data>
+  <data name="Sorun alındı! Ekibimiz en kısa sürede yanıtlayacak." xml:space="preserve"><value>Question received! Our team will answer as soon as possible.</value></data>
+  <data name="Sorunu yaz..." xml:space="preserve"><value>Write your question...</value></data>
+  <data name="Soruyu Cevapla" xml:space="preserve"><value>Answer Question</value></data>
+  <data name="Soyad" xml:space="preserve"><value>Last name</value></data>
+  <data name="Sırala:" xml:space="preserve"><value>Sort:</value></data>
+  <data name="Tarih" xml:space="preserve"><value>Date</value></data>
+  <data name="Tarih Bekleniyor" xml:space="preserve"><value>Dates Coming Soon</value></data>
+  <data name="Telefon" xml:space="preserve"><value>Phone</value></data>
+  <data name="Temizle" xml:space="preserve"><value>Clear</value></data>
+  <data name="Toplam" xml:space="preserve"><value>Total</value></data>
+  <data name="Toplam Kullanıcı" xml:space="preserve"><value>Total Users</value></data>
+  <data name="Toplam Rezervasyon" xml:space="preserve"><value>Total Reservations</value></data>
+  <data name="Toplam Tur" xml:space="preserve"><value>Total Tours</value></data>
+  <data name="Travelio ile keşfet" xml:space="preserve"><value>Explore with Travelio</value></data>
+  <data name="Travelio platformundaki son gelişmeleri ve önemli verileri buradan takip edebilirsiniz." xml:space="preserve"><value>Follow the latest activity and key metrics of the Travelio platform here.</value></data>
+  <data name="Tur" xml:space="preserve"><value>Tour</value></data>
+  <data name="Tur Ara" xml:space="preserve"><value>Search Tours</value></data>
+  <data name="Tur Bilgileri" xml:space="preserve"><value>Tour Information</value></data>
+  <data name="Tur Detayı" xml:space="preserve"><value>Tour Details</value></data>
+  <data name="Tur Hakkında" xml:space="preserve"><value>About the Tour</value></data>
+  <data name="Tur Hakkında Sorular" xml:space="preserve"><value>Questions About the Tour</value></data>
+  <data name="Tur Süresi" xml:space="preserve"><value>Duration</value></data>
+  <data name="Tur Tarihi" xml:space="preserve"><value>Tour Date</value></data>
+  <data name="Tur bulunamadı veya satışta değil." xml:space="preserve"><value>Tour not found or not on sale.</value></data>
+  <data name="Tur deneyimini birkaç cümleyle anlat..." xml:space="preserve"><value>Describe your tour experience in a few sentences...</value></data>
+  <data name="Tur detay sayfalarında sorduğun sorular ve yanıtları." xml:space="preserve"><value>Questions you asked on tour pages and their answers.</value></data>
+  <data name="Tur veya destinasyon ara" xml:space="preserve"><value>Search tour or destination</value></data>
+  <data name="Tura Git" xml:space="preserve"><value>Go to Tour</value></data>
+  <data name="Turlar" xml:space="preserve"><value>Tours</value></data>
+  <data name="Turlar hakkında paylaştığın değerlendirmeler." xml:space="preserve"><value>Reviews you shared about tours.</value></data>
+  <data name="Turları Ara" xml:space="preserve"><value>Search Tours</value></data>
+  <data name="Turları Filtrele" xml:space="preserve"><value>Filter Tours</value></data>
+  <data name="Turları Keşfet" xml:space="preserve"><value>Explore Tours</value></data>
+  <data name="Turu İncele" xml:space="preserve"><value>View Tour</value></data>
+  <data name="Turun tüm tarihleri" xml:space="preserve"><value>All dates of the tour</value></data>
+  <data name="Turun Öne Çıkanları" xml:space="preserve"><value>Tour Highlights</value></data>
+  <data name="Tutar" xml:space="preserve"><value>Amount</value></data>
+  <data name="Tüm Tarihler" xml:space="preserve"><value>All Dates</value></data>
+  <data name="Tüm Turlar" xml:space="preserve"><value>All Tours</value></data>
+  <data name="Tüm destinasyonlar" xml:space="preserve"><value>All destinations</value></data>
+  <data name="Tüm turları gör" xml:space="preserve"><value>See all tours</value></data>
+  <data name="Tümü" xml:space="preserve"><value>All</value></data>
+  <data name="Tümünü Gör" xml:space="preserve"><value>View All</value></data>
+  <data name="Ulaşım" xml:space="preserve"><value>Transportation</value></data>
+  <data name="Vazgeç" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Verdiğiniz cevap tur detay sayfasında ve kullanıcının profilinde görünür." xml:space="preserve"><value>Your answer will appear on the tour page and in the user's profile.</value></data>
+  <data name="Vize" xml:space="preserve"><value>Visa</value></data>
+  <data name="Yaklaşan" xml:space="preserve"><value>Upcoming</value></data>
+  <data name="Yaklaşan Seyahatin" xml:space="preserve"><value>Your Upcoming Trip</value></data>
+  <data name="Yaklaşan Tur" xml:space="preserve"><value>Upcoming Tours</value></data>
+  <data name="Yaklaşan bir seyahatin yok." xml:space="preserve"><value>You have no upcoming trips.</value></data>
+  <data name="Yaklaşan ve geçmiş tüm seyahatlerin." xml:space="preserve"><value>All your upcoming and past trips.</value></data>
+  <data name="Yanıt Bekleyen Sorular" xml:space="preserve"><value>Questions Awaiting Answer</value></data>
+  <data name="Yanıtla" xml:space="preserve"><value>Answer</value></data>
+  <data name="Yardımcı olalım" xml:space="preserve"><value>Let us help</value></data>
+  <data name="Yeni" xml:space="preserve"><value>New</value></data>
+  <data name="Yeni rotalar keşfetmeye ne dersin?" xml:space="preserve"><value>How about exploring new routes?</value></data>
+  <data name="Yeni rotalardan ve erken rezervasyon fırsatlarından ilk sen haberdar ol." xml:space="preserve"><value>Be the first to hear about new routes and early booking deals.</value></data>
+  <data name="Yetişkin" xml:space="preserve"><value>Adult</value></data>
+  <data name="Yorum" xml:space="preserve"><value>Reviews</value></data>
+  <data name="Yorum Yaz" xml:space="preserve"><value>Write a Review</value></data>
+  <data name="Yorum en az 10 karakter olmalıdır." xml:space="preserve"><value>Review must be at least 10 characters.</value></data>
+  <data name="Yorum için giriş yap" xml:space="preserve"><value>Sign in to review</value></data>
+  <data name="Yorum silindi." xml:space="preserve"><value>Review deleted.</value></data>
+  <data name="Yorumlar" xml:space="preserve"><value>Reviews</value></data>
+  <data name="Yorumlarım" xml:space="preserve"><value>My Reviews</value></data>
+  <data name="Yorumu Gönder" xml:space="preserve"><value>Submit Review</value></data>
+  <data name="Yorumu silmek istiyor musun?" xml:space="preserve"><value>Do you want to delete this review?</value></data>
+  <data name="Yorumun" xml:space="preserve"><value>Your review</value></data>
+  <data name="Yorumun alındı" xml:space="preserve"><value>Review received</value></data>
+  <data name="Yorumun için teşekkürler!" xml:space="preserve"><value>Thanks for your review!</value></data>
+  <data name="Yönetim" xml:space="preserve"><value>Management</value></data>
+  <data name="aktif" xml:space="preserve"><value>active</value></data>
+  <data name="destinasyon" xml:space="preserve"><value>destinations</value></data>
+  <data name="değerlendirme" xml:space="preserve"><value>reviews</value></data>
+  <data name="fotoğraf" xml:space="preserve"><value>photos</value></data>
+  <data name="gün" xml:space="preserve"><value>days</value></data>
+  <data name="kişi" xml:space="preserve"><value>people</value></data>
+  <data name="kişilik yer" xml:space="preserve"><value>seats left</value></data>
+  <data name="ort. puan" xml:space="preserve"><value>avg. rating</value></data>
+  <data name="pasif / taslak" xml:space="preserve"><value>passive / draft</value></data>
+  <data name="rezervasyon" xml:space="preserve"><value>reservations</value></data>
+  <data name="rezervasyon listeleniyor" xml:space="preserve"><value>reservations listed</value></data>
+  <data name="tur bulundu" xml:space="preserve"><value>tours found</value></data>
+  <data name="yıldız" xml:space="preserve"><value>stars</value></data>
+  <data name="© 2026 Travelio. Tüm hakları saklıdır." xml:space="preserve"><value>© 2026 Travelio. All rights reserved.</value></data>
+  <data name="Çocuk" xml:space="preserve"><value>Child</value></data>
+  <data name="Çocuk (2-11 yaş)" xml:space="preserve"><value>Child (2-11 years)</value></data>
+  <data name="Çok Satan" xml:space="preserve"><value>Best Seller</value></data>
+  <data name="Çıkış Yap" xml:space="preserve"><value>Sign Out</value></data>
+  <data name="Çıkış yapmak istediğine emin misin?" xml:space="preserve"><value>Are you sure you want to sign out?</value></data>
+  <data name="Önerilen" xml:space="preserve"><value>Recommended</value></data>
+  <data name="Ücretsiz ön rezervasyon" xml:space="preserve"><value>Free pre-booking</value></data>
+  <data name="İletişim" xml:space="preserve"><value>Contact</value></data>
+  <data name="İlham veren şehirler" xml:space="preserve"><value>Inspiring cities</value></data>
+  <data name="İptal Edildi" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="İptal Et" xml:space="preserve"><value>Cancel</value></data>
+  <data name="İşlemler" xml:space="preserve"><value>Actions</value></data>
+  <data name="Şu anda satışta tarih bulunmuyor." xml:space="preserve"><value>No dates currently on sale.</value></data>
+  <data name="Şu anda yayında tur bulunmuyor." xml:space="preserve"><value>No tours are currently published.</value></data>
+</root>

@@ -1,4 +1,4 @@
-﻿namespace Travel.Web.Settings
+namespace Travel.Web.Settings
 {
     public class DatabaseSettings : IDatabaseSettings
     {
@@ -43,5 +43,9 @@
         public string ContactMapCollectionName { get; set; }
         public string ContactFAQCollectionName { get; set; }
         public string ContactMessageCollectionName { get; set; }
+
+        public string ReservationCollectionName { get; set; }
+
+        public string FavoriteCollectionName { get; set; }
     }
 }

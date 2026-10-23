@@ -1,4 +1,4 @@
-﻿
+
 using AutoMapper;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -115,6 +115,41 @@ namespace Travel.Web.Services.QuestionServices
             await _questionCollection.DeleteOneAsync(
                 x => x.Id == id);
         }
+        public async Task<int> GetUnansweredCountAsync()
+        {
+            return (int)await _questionCollection.CountDocumentsAsync(x => !x.IsAnswered);
+        }
+
+        public async Task<List<QuestionListDto>> GetAnsweredByTourAsync(string tourId)
+        {
+            var questions = await _questionCollection
+                .Find(x => x.TourId == tourId && x.IsAnswered)
+                .SortByDescending(x => x.AnsweredAt)
+                .ToListAsync();
+
+            return _mapper.Map<List<QuestionListDto>>(questions);
+        }
+
+        public async Task<List<QuestionListDto>> GetByUserAsync(string userId)
+        {
+            var questions = await _questionCollection
+                .Find(x => x.UserId == userId)
+                .SortByDescending(x => x.CreatedAt)
+                .ToListAsync();
+
+            var result = _mapper.Map<List<QuestionListDto>>(questions);
+
+            var tourIds = result.Select(x => x.TourId).Distinct().ToList();
+            var tours = await _tourCollection
+                .Find(x => tourIds.Contains(x.Id))
+                .ToListAsync();
+
+            foreach (var question in result)
+                question.TourName = tours.FirstOrDefault(x => x.Id == question.TourId)?.Name ?? "-";
+
+            return result;
+        }
+
         public async Task<int> GetUnreadCountAsync() 
         { 
             return (int)await _questionCollection.CountDocumentsAsync(x => !x.IsRead); 

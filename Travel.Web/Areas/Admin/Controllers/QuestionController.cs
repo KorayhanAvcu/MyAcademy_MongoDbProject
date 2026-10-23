@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Travel.Web.DTOs.QuestionDtos;
@@ -14,7 +14,11 @@ namespace Travel.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var questions = await _questionService.GetAllAsync();
+            // Cevaplanmamış sorular en üstte listelenir.
+            var questions = (await _questionService.GetAllAsync())
+                .OrderBy(x => x.IsAnswered)
+                .ThenByDescending(x => x.CreatedAt)
+                .ToList();
 
             return View(questions);
         }
@@ -32,6 +36,7 @@ namespace Travel.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Answer(AnswerQuestionDto answerQuestionDto)
         {
             if (string.IsNullOrWhiteSpace(answerQuestionDto.Answer))

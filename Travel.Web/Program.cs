@@ -1,6 +1,8 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Travel.Web.Entities;
@@ -20,14 +22,52 @@ using Travel.Web.Services.ContactMapServices;
 using Travel.Web.Services.ContactMessageServices;
 using Travel.Web.Services.ContactPageHeadServices;
 using Travel.Web.Services.DestinationServices;
+using Travel.Web.Services.FavoriteServices;
 using Travel.Web.Services.QuestionServices;
+using Travel.Web.Services.ReportServices;
+using Travel.Web.Services.ReservationServices;
 using Travel.Web.Services.ReviewServices;
 using Travel.Web.Services.RouteServices;
+using Travel.Web.Services.StatisticServices;
 using Travel.Web.Services.TourServices;
+using Travel.Web.Services.UserServices;
 using Travel.Web.Services.WhyChooseUsServices;
 using Travel.Web.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Enum alanları eski kayıtlardaki metin değerleri de okuyabilsin
+Travel.Web.Helpers.EnumSerializerRegistration.Register();
+
+// QuestPDF topluluk lisansı (eğitim / bootcamp kullanımı)
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+
+// =====================================================
+// LOCALIZATION (TR / EN)
+// =====================================================
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+var supportedCultures = new[]
+{
+    new CultureInfo("tr-TR"),
+    new CultureInfo("en-US")
+};
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("tr-TR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    // Öncelik: ?culture=en-US -> çerez -> tarayıcı dili
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider()
+    };
+});
 
 
 // =====================================================
@@ -106,6 +146,16 @@ builder.Services.AddScoped<IAboutValueService, AboutValueService>();
 builder.Services.AddScoped<IAboutTimelineService, AboutTimelineService>();
 
 builder.Services.AddScoped<IAboutTeamMemberService, AboutTeamMemberService>();
+
+builder.Services.AddScoped<IReservationService, ReservationService>();
+
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+
+builder.Services.AddScoped<IStatisticService, StatisticService>();
+
+builder.Services.AddScoped<IReportService, ReportService>();
+
+builder.Services.AddScoped<IUserService, UserService>();
 // =====================================================
 // DATABASE SETTINGS OBJECT
 // =====================================================
@@ -205,7 +255,12 @@ builder.Services.AddAuthorization();
 // MVC
 // =====================================================
 
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+        options.DataAnnotationLocalizerProvider = (_, factory) =>
+            factory.Create(typeof(Travel.Web.SharedResource)));
 
 
 var app = builder.Build();
@@ -235,6 +290,13 @@ app.UseHttpsRedirection();
 // =====================================================
 
 app.UseStaticFiles();
+
+
+// =====================================================
+// LOCALIZATION
+// =====================================================
+
+app.UseRequestLocalization();
 
 
 // =====================================================
@@ -462,6 +524,32 @@ using (var scope = app.Services.CreateScope())
                 "User"
             );
         }
+    }
+}
+
+
+// =====================================================
+// TUR DURUMU NORMALİZASYONU
+// Metin olarak kaydedilmiş durumları ("Published", "Draft" ...) sayıya çevirir;
+// böylece Status filtreleri ve aggregation sorguları tüm kayıtlarda çalışır.
+// =====================================================
+
+{
+    var mongo = new MongoDB.Driver.MongoClient(databaseSettings.ConnectionString)
+        .GetDatabase(databaseSettings.DatabaseName)
+        .GetCollection<MongoDB.Bson.BsonDocument>(databaseSettings.TourCollectionName);
+
+    var statusMap = Enum.GetValues<Travel.Web.Entities.Enums.TourStatus>()
+        .ToDictionary(x => x.ToString(), x => (int)x);
+
+    foreach (var alias in Travel.Web.Helpers.EnumSerializerRegistration.TourStatusAliases)
+        statusMap[alias.Key] = (int)alias.Value;
+
+    foreach (var (text, number) in statusMap)
+    {
+        await mongo.UpdateManyAsync(
+            MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("Status", text),
+            MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Update.Set("Status", number));
     }
 }
 

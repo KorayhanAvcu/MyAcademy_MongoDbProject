@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+@using System.Globalization
 @model List<Travel.Web.DTOs.TourDtos.TourListItemDto>
 
 @{
@@ -1260,6 +1260,24 @@
                         <td>
 
                             <div class="actions">
+
+                                <!-- RAPOR AL (Excel / PDF) -->
+                                <a asp-area="Admin" asp-controller="Reservation" asp-action="ExportExcel" asp-route-tourId="@tour.Id"
+                                   class="action-btn edit" title="Katılımcı Raporu (Excel)"><i class="bi bi-file-earmark-excel"></i><span>Excel</span></a>
+
+                                <a asp-area="Admin" asp-controller="Reservation" asp-action="ExportPdf" asp-route-tourId="@tour.Id"
+                                   class="action-btn edit" title="Katılımcı Raporu (PDF)"><i class="bi bi-file-earmark-pdf"></i><span>PDF</span></a>
+
+                                <a asp-area="Admin" asp-controller="Reservation" asp-action="Index" asp-route-TourId="@tour.Id"
+                                   class="action-btn edit" title="Rezervasyonlar"><i class="bi bi-list-check"></i><span>@L["Rezervasyonlar"]</span></a>
+
+                                <!-- AKTİF / PASİF -->
+                                <form asp-area="Admin" asp-controller="Tour" asp-action="ToggleStatus" asp-route-id="@tour.Id" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="action-btn edit" title="Aktif / Pasif">
+                                        <i class="bi bi-toggle-on"></i><span>@(tour.Status == "Active" ? "Pasif Yap" : "Aktif Yap")</span>
+                                    </button>
+                                </form>
 
                                 <!-- DÜZENLE -->
 

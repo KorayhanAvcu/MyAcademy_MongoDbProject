@@ -1,4 +1,4 @@
-﻿
+
 @using Travel.Web.DTOs.QuestionDtos
 @model List<QuestionListDto>
 
@@ -399,7 +399,7 @@
                                 <td>
                                     <div class="user-info">
                                         <span class="user-name">
-                                            Kullanıcı
+                                            @(string.IsNullOrWhiteSpace(item.UserName) ? "Kullanıcı" : item.UserName)
                                         </span>
 
                                         <span class="user-id">

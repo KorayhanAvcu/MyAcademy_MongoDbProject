@@ -1,15 +1,57 @@
-﻿
+﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
 @{
     Layout = null;
+    var days = Model.DayPrograms.OrderBy(x => x.DayNumber).ToList();
 }
 
-<!-- ITINERARY -->
+<!-- ITINERARY (accordion) -->
 <div class="content-block">
+    <h2>@L["Gün Gün Tur Programı"]</h2>
 
-    <h2>
-        Gün Gün Tur Programı
-    </h2>
+    @if (!days.Any())
+    {
+        <p>@L["Bu tur için program henüz eklenmedi."]</p>
+    }
 
-    <div id="itinerary"></div>
+    <div id="itinerary">
+        @for (var i = 0; i < days.Count; i++)
+        {
+            var day = days[i];
+            var dayNo = day.DayNumber > 0 ? day.DayNumber : i + 1;
 
+            <div class="itin-item @(i == 0 ? "open" : "")">
+                <div class="itin-head" onclick="toggleDay(this)">
+                    <span class="day-tag">@dayNo. @L["Gün"]</span>
+                    <span class="itin-title">@day.Title</span>
+                    <span class="itin-toggle">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    </span>
+                </div>
+                <div class="itin-body" style="@(i == 0 ? "max-height:800px" : "")">
+                    <div class="itin-inner">
+                        <p style="margin-bottom:.4rem;white-space:pre-line">@day.Description</p>
+
+                        <div class="itin-tags">
+                            @if (!string.IsNullOrWhiteSpace(day.City))
+                            {
+                                <span>📍 @day.City</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(day.Accommodation))
+                            {
+                                <span>🏨 @day.Accommodation</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(day.Transportation))
+                            {
+                                <span>🚌 @day.Transportation</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(day.Meal))
+                            {
+                                <span>🍽️ @day.Meal</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

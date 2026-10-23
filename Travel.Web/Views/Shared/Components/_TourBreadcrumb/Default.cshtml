@@ -1,25 +1,12 @@
 ﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
-
 @{
     Layout = null;
 }
 
 <div class="crumb">
-
-    <a href="/">
-        Ana Sayfa
-    </a>
-
+    <a asp-controller="Default" asp-action="Index">@L["Ana Sayfa"]</a>
     /
-
-    <a href="/Tour">
-        Turlar
-    </a>
-
+    <a asp-controller="Tours" asp-action="Index">@L["Turlar"]</a>
     /
-
-    <span class="cur">
-        @Model.Name
-    </span>
-
+    <span class="cur">@Model.Name</span>
 </div>

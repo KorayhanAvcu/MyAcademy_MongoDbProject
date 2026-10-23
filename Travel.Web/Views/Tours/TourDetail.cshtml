@@ -1,4 +1,4 @@
-﻿@model Travel.Web.DTOs.TourDtos.TourDetailDto
+@model Travel.Web.DTOs.TourDtos.TourDetailDto
 @{
     ViewData["Title"] = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -1016,192 +1016,164 @@
     }
 </style>
 
-@await Component.InvokeAsync("_TourDetail", Model)
+@await Component.InvokeAsync("_TourDetail", new { model = Model })
 <!-- REVIEW MODAL -->
-<div class="modal fade" id="reviewModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" style="font-family:'Sora';font-weight:700;color:var(--navy)">Deneyimini Paylaş</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="book-label" style="margin-top:0">Puanın</div>
-                <div id="starPicker" class="mb-3">
-                    <span class="star-pick" data-v="1">★</span><span class="star-pick" data-v="2">★</span><span class="star-pick" data-v="3">★</span><span class="star-pick" data-v="4">★</span><span class="star-pick" data-v="5">★</span>
+@if (User.Identity?.IsAuthenticated == true && !Model.HasReviewed)
+{
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" asp-controller="Tours" asp-action="AddReview" method="post" onsubmit="return validateReview()">
+                <input type="hidden" name="TourId" value="@Model.Id" />
+                <input type="hidden" name="Rating" id="ratingInput" value="0" />
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" style="font-family:'Sora';font-weight:700;color:var(--navy)">@L["Deneyimini Paylaş"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="book-label" style="margin-top:0">Yorumun</div>
-                <textarea id="reviewText" class="form-control" style="border-radius:14px;border-color:var(--line);min-height:110px" placeholder="Tur deneyimini birkaç cümleyle anlat..."></textarea>
-            </div>
-            <div class="modal-footer border-0">
-                <button class="btn-teal" onclick="submitReview()">Yorumu Gönder</button>
-            </div>
+                <div class="modal-body">
+                    <div class="book-label" style="margin-top:0">@L["Puanın"]</div>
+                    <div id="starPicker" class="mb-3">
+                        <span class="star-pick" data-v="1">★</span><span class="star-pick" data-v="2">★</span><span class="star-pick" data-v="3">★</span><span class="star-pick" data-v="4">★</span><span class="star-pick" data-v="5">★</span>
+                    </div>
+                    <div class="book-label" style="margin-top:0">@L["Yorumun"]</div>
+                    <textarea name="Comment" id="reviewText" class="form-control" style="border-radius:14px;border-color:var(--line);min-height:110px" minlength="10" maxlength="1000" placeholder="@L["Tur deneyimini birkaç cümleyle anlat..."]"></textarea>
+                    <div id="reviewErr" style="display:none;color:#b45a4f;font-size:.85rem;margin-top:.5rem"></div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn-teal">@L["Yorumu Gönder"]</button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
+}
+
+@Html.AntiForgeryToken()
+
+@{
+    string Js(string key) => System.Text.Json.JsonSerializer.Serialize(L[key].Value);
+}
+
 <script>
-    /* ---------- ITINERARY ---------- */
-    const ITIN = [
-      {day:"1. Gün", title:"İstanbul → Roma", stay:"Roma", trans:"Uçak + Transfer", meal:"—",
-        body:`İstanbul Havalimanı'nda buluşma ve Roma uçuşu. Havalimanında profesyonel tur rehberimiz tarafından karşılanıp otele transfer. Otele yerleşmenin ardından şehir merkezinde kısa bir tanışma yürüyüşü ve akşam serbest zaman.`},
-      {day:"2. Gün", title:"Antik Roma", stay:"Roma", trans:"Yürüyüş", meal:"Kahvaltı",
-        body:`Kahvaltının ardından kapsamlı Roma şehir turu. Gün boyu gezilecek başlıca noktalar:`,
-        list:["Kolezyum","Roma Forumu","Palatino Tepesi","Trevi Çeşmesi","İspanyol Merdivenleri","Piazza Navona"], after:`Turun ardından akşam serbest zaman.`},
-      {day:"3. Gün", title:"Vatikan & Roma", stay:"Roma", trans:"Yürüyüş", meal:"Kahvaltı",
-        body:`Sabah Vatikan turu. Gezilecek yerler:`,
-        list:["Vatikan Müzeleri","Sistine Şapeli","Aziz Petrus Bazilikası","Castel Sant'Angelo çevresi"], after:`Öğleden sonra serbest zaman.`},
-      {day:"4. Gün", title:"Roma → Floransa", stay:"Floransa", trans:"Otobüs", meal:"Kahvaltı",
-        body:`Kahvaltı sonrası Floransa'ya hareket ve şehir yürüyüş turu:`,
-        list:["Duomo","Piazza della Signoria","Ponte Vecchio","Santa Croce","Michelangelo Meydanı"], after:`Akşam Floransa'da serbest zaman.`},
-      {day:"5. Gün", title:"Pisa & Toskana", stay:"Floransa", trans:"Otobüs", meal:"Kahvaltı",
-        body:`Sabah Pisa'ya hareket; Pisa Kulesi ve Mucizeler Meydanı gezisi. Ardından Toskana bölgesine geçiş; panoramik kasabalar, üzüm bağları ve manzaralar eşliğinde keyifli bir gün. Akşam Floransa'ya dönüş.`},
-      {day:"6. Gün", title:"Floransa → İstanbul", stay:"—", trans:"Transfer + Uçak", meal:"Kahvaltı",
-        body:`Kahvaltı sonrası serbest zaman ve alışveriş imkanı. Belirlenen saatte havalimanına transfer, İstanbul uçuşu ve turumuzun sona ermesi.`}
-    ];
+    const I18N = {
+        adult: @Html.Raw(Js("Yetişkin")),
+        child: @Html.Raw(Js("Çocuk")),
+        capLeft: @Html.Raw(Js("Seçilen tarihte kalan kontenjan:")),
+        pickStar: @Html.Raw(Js("Lütfen bir puan seç.")),
+        writeReview: @Html.Raw(Js("Yorum en az 10 karakter olmalıdır.")),
+        saved: @Html.Raw(Js("Favorilerde")),
+        save: @Html.Raw(Js("Kaydet")),
+        copied: @Html.Raw(Js("Bağlantı panoya kopyalandı."))
+    };
 
-    const itinEl = document.getElementById("itinerary");
-    itinEl.innerHTML = ITIN.map((d,i)=>`
-      <div class="itin-item ${i===0?'open':''}">
-        <div class="itin-head" onclick="toggleDay(this)">
-          <span class="day-tag">${d.day}</span>
-          <span class="itin-title">${d.title}</span>
-          <span class="itin-toggle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-        </div>
-        <div class="itin-body">
-          <div class="itin-inner">
-            <p style="margin-bottom:.4rem">${d.body}</p>
-            ${d.list?`<ul>${d.list.map(x=>`<li>${x}</li>`).join("")}</ul>`:""}
-            ${d.after?`<p style="margin:0">${d.after}</p>`:""}
-            <div class="itin-tags">
-              <span>🏨 ${d.stay}</span>
-              <span>🚌 ${d.trans}</span>
-              <span>🍽️ ${d.meal}</span>
-            </div>
-          </div>
-        </div>
-      </div>`).join("");
-
-    // open first
-    itinEl.querySelector(".itin-item.open .itin-body").style.maxHeight = "600px";
-
+    /* ---------- ITINERARY (accordion) ---------- */
     function toggleDay(head){
       const item = head.parentElement;
       const body = item.querySelector(".itin-body");
-      const isOpen = item.classList.contains("open");
-      if(isOpen){ item.classList.remove("open"); body.style.maxHeight = "0"; }
+      if(item.classList.contains("open")){ item.classList.remove("open"); body.style.maxHeight = "0"; }
       else { item.classList.add("open"); body.style.maxHeight = body.scrollHeight + 40 + "px"; }
     }
 
     /* ---------- BOOKING ---------- */
-    const UNIT = 42500;
+    const UNIT = @Model.Price.ToString(CultureInfo.InvariantCulture);
+    const CHILD_UNIT = @Model.ChildPrice.ToString(CultureInfo.InvariantCulture);
     let adult = 2, child = 0;
-    const childPrice = () => Math.round(UNIT * 0.6); // çocuk %40 indirimli
 
-    function fmt(n){ return n.toLocaleString("tr-TR") + " TL"; }
+    function fmt(n){ return Math.round(n).toLocaleString("tr-TR") + " TL"; }
+
+    function selectedRemaining(){
+      const sel = document.querySelector(".date-opt.sel");
+      return sel ? parseInt(sel.dataset.remaining || "0", 10) : 0;
+    }
 
     function changeCount(type, delta){
-      if(type==="adult"){ adult = Math.max(1, adult + delta); }
-      else { child = Math.max(0, child + delta); }
+      const remaining = selectedRemaining();
+      if(type === "adult"){
+        const next = Math.max(1, adult + delta);
+        if(delta > 0 && next + child > remaining) return;
+        adult = next;
+      } else {
+        const next = Math.max(0, child + delta);
+        if(delta > 0 && adult + next > remaining) return;
+        child = next;
+      }
       updateSummary();
     }
 
     function updateSummary(){
+      const remaining = selectedRemaining();
+      // Seçilen tarih değiştiğinde kişi sayısını kontenjana sığdır.
+      if(remaining > 0 && adult + child > remaining){ adult = Math.min(adult, remaining); child = Math.max(0, remaining - adult); }
+
       document.getElementById("adultVal").textContent = adult;
       document.getElementById("childVal").textContent = child;
-      document.getElementById("adultMinus").disabled = adult<=1;
-      document.getElementById("childMinus").disabled = child<=0;
+      document.getElementById("adultInput").value = adult;
+      document.getElementById("childInput").value = child;
+      document.getElementById("adultMinus").disabled = adult <= 1;
+      document.getElementById("childMinus").disabled = child <= 0;
+      document.getElementById("adultPlus").disabled = adult + child >= remaining;
+      document.getElementById("childPlus").disabled = adult + child >= remaining;
 
-      const adultSum = adult * UNIT;
-      const childSum = child * childPrice();
-      const sub = adultSum + childSum;
-
-      document.getElementById("adultLine").textContent = adult + " Yetişkin (" + fmt(UNIT) + ")";
+      const adultSum = adult * UNIT, childSum = child * CHILD_UNIT;
+      document.getElementById("adultLine").textContent = adult + " " + I18N.adult + " (" + fmt(UNIT) + ")";
       document.getElementById("adultSum").textContent = fmt(adultSum);
 
       const childRow = document.getElementById("childRow");
-      if(child>0){
+      if(child > 0){
         childRow.style.display = "flex";
-        document.getElementById("childLine").textContent = child + " Çocuk (" + fmt(childPrice()) + ")";
+        document.getElementById("childLine").textContent = child + " " + I18N.child + " (" + fmt(CHILD_UNIT) + ")";
         document.getElementById("childSum").textContent = fmt(childSum);
       } else { childRow.style.display = "none"; }
 
-      document.getElementById("subtotal").textContent = fmt(sub);
-      document.getElementById("grandTotal").textContent = fmt(sub);
-    }
-    updateSummary();
+      document.getElementById("grandTotal").textContent = fmt(adultSum + childSum);
 
-    // date selection
-    document.querySelectorAll(".date-opt").forEach(opt=>{
-      opt.addEventListener("click", ()=>{
-        document.querySelectorAll(".date-opt").forEach(o=>o.classList.remove("sel"));
+      const warn = document.getElementById("capWarn");
+      if(remaining > 0 && remaining <= 10){ warn.style.display = "block"; warn.textContent = I18N.capLeft + " " + remaining; }
+      else { warn.style.display = "none"; }
+    }
+
+    document.querySelectorAll(".date-opt").forEach(opt => {
+      opt.addEventListener("click", () => {
+        if(opt.classList.contains("full")) return;
+        document.querySelectorAll(".date-opt").forEach(o => o.classList.remove("sel"));
         opt.classList.add("sel");
         opt.querySelector("input").checked = true;
+        updateSummary();
       });
     });
 
-    function reserve(){
-      const date = document.querySelector(".date-opt.sel .d").textContent;
-      const total = document.getElementById("grandTotal").textContent;
-      alert("Ön rezervasyonun alındı!\n\nTur: Roma & Toskana Keşfi\nTarih: " + date + "\nKişi: " + adult + " yetişkin" + (child? ", " + child + " çocuk":"") + "\nToplam: " + total + "\n\nBu bir demo sayfasıdır.");
+    if(document.getElementById("adultVal")) updateSummary();
+
+    /* ---------- FAVORITE ---------- */
+    async function toggleFavorite(btn){
+      const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+      const body = new URLSearchParams({ tourId: btn.dataset.tourId, __RequestVerificationToken: token });
+      const res = await fetch("/Tours/ToggleFavorite", { method: "POST", body });
+      if(res.status === 401){ window.location.href = "/Auth/SignIn"; return; }
+      if(!res.ok) return;
+      const data = await res.json();
+      btn.classList.toggle("on", data.isFavorite);
+      btn.querySelector(".fav-label").textContent = data.isFavorite ? I18N.saved : I18N.save;
     }
 
     function sharePage(){
-      if(navigator.share){ navigator.share({title:"Roma & Toskana Keşfi — Travelio", url:location.href}).catch(()=>{}); }
-      else { alert("Bağlantı panoya kopyalandı (demo)."); }
+      if(navigator.share){ navigator.share({ title: document.title, url: location.href }).catch(() => {}); }
+      else { navigator.clipboard?.writeText(location.href); alert(I18N.copied); }
     }
 
     /* ---------- REVIEW MODAL ---------- */
     let pickedStars = 0;
-    document.querySelectorAll(".star-pick").forEach(s=>{
-      s.addEventListener("click", ()=>{
+    document.querySelectorAll(".star-pick").forEach(s => {
+      s.addEventListener("click", () => {
         pickedStars = +s.dataset.v;
-        document.querySelectorAll(".star-pick").forEach(x=> x.classList.toggle("on", +x.dataset.v <= pickedStars));
+        document.getElementById("ratingInput").value = pickedStars;
+        document.querySelectorAll(".star-pick").forEach(x => x.classList.toggle("on", +x.dataset.v <= pickedStars));
       });
     });
-    function submitReview(){
+
+    function validateReview(){
+      const err = document.getElementById("reviewErr");
       const txt = document.getElementById("reviewText").value.trim();
-      if(!pickedStars){ alert("Lütfen bir puan seç."); return; }
-      if(!txt){ alert("Lütfen yorumunu yaz."); return; }
-      bootstrap.Modal.getInstance(document.getElementById("reviewModal")).hide();
-      alert("Yorumun için teşekkürler! (demo)");
-      document.getElementById("reviewText").value = "";
-      pickedStars = 0;
-      document.querySelectorAll(".star-pick").forEach(x=>x.classList.remove("on"));
+      if(!pickedStars){ err.textContent = I18N.pickStar; err.style.display = "block"; return false; }
+      if(txt.length < 10){ err.textContent = I18N.writeReview; err.style.display = "block"; return false; }
+      return true;
     }
-
-    /* ---------- ASK ---------- */
-    function sendQuestion(){
-      const v = document.getElementById("askInput").value.trim();
-      if(!v){ return; }
-      document.getElementById("askInput").value = "";
-      document.getElementById("askOk").style.display = "block";
-    }
-
-    /* ---------- SIMILAR ---------- */
-    const SIMILAR = [
-      {title:"Amalfi & Napoli", country:"İtalya", dur:"6 Gün / 5 Gece", rating:4.9, reviews:886, price:"49.500", badge:"Popüler", img:"https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80"},
-      {title:"Paris & Alsace", country:"Fransa", dur:"7 Gün / 6 Gece", rating:4.8, reviews:721, price:"47.900", badge:"", img:"https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=800&q=80"},
-      {title:"Prag & Viyana Kültür Turu", country:"Çekya · Avusturya", dur:"6 Gün / 5 Gece", rating:4.8, reviews:1421, price:"36.400", badge:"", img:"https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=800&q=80"}
-    ];
-    document.getElementById("similarGrid").innerHTML = SIMILAR.map(t=>`
-      <div class="col-md-6 col-lg-4">
-        <article class="tour-card">
-          <div class="tour-media">
-            <img src="${t.img}" alt="${t.title}" loading="lazy" />
-            ${t.badge?`<span class="tour-badge">${t.badge}</span>`:''}
-          </div>
-          <div class="tour-body">
-            <div class="tour-country">${t.country}</div>
-            <h3 class="tour-title">${t.title}</h3>
-            <div class="tour-meta">
-              <span>🗓️ ${t.dur}</span>
-              <span><span class="star">★</span> ${t.rating.toFixed(1)} <span style="color:var(--muted)">(${t.reviews.toLocaleString("tr-TR")})</span></span>
-            </div>
-            <div class="tour-foot">
-              <div class="price"><small>Kişi başı</small><b>${t.price} <span>TL</span></b></div>
-              <a href="tour-detail.html" class="btn-incele">Turu İncele</a>
-            </div>
-          </div>
-        </article>
-      </div>`).join("");
 </script>

@@ -1,4 +1,4 @@
-﻿
+
 using Travel.Web.DTOs.QuestionDtos;
 
 namespace Travel.Web.Services.QuestionServices
@@ -12,5 +12,8 @@ namespace Travel.Web.Services.QuestionServices
         Task MarkAsReadAsync(string id);
         Task DeleteAsync(string id);
         Task<int> GetUnreadCountAsync();
+        Task<int> GetUnansweredCountAsync();
+        Task<List<QuestionListDto>> GetAnsweredByTourAsync(string tourId);
+        Task<List<QuestionListDto>> GetByUserAsync(string userId);
     }
 }
