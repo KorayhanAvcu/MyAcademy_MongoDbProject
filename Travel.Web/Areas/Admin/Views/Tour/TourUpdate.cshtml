@@ -1,4 +1,4 @@
-﻿@model Travel.Web.DTOs.TourDtos.TourUpdateDto
+@model Travel.Web.DTOs.TourDtos.TourUpdateDto
 
 @{
     ViewData["Title"] = "Tur Düzenle";
@@ -665,6 +665,22 @@
                                   rows="7"
                                   placeholder="Tur hakkında detaylı açıklama..."></textarea>
 
+                    </div>
+
+                    <!-- İNGİLİZCE İÇERİK (çoklu dil) -->
+                    <div class="col-12">
+                        <label asp-for="NameEn" class="form-label">Tur Adı (English)</label>
+                        <input asp-for="NameEn" class="form-control" />
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="ShortDescriptionEn" class="form-label">Kısa Açıklama (English)</label>
+                        <textarea asp-for="ShortDescriptionEn" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="DescriptionEn" class="form-label">Detaylı Açıklama (English)</label>
+                        <textarea asp-for="DescriptionEn" class="form-control" rows="5"></textarea>
                     </div>
 
                 </div>

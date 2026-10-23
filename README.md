@@ -109,7 +109,7 @@ Aşağıdaki istatistikler `Find()` yerine **Aggregation Pipeline** ile hazırla
 ### 11. Çoklu Dil Desteği (TR / EN)
 - ASP.NET Core Localization; menüdeki **TR / EN** seçicisi ile dil çerezde saklanır
 - Menüler, butonlar, başlıklar ve sistem mesajları seçilen dile göre değişir (`Resources/SharedResource.en.resx`)
-- Tur adı ve açıklamaları MongoDB'de çok dilli alanlarda tutulur (`NameEn`, `ShortDescriptionEn`, `DescriptionEn`)
+- Tur adı ve açıklamaları MongoDB'de çok dilli alanlarda tutulur (`NameEn`, `ShortDescriptionEn`, `DescriptionEn`); admin tur ekleme/düzenleme formlarından girilir
 
 ### 12. Validasyon
 FluentValidation ile: rezervasyon, yorum, soru ve soru cevabı formları (mevcut tur, kategori, destinasyon vb. validasyonlarına ek olarak).
@@ -121,7 +121,6 @@ FluentValidation ile: rezervasyon, yorum, soru ve soru cevabı formları (mevcut
 ---
 
 ## Bilinen Eksikler
-- Admin tur ekleme / düzenleme formlarında İngilizce ad ve açıklama alanları henüz form üzerinde yok (modelde mevcut).
 - Bazı eski admin CRUD sayfaları (Hakkımızda, İletişim vb.) yalnızca Türkçe.
 - Yorumlar case'teki `Comments` adı yerine projede mevcut olan `Reviews` koleksiyonunda tutulur.
 

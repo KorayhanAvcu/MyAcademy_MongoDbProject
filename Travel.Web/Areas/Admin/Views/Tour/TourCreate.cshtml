@@ -1,4 +1,4 @@
-﻿@model Travel.Web.DTOs.TourDtos.TourCreateDto
+@model Travel.Web.DTOs.TourDtos.TourCreateDto
 
 @{
     ViewData["Title"] = "Yeni Tur Oluştur";
@@ -959,6 +959,22 @@
                                       placeholder="Tur hakkında detaylı açıklama..."></textarea>
 
                             <span asp-validation-for="Description"></span>
+                        </div>
+
+                        <!-- İNGİLİZCE İÇERİK (çoklu dil) -->
+                        <div class="form-group full">
+                            <label asp-for="NameEn" class="form-label">Tur Adı (English)</label>
+                            <input asp-for="NameEn" class="form-control" placeholder="e.g. Rome & Tuscany Discovery" />
+                        </div>
+
+                        <div class="form-group full">
+                            <label asp-for="ShortDescriptionEn" class="form-label">Kısa Açıklama (English)</label>
+                            <textarea asp-for="ShortDescriptionEn" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group full">
+                            <label asp-for="DescriptionEn" class="form-label">Detaylı Açıklama (English)</label>
+                            <textarea asp-for="DescriptionEn" class="form-control" rows="5"></textarea>
                         </div>
 
                         <div class="form-group full">
